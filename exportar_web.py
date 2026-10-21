@@ -276,14 +276,69 @@ def exportar(desde, hasta):
 
 
 INICIO = date(2026, 10, 9)   # primer día con seguimiento de aciertos
+APOSTABLES = {"goles", "goles_1t", "goles_2t", "tiros", "remates", "corners", "tarjetas"}
+
+
+def _ok(p, met, lado, linea):
+    real = (p.get("real") or {}).get(met)
+    if real is None or not lado or linea is None:
+        return None
+    return bool(real > linea) if lado.lower().startswith("más") else bool(real < linea)
+
+
+def _destacados(p):
+    ap = [f for f in p["pronosticos"] if f["metrica"] in APOSTABLES]
+    normal = max((f for f in ap if (f.get("prob") or 0) >= 0.55), key=lambda f: f["prob"], default=None)
+    segura = min((f for f in ap if f.get("segura_prob")), key=lambda f: f["segura_prob"], default=None)
+    return normal, segura
+
+
+def indice(d):
+    """Índice ligero para la web: días, conteos por liga, escalera y aciertos ya calculados."""
+    dias = []
+    for x in d["dias"]:
+        cuenta = {}
+        for p in x["partidos"]:
+            cuenta[p["liga"]] = cuenta.get(p["liga"], 0) + 1
+        por_id = {p["understat_id"]: p for p in x["partidos"]}
+        esc = []
+        for e in x.get("escalera", []):
+            p = por_id.get(e["understat_id"])
+            esc.append({**e, "ok": _ok(p, e["metrica"], e["lado"], e["linea"]) if p else None,
+                        "real": ((p or {}).get("real") or {}).get(e["metrica"])})
+        res = []
+        for p in x["partidos"]:
+            if not p.get("real"):
+                continue
+            normal, segura = _destacados(p)
+            res.append({"l": p["liga"], "d": bool(p["destacado"]),
+                        "n": _ok(p, normal["metrica"], normal["eleccion"], normal["linea"]) if normal else None,
+                        "s": _ok(p, segura["metrica"], segura["segura_lado"], segura["segura_linea"]) if segura else None,
+                        "m": {f["metrica"]: [_ok(p, f["metrica"], f["eleccion"], f["linea"]) if (f.get("prob") or 0) >= 0.55 else None,
+                                             _ok(p, f["metrica"], f.get("segura_lado"), f.get("segura_linea"))]
+                              for f in p["pronosticos"]}})
+        dias.append({"dia": x["dia"], "jugado": x["jugado"], "n": cuenta, "escalera": esc, "res": res})
+    return {"generado": d["generado"], "ultimo_dato": d["ultimo_dato"],
+            "correlaciones": d.get("correlaciones", {}), "dias": dias}
+
 
 if __name__ == "__main__":
     import sys
     a = date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else INICIO
     b = date.fromisoformat(sys.argv[2]) if len(sys.argv) > 2 else date.today() + timedelta(days=8)
     d = exportar(a, b)
-    datos = json.dumps(d, ensure_ascii=False, default=float).replace("</", "<\\/")
     raiz = Path(__file__).resolve().parent
+    # un archivo por día (se descarga solo cuando se abre ese día)
+    carpeta = raiz / "docs" / "web" / "dias"
+    if carpeta.exists():
+        for f in carpeta.glob("*.json"):
+            f.unlink()
+    carpeta.mkdir(parents=True, exist_ok=True)
+    for x in d["dias"]:
+        (carpeta / f"{x['dia']}.json").write_text(
+            json.dumps({"dia": x["dia"], "partidos": x["partidos"]}, ensure_ascii=False, default=float,
+                       separators=(",", ":")), encoding="utf-8")
+    datos = json.dumps(indice(d), ensure_ascii=False, default=float, separators=(",", ":")).replace("</", "<\\/")
     plantilla = (raiz / "web_plantilla.html").read_text(encoding="utf-8")
     cabeza = """<!doctype html>
 <html lang="es">
@@ -299,7 +354,6 @@ if __name__ == "__main__":
 """
     cuerpo = plantilla.replace("__DATOS__", datos).replace('<div class="wrap">', '</head>\n<body>\n<div class="wrap">', 1)
     html = cabeza + cuerpo + "\n</body>\n</html>\n"
-    (raiz / "docs").mkdir(exist_ok=True)
     (raiz / "docs" / "index.html").write_text(html, encoding="utf-8")
     (raiz / "docs" / ".nojekyll").write_text("", encoding="utf-8")
-    print("listo", d["generado"], "->", raiz / "docs" / "index.html")
+    print("listo", d["generado"], "->", raiz / "docs" / "index.html", f"({len(html) // 1024} KB)")

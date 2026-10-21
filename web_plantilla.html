@@ -510,14 +510,32 @@ const sello = `Datos hasta el ${D.ultimo_dato.split('-').reverse().join('/')} ·
 document.getElementById('sello').textContent = sello;
 document.getElementById('sello-mini').title = sello;
 
-const partidosDia = () => { const d = D.dias.find(x => x.dia === E.dia); return d ? d.partidos.filter(p => E.ligas.has(p.liga)) : []; };
+/* cada día se descarga solo cuando se abre (web/dias/AAAA-MM-DD.json) */
+const CARGADOS = {}, CARGANDO = {};
+function cargarDia(dia) {
+  if (CARGADOS[dia] || CARGANDO[dia]) return;
+  CARGANDO[dia] = fetch(`web/dias/${dia}.json`, {cache: 'no-cache'})
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => { CARGADOS[dia] = j.partidos; })
+    .catch(() => { CARGADOS[dia] = 'error'; })
+    .finally(() => { delete CARGANDO[dia]; render(); });
+}
+const partidosDia = () => {
+  const lista = CARGADOS[E.dia];
+  if (!lista) { cargarDia(E.dia); return null; }
+  if (lista === 'error') return 'error';
+  return lista.filter(p => E.ligas.has(p.liga));
+};
+const AVISO_CARGA = '<div class="vacio" style="margin-top:28px">Cargando partidos…</div>';
+const AVISO_ERROR = '<div class="vacio" style="margin-top:28px">No se han podido cargar los partidos de este día. Comprueba la conexión y vuelve a tocar el día.</div>';
+const contarDia = d => Object.entries(d.n || {}).reduce((a, [l, k]) => a + (E.ligas.has(l) ? k : 0), 0);
 
 /* ---------- barra ---------- */
 function pintarBarra() {
   document.getElementById('ligas').innerHTML = ORDEN.map(l =>
     `<button class="liga-f" data-liga="${l}" aria-pressed="${E.ligas.has(l)}"><span class="ico">${LIGA_ICO[l]}</span>${LIGAS[l]}</button>`).join('');
   document.getElementById('dias').innerHTML = D.dias.map(d => {
-    const f = new Date(d.dia + 'T12:00:00'), n = d.partidos.filter(p => E.ligas.has(p.liga)).length;
+    const f = new Date(d.dia + 'T12:00:00'), n = contarDia(d);
     return `<button class="dia ${d.jugado ? 'pasado' : ''}" data-dia="${d.dia}" aria-pressed="${d.dia === E.dia}"><small>${DSEM[f.getDay()]}</small><b>${f.getDate()}</b><i>${d.jugado ? 'jugado' : n + ' part.'}</i></button>`;
   }).join('');
   document.getElementById('titular').innerHTML = {partidos: 'Elige tu<strong>partido del día</strong>',
@@ -667,6 +685,8 @@ function ficha(p) {
 }
 function pintarPartidos() {
   const ps = partidosDia(), v = document.getElementById('vista-partidos');
+  if (ps === null) { v.innerHTML = AVISO_CARGA; return; }
+  if (ps === 'error') { delete CARGADOS[E.dia]; v.innerHTML = AVISO_ERROR; return; }
   if (!ps.length) { v.innerHTML = '<div class="vacio" style="margin-top:28px">No hay partidos de las ligas elegidas este día.<br>Prueba con otro día o activa más ligas.</div>'; return; }
   const orden = [...ps].sort((a, b) => b.relevancia - a.relevancia);
   const top = orden[0], dest = orden.filter(p => p.destacado && p !== top);
@@ -728,7 +748,10 @@ function buscar(ps, modo, obj) {
 }
 function pintarCombinada() {
   const v = document.getElementById('vista-combinada');
-  const ps = [...partidosDia()].sort((a, b) => b.relevancia - a.relevancia);
+  const crudo = partidosDia();
+  if (crudo === null) { v.innerHTML = AVISO_CARGA; return; }
+  if (crudo === 'error') { delete CARGADOS[E.dia]; v.innerHTML = AVISO_ERROR; return; }
+  const ps = [...crudo].sort((a, b) => b.relevancia - a.relevancia);
   if (!ps.length) { v.innerHTML = '<div class="vacio" style="margin-top:28px">No hay partidos de las ligas elegidas este día.</div>'; return; }
   if (!E.elegidos) E.elegidos = ps.slice(0, Math.min(2, ps.length)).map(p => p.understat_id);
   E.elegidos = E.elegidos.filter(id => ps.some(p => p.understat_id === id));
@@ -818,17 +841,15 @@ function pintarAciertos() {
   const v = document.getElementById('vista-aciertos');
   const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {};
   let partidos = 0;
-  D.dias.filter(d => d.jugado).forEach(d => {
+  D.dias.forEach(d => {
     const dd = {dia: d.dia, n: cuenta(), s: cuenta()};
-    d.partidos.filter(p => E.ligas.has(p.liga) && p.real && (E.ambito === 'todos' || p.destacado)).forEach(p => {
+    (d.res || []).filter(r => E.ligas.has(r.l) && (E.ambito === 'todos' || r.d)).forEach(r => {
       partidos++;
-      const {normal, segura} = destacados(p);
-      suma(tot.n, okNormal(p, normal)); suma(dd.n, okNormal(p, normal));
-      suma(tot.s, okSegura(p, segura)); suma(dd.s, okSegura(p, segura));
-      p.pronosticos.forEach(f => {
-        const m = porMet[f.metrica] = porMet[f.metrica] || {n: cuenta(), s: cuenta()};
-        if (f.prob >= 0.55) suma(m.n, okNormal(p, f));
-        suma(m.s, okSegura(p, f));
+      suma(tot.n, r.n); suma(dd.n, r.n);
+      suma(tot.s, r.s); suma(dd.s, r.s);
+      Object.entries(r.m || {}).forEach(([met, [okN, okS]]) => {
+        const m = porMet[met] = porMet[met] || {n: cuenta(), s: cuenta()};
+        suma(m.n, okN); suma(m.s, okS);
       });
     });
     if (dd.n.n || dd.s.n) porDia.push(dd);
@@ -867,9 +888,7 @@ const META = 20, APUESTA = 10;
 function pasosEscalera() {
   const pasos = [];
   D.dias.forEach(d => (d.escalera || []).filter(e => e.recomendada !== false).forEach(e => {
-    const p = d.partidos.find(x => x.understat_id === e.understat_id);
-    pasos.push({...e, dia: d.dia, ok: p ? acierto(p, e.metrica, e.lado, e.linea) : null,
-                real: p && p.real ? p.real[e.metrica] : null});
+    pasos.push({...e, dia: d.dia});
   }));
   return pasos;
 }
@@ -897,9 +916,11 @@ function pintarEscalera() {
   const probResto = Math.pow(pMedia, META - n);
   const prox = pendientes.slice(0, Math.min(4, META - n));
   const diaHoy = D.dias.find(d => d.dia >= hoy && (d.escalera || []).length);
+  const lista = diaHoy ? CARGADOS[diaHoy.dia] : null;
+  if (diaHoy && !lista) cargarDia(diaHoy.dia);
   const opcion = (e, i) => {
-    const p = diaHoy.partidos.find(x => x.understat_id === e.understat_id);
-    const ok = p ? acierto(p, e.metrica, e.lado, e.linea) : null;
+    const p = Array.isArray(lista) ? lista.find(x => x.understat_id === e.understat_id) : null;
+    const ok = e.ok;
     return `<div class="opcion ${e.recomendada ? 'rec' : ''}">
       ${e.recomendada ? '<span class="etq">Recomendada</span>' : `<span class="letra">${'ABCD'[i]}</span>`}
       <div class="t"><small>${e.hora} · ${LIGAS[e.liga]} · ${esc(e.partido)}</small><b>${esc(e.texto)}</b>${p ? porque(p, e.metrica, e.lado, e.linea) : ''}${e.motivo ? `<small class="por">${esc(e.motivo)}</small>` : ''}</div>

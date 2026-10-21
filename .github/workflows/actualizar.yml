@@ -70,11 +70,11 @@ jobs:
         run: |
           git config user.name "pronosticos-bot"
           git config user.email "pronosticos-bot@users.noreply.github.com"
-          cp docs/index.html index.html && touch .nojekyll
+          cp docs/index.html index.html && touch .nojekyll && rm -rf web && cp -r docs/web web
           mkdir -p registro && cp registro_actualizacion.txt registro/ultima_actualizacion.txt 2>/dev/null || true
           cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
           cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
           cp registro_extra.txt registro/ultimas_ligas_extra.txt 2>/dev/null || true
-          git add docs dias index.html .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
+          git add -A docs web dias index.html .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
           git push
