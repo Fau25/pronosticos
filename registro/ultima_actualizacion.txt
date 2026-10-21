@@ -1,67 +1,21 @@
-Actualización 2026-10-21 15:18  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-21 15:48  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
-  Ligas sin histórico, descarga completa: seriea
   [football-data] laliga 2627: 88 partidos
   [football-data] premier 2627: 70 partidos
   [football-data] bundesliga 2627: 54 partidos
   [football-data] ligue1 2627: 63 partidos
-  -> tabla 'partidos': 275 filas (laliga, premier, bundesliga, ligue1)
-  [football-data] seriea 2425: 380 partidos
-  [football-data] seriea 2526: 380 partidos
   [football-data] seriea 2627: 70 partidos
-  -> tabla 'partidos': 830 filas (seriea)
+  -> tabla 'partidos': 345 filas (laliga, premier, bundesliga, ligue1, seriea)
   -> tabla 'proximos': 1 partidos por jugar
 
 2) Understat
-  Ligas sin histórico, descarga completa: seriea
   [understat] laliga 2026: 380 partidos (88 jugados)
   [understat] premier 2026: 380 partidos (70 jugados)
   [understat] bundesliga 2026: 306 partidos (54 jugados)
   [understat] ligue1 2026: 306 partidos (63 jugados)
-  [understat] tiros: todo al día
-  [understat] seriea 2024: 380 partidos (380 jugados)
-  [understat] seriea 2025: 380 partidos (380 jugados)
   [understat] seriea 2026: 380 partidos (70 jugados)
-
-  [understat] Descargando tiros de 830 partidos (~22 min).
-  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
-
-    1/830  seriea  2024-08-17  Genoa - Inter  (30 tiros)
-    25/830  seriea  2024-08-31  Napoli - Parma Calcio 1913  (42 tiros)
-    50/830  seriea  2024-09-24  Atalanta - Como  (23 tiros)
-    75/830  seriea  2024-10-20  Cagliari - Torino  (35 tiros)
-    100/830  seriea  2024-11-02  Monza - AC Milan  (30 tiros)
-    125/830  seriea  2024-11-24  Lazio - Bologna  (16 tiros)
-    150/830  seriea  2024-12-14  Juventus - Venezia  (20 tiros)
-    175/830  seriea  2024-12-29  Napoli - Venezia  (29 tiros)
-    200/830  seriea  2025-01-18  Atalanta - Napoli  (21 tiros)
-    225/830  seriea  2025-02-02  Fiorentina - Genoa  (24 tiros)
-    250/830  seriea  2025-02-21  Lecce - Udinese  (22 tiros)
-    275/830  seriea  2025-03-08  Parma Calcio 1913 - Torino  (18 tiros)
-    300/830  seriea  2025-03-31  Verona - Parma Calcio 1913  (16 tiros)
-    325/830  seriea  2025-04-20  Empoli - Venezia  (24 tiros)
-    350/830  seriea  2025-05-05  Genoa - AC Milan  (22 tiros)
-    375/830  seriea  2025-05-25  Venezia - Juventus  (27 tiros)
-    400/830  seriea  2025-08-31  Lazio - Verona  (34 tiros)
-    425/830  seriea  2025-09-28  AC Milan - Napoli  (25 tiros)
-    450/830  seriea  2025-10-20  Cremonese - Udinese  (19 tiros)
-    475/830  seriea  2025-11-02  AC Milan - Roma  (37 tiros)
-    500/830  seriea  2025-11-24  Torino - Como  (25 tiros)
-    525/830  seriea  2025-12-14  Bologna - Juventus  (25 tiros)
-    550/830  seriea  2026-01-03  Genoa - Pisa  (22 tiros)
-    575/830  seriea  2026-01-12  Genoa - Cagliari  (26 tiros)
-    600/830  seriea  2026-01-26  Verona - Udinese  (27 tiros)
-    625/830  seriea  2026-02-15  Napoli - Roma  (20 tiros)
-    650/830  seriea  2026-03-02  Udinese - Fiorentina  (20 tiros)
-    675/830  seriea  2026-03-21  Parma Calcio 1913 - Cremonese  (15 tiros)
-    700/830  seriea  2026-04-13  Fiorentina - Lazio  (21 tiros)
-    725/830  seriea  2026-05-03  Bologna - Cagliari  (21 tiros)
-    750/830  seriea  2026-05-17  Udinese - Cremonese  (17 tiros)
-    775/830  seriea  2026-08-29  Juventus - Parma Calcio 1913  (25 tiros)
-    800/830  seriea  2026-09-14  Inter - Udinese  (33 tiros)
-    825/830  seriea  2026-10-18  AC Milan - Atalanta  (23 tiros)
-    830/830  seriea  2026-10-19  Parma Calcio 1913 - Torino  (34 tiros)
+  [understat] tiros: todo al día
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3849 filas
