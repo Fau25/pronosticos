@@ -13,7 +13,7 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
-      - run: python europa.py historico 2024-07-01 2026-10-21
+      - run: python extra_ligas.py historico 2024-07-01 2026-10-21
       - run: |
           git config user.name "pronosticos-bot"; git config user.email "pronosticos-bot@users.noreply.github.com"
-          git add datos/europa_historico.json; git commit -m "Histórico europeo" && git pull --rebase -q && git push
+          git add datos/extra_historico.json; git commit -m "Histórico ligas extra" && git pull --rebase -q && git push
