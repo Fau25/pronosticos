@@ -741,7 +741,7 @@ function simular(pasos) {
   const intentos = []; let cur = [];
   const pendientes = [];
   for (const p of pasos) {
-    if (p.ok == null) { pendientes.push(p); continue; }
+    if (p.ok == null) { if (p.dia >= hoy) pendientes.push(p); continue; }  // sin datos de un día pasado: no cuenta
     cur.push(p);
     if (!p.ok) { intentos.push({pasos: cur, fin: 'fallo'}); cur = []; }
     else if (cur.length === META) { intentos.push({pasos: cur, fin: 'completa'}); cur = []; }
