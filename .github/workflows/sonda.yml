@@ -1,0 +1,13 @@
+name: Sonda ligas
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  s:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p registro && python3 sonda_ligas.py
+      - run: |
+          git config user.name "pronosticos-bot"; git config user.email "pronosticos-bot@users.noreply.github.com"
+          git add registro/sonda_ligas.json; git commit -m "Sonda ligas" && git pull --rebase -q && git push
