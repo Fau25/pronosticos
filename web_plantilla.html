@@ -198,6 +198,57 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .veredicto.pos { color: var(--win); }
 .vacio { background: var(--card); border-radius: 26px; padding: 36px 24px; text-align: center; color: var(--muted); line-height: 1.7; }
 
+/* ---------- noche europea (partidos de Champions) ---------- */
+:root { --noche: #061038; --noche-2: #0b1d6b; --cian: #5ff0e4; --cian-ink: #04213a; --vidrio: rgba(255, 255, 255, .09); --vidrio-borde: rgba(255, 255, 255, .2); }
+.ucl {
+  position: relative; isolation: isolate; overflow: hidden; color: #f2f6ff; border-color: transparent;
+  background:
+    radial-gradient(60% 55% at 12% 0%, rgba(95, 240, 228, .55) 0%, rgba(95, 240, 228, 0) 70%),
+    radial-gradient(45% 40% at 95% 20%, rgba(73, 120, 255, .55) 0%, rgba(73, 120, 255, 0) 70%),
+    radial-gradient(70% 60% at 70% 110%, rgba(40, 70, 220, .6) 0%, rgba(40, 70, 220, 0) 70%),
+    linear-gradient(160deg, var(--noche-2) 0%, var(--noche) 70%);
+}
+.ucl::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    repeating-radial-gradient(circle at 120% -30%, rgba(255, 255, 255, 0) 0 46px, rgba(150, 220, 255, .10) 47px 48px),
+    radial-gradient(30% 25% at 40% 45%, rgba(95, 240, 228, .25), transparent 70%);
+}
+.ucl .top b, .ucl .duelo-g .eq b, .ucl .centro .hora { color: #fff; }
+.ucl .centro small, .ucl .duelo-g .eq small, .ucl .ficha .top b { color: rgba(225, 235, 255, .75); opacity: 1; }
+.ucl .centro .final { color: var(--cian); }
+.ucl .etq, .ucl .etq.cla, .ucl .etq.osc { background: var(--vidrio); color: var(--cian); border: 1px solid var(--vidrio-borde);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.ucl .pick-e, .ucl .pie-ficha {
+  background: var(--vidrio); border: 1px solid var(--vidrio-borde); color: #f2f6ff;
+  backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+.ucl .pick-e small, .ucl .pie-ficha .txt small { color: rgba(225, 235, 255, .7); opacity: 1; }
+.ucl .pick-e b { color: var(--cian); }
+.ucl .pick-e.ok { background: rgba(95, 240, 228, .16); }
+.ucl .pie-ficha.ok { box-shadow: inset 0 0 0 1.5px var(--win), inset 0 1px 0 rgba(255, 255, 255, .12); }
+.ucl .prob { background: var(--cian); color: var(--cian-ink); }
+.ucl .prob.seg { background: transparent; color: var(--cian); box-shadow: inset 0 0 0 2px var(--cian); }
+.ucl .abrir { background: var(--vidrio); color: #fff; border: 1px solid var(--vidrio-borde); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.ucl .abrir-f { color: rgba(225, 235, 255, .8); }
+.ucl .racha .V { background: var(--win); } .ucl .racha .E { background: rgba(225, 235, 255, .45); } .ucl .racha .D { background: var(--loss); }
+.ucl .escudo { box-shadow: inset 0 0 0 4px var(--c2), 0 0 0 2px rgba(255, 255, 255, .35), 0 6px 18px rgba(0, 0, 0, .35); }
+.ucl .detalle { border-top-color: var(--vidrio-borde); }
+.estrella.ucl .detalle { background: rgba(4, 10, 40, .55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--vidrio-borde); }
+.ucl .met { background: var(--vidrio); border: 1px solid var(--vidrio-borde); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.ucl .opc { background: rgba(255, 255, 255, .07); color: #f2f6ff; }
+.ucl .opc b, .ucl .opc .der b { color: var(--cian); }
+.ucl .opc.seg { box-shadow: inset 0 0 0 1.5px var(--vidrio-borde); background: transparent; }
+.ucl .barra .pista { background: rgba(255, 255, 255, .12); }
+.ucl .barra .pista i { background: var(--cian); }
+.ucl .tramos { background: var(--vidrio); border: 1px solid var(--vidrio-borde); }
+.ucl .tramos button { color: rgba(225, 235, 255, .75); }
+.ucl .tramos button[aria-pressed="true"] { background: var(--cian); color: var(--cian-ink); }
+.ucl .lectura, .ucl .nota, .ucl .met-cab span, .ucl .leyenda-eq { color: rgba(225, 235, 255, .75); }
+.ucl .lectura strong, .ucl .met-cab .realv { color: #fff; }
+.ucl .leyenda-eq span:first-child::before { background: var(--cian); }
+
 /* ---------- resultados ---------- */
 .res { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800; font-size: .82rem; flex: 0 0 auto; line-height: 1; }
 .res.ok { background: var(--win); color: #0f1a0a; }
@@ -318,6 +369,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pie .muestra.seg { background: transparent; box-shadow: inset 0 0 0 2px var(--lime); }
 
 @media (max-width: 480px) {
+  .duelo-g .eq b { font-size: .86rem; overflow-wrap: normal; word-break: normal; hyphens: auto; }
   .nav { width: calc(100% - 32px); justify-content: space-between; }
   .nav button { flex: 1; justify-content: center; padding: 10px 4px; font-size: .78rem; gap: 4px; flex-direction: column; }
   .nav button svg { width: 16px; height: 16px; }
@@ -538,7 +590,7 @@ function detalle(p) {
 }
 function estrella(p) {
   const {normal, segura} = destacados(p), ab = E.abiertos.has(p.understat_id);
-  return `<article class="estrella ancho ${ab ? 'abierta' : ''}">
+  return `<article class="estrella ancho ${p.liga === 'ucl' ? 'ucl' : ''} ${ab ? 'abierta' : ''}">
     <div class="top"><b>${LIGAS[p.liga]} · el más interesante</b>${etiqueta(p, true)}</div>
     ${duelo(p)}
     <div class="picks-e">
@@ -551,7 +603,7 @@ function estrella(p) {
 }
 function ficha(p) {
   const {normal, segura} = destacados(p), ab = E.abiertos.has(p.understat_id);
-  return `<article class="ficha ${ab ? 'abierta' : ''}">
+  return `<article class="ficha ${p.liga === 'ucl' ? 'ucl' : ''} ${ab ? 'abierta' : ''}">
     <div class="top"><b>${LIGAS[p.liga]}</b>${etiqueta(p, false)}</div>
     ${duelo(p)}
     ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span></div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marca(okNormal(p, normal))}</span></div>` : ''}
