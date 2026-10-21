@@ -755,7 +755,10 @@ function pintarEscalera() {
   const {intentos, actual, pendientes} = simular(pasosEscalera());
   const n = actual.length;
   const banco = actual.reduce((b, p) => b * p.cuota, APUESTA);
-  const probResto = Math.pow(0.9, META - n);
+  const todos = [...actual, ...pendientes, ...intentos.flatMap(x => x.pasos)];
+  const pMedia = todos.length ? todos.reduce((a, p) => a + p.prob, 0) / todos.length : 0.8;
+  const qMedia = todos.length ? todos.reduce((a, p) => a + p.cuota, 0) / todos.length : 1.175;
+  const probResto = Math.pow(pMedia, META - n);
   const prox = pendientes.slice(0, Math.max(2, Math.min(4, META - n)));
   const barras = Array.from({length: META}, (_, i) =>
     `<i class="${i < n ? 'ok' : i < n + prox.length ? 'sig' : ''} ${i === META - 1 ? 'meta' : ''}" style="height:${(i + 1) / META * 100}%"></i>`).join('');
@@ -773,12 +776,12 @@ function pintarEscalera() {
       </div>
       <div class="escalones" aria-label="${n} de ${META} escalones superados">${barras}</div>
       <div class="esc-pie">
-        <div><small>Cada escalón</small><b>~90%</b></div>
+        <div><small>Cada escalón</small><b>~${pct(pMedia)}</b></div>
         <div><small>Completarla</small><b>${pct(probResto)}</b></div>
-        <div><small>Si la acabas</small><b>${euros(banco * Math.pow(1.048, META - n))}</b></div>
+        <div><small>Si la acabas</small><b>${euros(banco * Math.pow(qMedia, META - n))}</b></div>
       </div>
     </div>
-    <div class="sec"><h2>Próximos escalones</h2><span>2 apuestas por día</span></div>
+    <div class="sec"><h2>Próximos escalones</h2><span>2 apuestas por día · cuota 1,15–1,20</span></div>
     <div class="lista-int">${prox.length ? prox.map((p, i) => tarjeta(p, n + i + 1, 'pend')).join('') : '<div class="vacio">Aún no hay partidos programados para los próximos días.</div>'}</div>
     ${n ? `<div class="sec"><h2>Escalones superados</h2><span>${n}</span></div>
     <div class="lista-int">${actual.slice().reverse().slice(0, 5).map((p, i) => tarjeta(p, n - i, 'ok')).join('')}
@@ -790,7 +793,7 @@ function pintarEscalera() {
         <div class="mini-esc">${x.pasos.map(p => `<i class="${p.ok ? 'ok' : 'ko'}"></i>`).join('')}</div>
         <small>${fechaCorta(x.pasos[0].dia)} → ${fechaCorta(ult.dia)}${x.fin === 'fallo' ? ` · cayó en «${esc(ult.texto)}», ${esc(ult.partido)}${ult.real != null ? ' (real ' + n1(ult.real) + ')' : ''}` : ''}</small></div>`;
     }).join('') : '<div class="vacio">Todavía no ha caído ninguna escalera.</div>'}</div>
-    <p class="nota" style="margin:16px 4px 0">Cada escalón es la línea más cercana al 90 % del día, en partidos distintos. En la temporada pasada estos pronósticos acertaron el 88–90 %, pero solo 5–7 de cada 50 escaleras llegaron a 20 (de media caen hacia el escalón 7–8). Una apuesta del 90 % vale 1,11 sin margen y las casas suelen pagarla a 1,03–1,07: la cuota que ves es estimada.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
+    <p class="nota" style="margin:16px 4px 0">Cada escalón es una apuesta con cuota estimada entre 1,15 y 1,20, en partidos distintos. Esa cuota corresponde a una probabilidad real de ~80 %: completar 20 seguidos sale aproximadamente 1 de cada 90 veces y de media la escalera cae hacia el escalón 4. La cuota es estimada; comprueba la de tu casa antes de apostar.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
 }
 
 function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, aciertos: pintarAciertos})[E.vista](); }

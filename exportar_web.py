@@ -142,11 +142,12 @@ def _partidos_ucl(con, mod, ucl):
 
 
 ESC_FAM = {"goles", "goles_1t", "goles_2t", "tiros", "remates", "corners", "tarjetas"}
-ESC_MIN, ESC_MAX = 0.88, 0.93   # banda de probabilidad de cada escalón (~90 %)
+# cuota estimada de cada escalón entre 1,15 y 1,20  (-> probabilidad real ~79-82 %)
+ESC_CUOTA_MIN, ESC_CUOTA_MAX, ESC_CUOTA_OBJ = 1.15, 1.20, 1.175
 
 
 def escalera_dia(mod, partidos):
-    """Las 2 apuestas del día para la escalera: en 2 partidos distintos, la línea más cercana al 90 %."""
+    """Las 2 apuestas del día para la escalera: en 2 partidos distintos, línea con cuota estimada 1,15-1,20."""
     mejores = []
     for p in partidos:
         cand = None
@@ -156,7 +157,8 @@ def escalera_dia(mod, partidos):
             for l in [x + 0.5 for x in range(0, 45)]:
                 pm = mod.prob_mas(f["metrica"], f["esperado_total"], l)
                 for prob, lado in ((pm, "más"), (1 - pm, "menos")):
-                    if ESC_MIN <= prob <= ESC_MAX and (cand is None or abs(prob - 0.90) < abs(cand["prob"] - 0.90)):
+                    q = C.cuota_casa_estimada(prob)
+                    if ESC_CUOTA_MIN <= q <= ESC_CUOTA_MAX and (cand is None or abs(q - ESC_CUOTA_OBJ) < abs(cand["cuota"] - ESC_CUOTA_OBJ)):
                         nombre = M.NOMBRES[f["metrica"]].lower()
                         cand = dict(understat_id=p["understat_id"], liga=p["liga"], hora=p["hora"],
                                     partido=f"{p['local']} – {p['visitante']}", metrica=f["metrica"],
@@ -166,7 +168,8 @@ def escalera_dia(mod, partidos):
         if cand:
             mejores.append(cand)
     # se prefieren ligas a Champions (experimental), y luego la probabilidad
-    mejores.sort(key=lambda c: (c["liga"] == "ucl", abs(c["prob"] - 0.90)))
+    # entre las candidatas, las más probables (cuota más cerca de 1,15), y ligas antes que Champions
+    mejores.sort(key=lambda c: (c["liga"] == "ucl", -c["prob"]))
     return sorted(mejores[:2], key=lambda c: c["hora"])
 
 

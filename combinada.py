@@ -21,7 +21,7 @@ P_MIN, P_MAX = 0.55, 0.92   # por encima de ~92 % las casas apenas pagan (cuota 
 
 
 def cuota_casa_estimada(p):
-    return 1 / min(p * (1 + MARGEN), 0.99)
+    return 1 / min(max(p, 0.01) * (1 + MARGEN), 0.99)
 
 
 def candidatos(mod, partido, cuotas_reales=None):
