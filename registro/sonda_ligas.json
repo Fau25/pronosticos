@@ -1,22 +1,332 @@
 {
- "por.1": "HTTP Error 400: Bad Request",
- "ned.1": "HTTP Error 400: Bad Request",
- "bel.1": "HTTP Error 400: Bad Request",
- "sco.1": "HTTP Error 400: Bad Request",
- "tur.1": "HTTP Error 400: Bad Request",
- "aut.1": "HTTP Error 400: Bad Request",
- "gre.1": "HTTP Error 400: Bad Request",
- "den.1": "HTTP Error 400: Bad Request",
- "sui.1": "HTTP Error 400: Bad Request",
- "cze.1": "HTTP Error 400: Bad Request",
- "nor.1": "HTTP Error 400: Bad Request",
+ "por.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Portuguese Primeira Liga",
+  "eventos": 5,
+  "jugados": 5,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 7,
+  "equipos": [
+   "Académico de Viseu",
+   "Benfica",
+   "Braga",
+   "Casa Pia",
+   "Estoril",
+   "Estrela",
+   "FC Porto",
+   "Moreirense",
+   "Santa Clara",
+   "Vitória de Guimaraes"
+  ]
+ },
+ "ned.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Dutch Eredivisie",
+  "eventos": 4,
+  "jugados": 4,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 9,
+  "equipos": [
+   "AZ Alkmaar",
+   "FC Twente",
+   "FC Utrecht",
+   "Feyenoord Rotterdam",
+   "Go Ahead Eagles",
+   "NEC Nijmegen",
+   "PSV Eindhoven",
+   "Telstar"
+  ]
+ },
+ "bel.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Belgian Pro League",
+  "eventos": 4,
+  "jugados": 4,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 9,
+  "equipos": [
+   "Antwerp",
+   "Club Brugge",
+   "KV Kortrijk",
+   "KVC Westerlo",
+   "Racing Genk",
+   "Sint-Truidense",
+   "Union St.-Gilloise",
+   "Waasland-Beveren"
+  ]
+ },
+ "sco.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Scottish Premiership",
+  "eventos": 1,
+  "jugados": 1,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 7,
+  "equipos": [
+   "Celtic",
+   "Rangers"
+  ]
+ },
+ "tur.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Turkish Super Lig",
+  "eventos": 4,
+  "jugados": 4,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 6,
+  "equipos": [
+   "Amed SFK",
+   "Besiktas",
+   "Caykur Rizespor",
+   "Erzurum BB",
+   "Eyupspor",
+   "Fenerbahce",
+   "Goztepe",
+   "Samsunspor"
+  ]
+ },
+ "aut.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Austrian Bundesliga",
+  "eventos": 3,
+  "jugados": 3,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 12,
+  "equipos": [
+   "LASK Linz",
+   "RB Salzburg",
+   "SK Sturm Graz",
+   "SV Josko Ried",
+   "TSV Hartberg",
+   "Wolfsberger"
+  ]
+ },
+ "gre.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Greek Super League",
+  "eventos": 5,
+  "jugados": 5,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 6,
+  "equipos": [
+   "AEK Athens",
+   "Asteras Tripoli",
+   "Kalamata",
+   "Levadiakos",
+   "OFI Crete",
+   "Olympiacos",
+   "PAOK",
+   "Panathinaikos",
+   "Panetolikos",
+   "Volos NFC"
+  ]
+ },
+ "den.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Danish Superliga",
+  "eventos": 4,
+  "jugados": 4,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 3,
+  "equipos": [
+   "AC Horsens",
+   "AGF",
+   "Brøndby IF",
+   "F.C. København",
+   "FC Nordsjælland",
+   "Randers FC",
+   "Sønderjyske Fodbold",
+   "Viborg FF"
+  ]
+ },
+ "sui.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Swiss Super League",
+  "eventos": 0,
+  "jugados": 0,
+  "stats": [],
+  "detalles": 0,
+  "equipos": []
+ },
+ "cze.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Gambrinus Liga",
+  "eventos": 0,
+  "jugados": 0,
+  "stats": [],
+  "detalles": 0,
+  "equipos": []
+ },
+ "nor.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Norwegian Eliteserien",
+  "eventos": 5,
+  "jugados": 5,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 4,
+  "equipos": [
+   "Bodo/Glimt",
+   "Fredrikstad",
+   "Hamarkameratene",
+   "IK Start",
+   "Lillestrom",
+   "SK Brann",
+   "Sandefjord",
+   "Tromso",
+   "Viking FK",
+   "Vålerenga"
+  ]
+ },
  "ukr.1": "HTTP Error 400: Bad Request",
  "srb.1": "HTTP Error 400: Bad Request",
  "cro.1": "HTTP Error 400: Bad Request",
- "cyp.1": "HTTP Error 400: Bad Request",
+ "cyp.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Cypriot First Division",
+  "eventos": 0,
+  "jugados": 0,
+  "stats": [],
+  "detalles": 0,
+  "equipos": []
+ },
  "pol.1": "HTTP Error 400: Bad Request",
- "swe.1": "HTTP Error 400: Bad Request",
- "isr.1": "HTTP Error 400: Bad Request",
+ "swe.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Swedish Allsvenskan",
+  "eventos": 5,
+  "jugados": 5,
+  "stats": [
+   "appearances",
+   "foulsCommitted",
+   "wonCorners",
+   "goalAssists",
+   "possessionPct",
+   "shotAssists",
+   "shotsOnTarget",
+   "totalGoals",
+   "totalShots"
+  ],
+  "detalles": 5,
+  "equipos": [
+   "AIK",
+   "BK Häcken",
+   "Degerfors IF",
+   "Djurgården",
+   "GAIS",
+   "Halmstads BK",
+   "Hammarby IF",
+   "IF Elfsborg",
+   "Kalmar FF",
+   "Mjällby AIF"
+  ]
+ },
+ "isr.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Israeli Premier League",
+  "eventos": 0,
+  "jugados": 0,
+  "stats": [],
+  "detalles": 0,
+  "equipos": []
+ },
  "kaz.1": "HTTP Error 400: Bad Request",
- "rus.1": "HTTP Error 400: Bad Request"
+ "rus.1": {
+  "rango": "un dia (20260901-20260930: HTTP Error 400: Bad Request)",
+  "nombre": "Russian Premier League",
+  "eventos": 0,
+  "jugados": 0,
+  "stats": [],
+  "detalles": 0,
+  "equipos": []
+ }
 }
