@@ -359,7 +359,15 @@ const escudo = (n, peq, rival) => {
 
 const E = {vista: 'partidos', dia: null, ligas: new Set(ORDEN), abiertos: new Set(), tramo: {},
            modo: 'cuota', objetivo: 1.80, elegidos: null, verTodos: false, ambito: 'destacados'};
-try { const g = JSON.parse(localStorage.getItem('pron-ligas') || 'null'); if (Array.isArray(g) && g.length) E.ligas = new Set(g); } catch (e) {}
+/* filtro de ligas recordado; las ligas que no existían cuando se guardó entran activadas */
+try {
+  const v2 = JSON.parse(localStorage.getItem('pron-ligas-v2') || 'null');
+  const v1 = JSON.parse(localStorage.getItem('pron-ligas') || 'null');
+  let sel = null, conocidas = null;
+  if (v2 && Array.isArray(v2.sel)) { sel = v2.sel; conocidas = v2.conocidas || []; }
+  else if (Array.isArray(v1) && v1.length) { sel = v1; conocidas = ['laliga', 'premier', 'bundesliga', 'ligue1']; }
+  if (sel) E.ligas = new Set([...sel.filter(l => ORDEN.includes(l)), ...ORDEN.filter(l => !conocidas.includes(l))]);
+} catch (e) {}
 const hoy = new Date().toISOString().slice(0, 10);
 E.dia = (D.dias.find(d => d.dia >= hoy) || D.dias[0] || {}).dia;
 if (location.hash === '#combinada') E.vista = 'combinada';
@@ -398,7 +406,7 @@ document.getElementById('ligas').addEventListener('click', e => {
   const b = e.target.closest('[data-liga]'); if (!b) return;
   const l = b.dataset.liga;
   if (E.ligas.has(l)) { if (E.ligas.size > 1) E.ligas.delete(l); } else E.ligas.add(l);
-  try { localStorage.setItem('pron-ligas', JSON.stringify([...E.ligas])); } catch (e) {}
+  try { localStorage.setItem('pron-ligas-v2', JSON.stringify({sel: [...E.ligas], conocidas: ORDEN})); } catch (e) {}
   E.elegidos = null; render();
 });
 ['partidos', 'combinada', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
