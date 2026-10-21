@@ -249,6 +249,26 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .ucl .lectura strong, .ucl .met-cab .realv { color: #fff; }
 .ucl .leyenda-eq span:first-child::before { background: var(--cian); }
 
+/* ---------- el porqué: últimos 5 ---------- */
+.porque { display: block; font-size: .74rem; font-weight: 600; color: var(--muted); margin-top: 3px; letter-spacing: .01em; }
+.porque b, .pick-e .porque b { color: var(--ink); font-weight: 800; font-size: inherit; }
+.estrella .porque, .opcion.rec .porque { color: var(--lime-ink); opacity: .72; }
+.estrella .porque b, .opcion.rec .porque b { color: var(--lime-ink); }
+.ucl .porque { color: rgba(225, 235, 255, .72); }
+.ucl .porque b { color: var(--cian); }
+.ult { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; border-top: 1px dashed var(--line); }
+.ult small { color: var(--muted); font-size: .74rem; }
+.ult-fila { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; }
+.ult-fila .eqn { font-size: .74rem; font-weight: 800; color: var(--muted); }
+.ult-fila .nums { display: flex; gap: 4px; flex-wrap: wrap; }
+.ult-fila .nums i { font-style: normal; min-width: 28px; height: 24px; padding: 0 5px; border-radius: 7px; display: inline-grid; place-items: center;
+  font-size: .78rem; font-weight: 700; background: var(--card-3); color: var(--muted); }
+.ult-fila .nums i.si { background: var(--lime-dim); color: var(--lime); box-shadow: inset 0 0 0 1px var(--lime); }
+.ult-fila b { font-size: .82rem; font-weight: 800; }
+.ucl .ult { border-top-color: var(--vidrio-borde); }
+.ucl .ult-fila .nums i { background: rgba(255, 255, 255, .08); color: rgba(225, 235, 255, .7); }
+.ucl .ult-fila .nums i.si { background: rgba(95, 240, 228, .16); color: var(--cian); box-shadow: inset 0 0 0 1px var(--cian); }
+
 /* ---------- resultados ---------- */
 .res { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800; font-size: .82rem; flex: 0 0 auto; line-height: 1; }
 .res.ok { background: var(--win); color: #0f1a0a; }
@@ -537,6 +557,24 @@ const clase = ok => ok == null ? '' : ok ? 'ok' : 'ko';
 const okNormal = (p, f) => f ? acierto(p, f.metrica, f.eleccion, f.linea) : null;
 const okSegura = (p, f) => f ? acierto(p, f.metrica, f.segura_lado, f.segura_linea) : null;
 
+/* ---------- el porqué ---------- */
+function forma(p, met, lado, linea) {
+  if (!p || !p.ultimos || !lado) return null;
+  const mas = lado.toLowerCase().startsWith('m\u00e1s');
+  const r = {};
+  for (const k of ['local', 'visitante']) {
+    const v = ((p.ultimos[k] || {}).valores || {})[met] || [];
+    const vals = v.filter(x => x != null);
+    r[k] = {v, ok: vals.filter(x => mas ? x > linea : x < linea).length, n: vals.length};
+  }
+  return (r.local.n || r.visitante.n) ? r : null;
+}
+const porque = (p, met, lado, linea) => {
+  const f = forma(p, met, lado, linea);
+  if (!f) return '';
+  return `<span class="porque">Últimos 5 de liga: ${esc(siglas(p.local))} <b>${f.local.ok}/${f.local.n}</b> · ${esc(siglas(p.visitante))} <b>${f.visitante.ok}/${f.visitante.n}</b></span>`;
+};
+
 /* ---------- partidos ---------- */
 const racha = t => `<span class="racha" aria-label="Últimos 5: ${esc(t || '')}">${[...(t || '')].map(c => `<i class="${c}"></i>`).join('')}</span>`;
 function destacados(p) {
@@ -565,6 +603,21 @@ function lecturaCorta(md) {
   const it = md.split('\n').filter(l => l.startsWith('- ')).map(l => l.slice(2)).filter(l => /^\*\*(Dominio|Por partes|Ojo)/.test(l));
   return '<ul class="lectura">' + it.map(l => '<li>' + dec(esc(l)).replace(/\*\*(.+?):\*\*/g, '<strong>$1:</strong>') + '</li>').join('') + '</ul>';
 }
+function bloqueUlt(p, f) {
+  if (!p.ultimos) return '';
+  const ref = f.prob >= 0.55 ? [f.eleccion, f.linea] : (f.segura_lado ? [f.segura_lado, f.segura_linea] : null);
+  if (!ref) return '';
+  const fo = forma(p, f.metrica, ref[0], ref[1]);
+  if (!fo) return '';
+  const mas = ref[0].toLowerCase().startsWith('m\u00e1s');
+  const dec1 = f.metrica.startsWith('xg');
+  const fila = (k, n) => {
+    const vals = fo[k].v, riv = (p.ultimos[k] || {}).rivales || [];
+    return `<div class="ult-fila"><span class="eqn">${esc(siglas(n))}</span><span class="nums">${vals.map((x, i) => x == null ? '' :
+      `<i class="${(mas ? x > ref[1] : x < ref[1]) ? 'si' : ''}" title="${esc(riv[i] || '')}">${dec1 ? n1(x) : Math.round(x)}</i>`).join('')}</span><b>${fo[k].ok}/${fo[k].n}</b></div>`;
+  };
+  return `<div class="ult"><small>Últimos 5 partidos de liga de cada equipo (total del partido) · ${cap(ref[0])} de ${lin(ref[1])}</small>${fila('local', p.local)}${fila('visitante', p.visitante)}</div>`;
+}
 function detalle(p) {
   const tr = E.tramo[p.understat_id] || 'p', por = Object.fromEntries(p.pronosticos.map(f => [f.metrica, f]));
   const mets = GRUPOS.map(g => {
@@ -575,7 +628,7 @@ function detalle(p) {
     const rv = p.real && p.real[f.metrica] != null ? ` · real <span class="realv">${n1(p.real[f.metrica])}</span>` : '';
     return `<div class="met"><div class="met-cab"><b>${g.n}</b><span>esperado ${n1(f.esperado_total)}${rv}</span></div>
       <div class="barra"><span>${n1(f.esperado_local)}</span><div class="pista"><i style="width:${f.esperado_local / tot * 100}%"></i></div><span>${n1(f.esperado_visitante)}</span></div>
-      <div class="opciones">${normal}${segura}</div></div>`;
+      <div class="opciones">${normal}${segura}</div>${bloqueUlt(p, f)}</div>`;
   }).join('');
   return `<div class="detalle">
     ${lecturaCorta(p.lectura)}
@@ -594,8 +647,8 @@ function estrella(p) {
     <div class="top"><b>${LIGAS[p.liga]} · el más interesante</b>${etiqueta(p, true)}</div>
     ${duelo(p)}
     <div class="picks-e">
-      ${normal ? `<div class="pick-e ${clase(okNormal(p, normal))}">${marca(okNormal(p, normal))}<small>Más probable</small><span>${txtNormal(normal)}</span><b>${pct(normal.prob)}</b></div>` : ''}
-      ${segura ? `<div class="pick-e ${clase(okSegura(p, segura))}">${marca(okSegura(p, segura))}<small>Línea segura</small><span>${txtSegura(segura)}</span><b>${pct(segura.segura_prob)}</b></div>` : ''}
+      ${normal ? `<div class="pick-e ${clase(okNormal(p, normal))}">${marca(okNormal(p, normal))}<small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}<b>${pct(normal.prob)}</b></div>` : ''}
+      ${segura ? `<div class="pick-e ${clase(okSegura(p, segura))}">${marca(okSegura(p, segura))}<small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}<b>${pct(segura.segura_prob)}</b></div>` : ''}
     </div>
     <button class="abrir" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
     ${ab ? detalle(p) : ''}
@@ -606,8 +659,8 @@ function ficha(p) {
   return `<article class="ficha ${p.liga === 'ucl' ? 'ucl' : ''} ${ab ? 'abierta' : ''}">
     <div class="top"><b>${LIGAS[p.liga]}</b>${etiqueta(p, false)}</div>
     ${duelo(p)}
-    ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span></div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marca(okNormal(p, normal))}</span></div>` : ''}
-    ${segura ? `<div class="pie-ficha ${clase(okSegura(p, segura))}"><div class="txt"><small>Línea segura</small><span>${txtSegura(segura)}</span></div><span class="der"><span class="prob seg">${pct(segura.segura_prob)}</span>${marca(okSegura(p, segura))}</span></div>` : ''}
+    ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}</div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marca(okNormal(p, normal))}</span></div>` : ''}
+    ${segura ? `<div class="pie-ficha ${clase(okSegura(p, segura))}"><div class="txt"><small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}</div><span class="der"><span class="prob seg">${pct(segura.segura_prob)}</span>${marca(okSegura(p, segura))}</span></div>` : ''}
     <button class="abrir-f" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
     ${ab ? detalle(p) : ''}
   </article>`;
@@ -849,7 +902,7 @@ function pintarEscalera() {
     const ok = p ? acierto(p, e.metrica, e.lado, e.linea) : null;
     return `<div class="opcion ${e.recomendada ? 'rec' : ''}">
       ${e.recomendada ? '<span class="etq">Recomendada</span>' : `<span class="letra">${'ABCD'[i]}</span>`}
-      <div class="t"><small>${e.hora} · ${LIGAS[e.liga]} · ${esc(e.partido)}</small><b>${esc(e.texto)}</b>${e.motivo ? `<small class="por">${esc(e.motivo)}</small>` : ''}</div>
+      <div class="t"><small>${e.hora} · ${LIGAS[e.liga]} · ${esc(e.partido)}</small><b>${esc(e.texto)}</b>${p ? porque(p, e.metrica, e.lado, e.linea) : ''}${e.motivo ? `<small class="por">${esc(e.motivo)}</small>` : ''}</div>
       <div class="der"><b>${pct(e.prob)}</b><small>cuota ~${q2(e.cuota)}</small></div>${marca(ok)}</div>`;
   };
   const barras = Array.from({length: META}, (_, i) =>

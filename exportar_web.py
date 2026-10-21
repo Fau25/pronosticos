@@ -36,6 +36,39 @@ def _completo(dia_json):
                for p in dia_json["partidos"])
 
 
+# ------------------------------------------------------------------ el "porqué": últimos 5 partidos
+
+_HIST = {}
+ULT_METS = ["goles", "goles_1t", "goles_2t", "xg", "xg_1t", "xg_2t", "tiros", "tiros_1t", "tiros_2t",
+            "remates", "remates_1t", "remates_2t", "corners", "tarjetas"]
+
+
+def preparar_historial(df):
+    """(liga, equipo) -> lista de (fecha, rival, en_casa, {métrica: total del partido}) ordenada por fecha."""
+    _HIST.clear()
+    for r in df.itertuples(index=False):
+        d = r._asdict()
+        tot = {}
+        for met in ULT_METS:
+            cl, cv, _ = M.METRICAS[met]
+            a, b = d.get(cl), d.get(cv)
+            if a is not None and b is not None and not (pd.isna(a) or pd.isna(b)):
+                tot[met] = round(float(a) + float(b), 2)
+        for eq, rival, casa in ((r.local, r.visitante, True), (r.visitante, r.local, False)):
+            _HIST.setdefault((r.liga, eq), []).append((r.fecha, rival, casa, tot))
+    for v in _HIST.values():
+        v.sort(key=lambda x: x[0])
+
+
+def ultimos(liga, equipo, fecha, n=5):
+    """Los n últimos partidos del equipo antes de 'fecha' (más reciente primero)."""
+    f = pd.Timestamp(fecha)
+    previos = [x for x in _HIST.get((liga, equipo), []) if x[0] < f][-n:][::-1]
+    return {"rivales": [("vs " if c else "en ") + str(r) for _, r, c, _ in previos],
+            "valores": {met: [t.get(met) for _, _, _, t in previos] for met in ULT_METS
+                        if any(t.get(met) is not None for _, _, _, t in previos)}}
+
+
 def _partidos_liga(con, mod, todos, px, nombres, reales_df):
     partidos = []
     todos = todos.sort_values("relevancia", ascending=False)
@@ -77,6 +110,7 @@ def _partidos_liga(con, mod, todos, px, nombres, reales_df):
                     real[met] = round(float(f[cl]) + float(f[cv]), 2)
             real["marcador"] = [int(f.goles_local), int(f.goles_visitante)]
 
+        p["ultimos"] = {"local": ultimos(r.liga, r.local, r.fecha), "visitante": ultimos(r.liga, r.visitante, r.fecha)}
         p.update(
             pocos_datos=[eq for eq in (r.local, r.visitante) if mod.partidos[(r.liga, eq)] < 5],
             contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real,
@@ -130,6 +164,8 @@ def _partidos_ucl(con, mod, ucl):
             if pd.notna(f.amarillas_local):
                 real["tarjetas"] = int(f.amarillas_local) + int(f.amarillas_visitante) + \
                     int(f.rojas_local or 0) + int(f.rojas_visitante or 0)
+        p["ultimos"] = {"local": ultimos(r.liga_local, r.local, r.fecha),
+                        "visitante": ultimos(r.liga_visitante, r.visitante, r.fecha)}
         p.update(
             pocos_datos=[], contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real,
             selecciones=[dict(familia=slot[1], metrica=c["metrica"], texto=c["texto"],
@@ -188,6 +224,7 @@ def escalera_dia(mod, partidos):
 def exportar(desde, hasta):
     CACHE.mkdir(exist_ok=True)
     df, nombres = M.unir_fuentes()
+    preparar_historial(df)
     mod_actual = _modelo_hasta(df, nombres, pd.Timestamp.max.normalize())
     con = sqlite3.connect(M.BD)
     try:
