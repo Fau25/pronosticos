@@ -589,6 +589,18 @@ function slots(ps) {
   });
   return out;
 }
+/* corrección por selecciones del mismo partido (solo penaliza; medido en el backtest) */
+const ORDEN_FAM = ['goles', 'tiros', 'remates', 'corners', 'tarjetas'];
+function factorCorr(sel) {
+  let f = 1;
+  for (let i = 0; i < sel.length; i++) for (let j = i + 1; j < sel.length; j++) {
+    const a = sel[i], b = sel[j];
+    if (a.pid !== b.pid) continue;
+    const [x, y] = [[a.familia, a.lado], [b.familia, b.lado]].sort((u, v) => ORDEN_FAM.indexOf(u[0]) - ORDEN_FAM.indexOf(v[0]));
+    f *= (D.correlaciones || {})[`${x[0]}|${x[1]}|${y[0]}|${y[1]}`] || 1;
+  }
+  return Math.min(f, 1);
+}
 function* comb(a, k, i = 0, acc = []) { if (acc.length === k) { yield acc; return; } for (let j = i; j < a.length; j++) yield* comb(a, k, j + 1, [...acc, a[j]]); }
 function buscar(ps, modo, obj) {
   const ss = slots(ps), n = new Set(ps.map(p => p.understat_id)).size;
@@ -596,8 +608,9 @@ function buscar(ps, modo, obj) {
   for (const k of (modo === 'cuota' ? [2, 3, 4] : [1, 2, 3, 4])) {
     for (const cb of comb(ss, k)) {
       if (modo === 'cuota' && new Set(cb.map(s => s.pid)).size < n) continue;
-      const rec = (i, sel, pr, q) => {
+      const rec = (i, sel, pr0, q) => {
         if (i === cb.length) {
+          const pr = pr0 * factorCorr(sel);
           if (modo === 'cuota' ? (q >= obj && (!mejor || pr > mejor.prob)) : (pr >= obj && (!mejor || q > mejor.cuota))) mejor = {sel: [...sel], prob: pr, cuota: q};
           return;
         }

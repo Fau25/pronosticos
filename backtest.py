@@ -26,11 +26,63 @@ INICIO_EVAL = pd.Timestamp("2025-08-01")
 UMBRALES = [0.70, 0.75, 0.80]
 
 
-def ejecutar(df):
+def contexto(p):
+    """Datos de contexto del partido para los ajustes (árbitro, Europa entre semana)."""
+    arb = p.get("arbitro")
+    return {"arbitro": arb.strip() if isinstance(arb, str) else None,
+            "europa_local": bool(p.get("europa_local")), "europa_visitante": bool(p.get("europa_visitante"))}
+
+
+RECAL_MENSUAL = True   # recalibrar dispersión y corrección de probabilidades cada mes (últimos 12 meses)
+
+
+def ajustar_cansancio(mod, lados):
+    """lados: (met, esperado_equipo, real_equipo, esperado_rival, real_rival, jugo_europa).
+    Factor = rendimiento tras jugar en Europa / rendimiento normal, con prudencia si hay pocos casos."""
+    d = pd.DataFrame(lados, columns=["met", "e", "y", "er", "yr", "eu"])
+    ajuste = {}
+    for met, g in d.groupby("met"):
+        si, no = g[g.eu], g[~g.eu]
+        if len(si) < 30 or si.e.sum() <= 0 or no.e.sum() <= 0:
+            continue
+        propio = (si.y.sum() / si.e.sum()) / (no.y.sum() / no.e.sum())
+        rival = (si.yr.sum() / si.er.sum()) / (no.yr.sum() / no.er.sum())
+        peso = len(si) / (len(si) + 200)
+        ajuste[met] = (1 + (propio - 1) * peso, 1 + (rival - 1) * peso)
+    mod.ajuste_cansancio = ajuste
+
+
+def _calibrar(mod, filas_calib, fijar_lineas):
+    M.calibrar_dispersion(mod, filas_calib)
+    if fijar_lineas:
+        cdf = pd.DataFrame(filas_calib, columns=["met", "esp", "real"])
+        mod.lineas = {met: M.elegir_linea(g.real) for met, g in cdf.groupby("met")}
+    M.calibrar_platt(mod, filas_calib, mod.lineas)
+
+
+def ejecutar(df, recal=None, registrar=False):
+    """Recorre los partidos por fecha. registrar=True guarda las probabilidades en el momento del pronóstico."""
+    recal = RECAL_MENSUAL if recal is None else recal
     mod = M.Modelo()
     calib = []
+    historia = []          # (fecha, met, esp, real) de todo lo pronosticado, para recalibrar
+    lados = []             # (fecha, met, e_equipo, y_equipo, e_rival, y_rival, europa) para el cansancio
     filas = []
+    mes_calibrado = None
     for fecha, jornada in df.groupby("fecha", sort=True):
+        # 0) calibración: la primera vez al empezar la evaluación; después, cada mes con los últimos 12 meses
+        if fecha >= INICIO_EVAL:
+            if not mod.dispersion:
+                ajustar_cansancio(mod, [x[1:] for x in lados])
+                _calibrar(mod, calib, fijar_lineas=True)
+                mes_calibrado = (fecha.year, fecha.month)
+            elif recal and (fecha.year, fecha.month) != mes_calibrado:
+                desde = fecha - pd.Timedelta(days=365)
+                ventana = [(m, e, r) for f, m, e, r in historia if desde <= f < fecha]
+                if len(ventana) > 2000:
+                    ajustar_cansancio(mod, [x[1:] for x in lados if desde <= x[0] < fecha])
+                    _calibrar(mod, ventana, fijar_lineas=False)
+                mes_calibrado = (fecha.year, fecha.month)
         # 1) pronosticar
         for _, p in jornada.iterrows():
             for met, (cl, cv, _) in M.METRICAS.items():
@@ -38,22 +90,32 @@ def ejecutar(df):
                     continue
                 if mod.partidos[(p.liga, p.local)] < 5 or mod.partidos[(p.liga, p.visitante)] < 5:
                     continue
-                e = mod.esperado(p.liga, p.local, p.visitante, met)
+                e = mod.esperado(p.liga, p.local, p.visitante, met, None, contexto(p))
                 if e is None:
                     continue
+                # para medir el cansancio: esperado SIN ajuste y lo real, por equipo
+                e0 = mod.esperado(p.liga, p.local, p.visitante, met)
+                yl, yv = float(p[cl]), float(p[cv])
+                lados.append((fecha, met, e0[0], yl, e0[1], yv, bool(p.get("europa_local"))))
+                lados.append((fecha, met, e0[1], yv, e0[0], yl, bool(p.get("europa_visitante"))))
                 real = float(p[cl]) + float(p[cv])
+                esp = e[0] + e[1]
+                if fecha >= pd.Timestamp("2024-11-01"):
+                    historia.append((fecha, met, esp, real))
                 if fecha < INICIO_EVAL:
                     if fecha >= pd.Timestamp("2024-11-01"):
-                        calib.append((met, e[0] + e[1], real))
+                        calib.append((met, esp, real))
                 else:
-                    filas.append(dict(fecha=fecha, liga=p.liga, local=p.local, visitante=p.visitante,
-                                      met=met, esp=e[0] + e[1], real=real,
-                                      b365_mas25=p.get("b365_mas25"), b365_menos25=p.get("b365_menos25")))
-        if fecha >= INICIO_EVAL and not mod.dispersion:
-            M.calibrar_dispersion(mod, calib)
-            cdf = pd.DataFrame(calib, columns=["met", "esp", "real"])
-            mod.lineas = {met: M.elegir_linea(g.real) for met, g in cdf.groupby("met")}
-            M.calibrar_platt(mod, calib, mod.lineas)
+                    fila = dict(fecha=fecha, liga=p.liga, local=p.local, visitante=p.visitante,
+                                met=met, esp=esp, real=real,
+                                b365_mas25=p.get("b365_mas25"), b365_menos25=p.get("b365_menos25"))
+                    if registrar and mod.dispersion:
+                        l = mod.lineas[met]
+                        fila["p_linea"] = mod.prob(met, esp, l)
+                        seg = mod.linea_segura(met, esp)
+                        if seg:
+                            fila["seg_p"], fila["seg_lado"], fila["seg_l"] = seg
+                    filas.append(fila)
         # 2) aprender del resultado
         for _, p in jornada.iterrows():
             mod.actualizar(p.to_dict())

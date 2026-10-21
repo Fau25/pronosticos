@@ -25,7 +25,7 @@ INICIO_TEMPORADA = date(2026, 8, 25)
 ALIAS = {
     "internazionale": "Inter", "inter milan": "Inter", "rb leipzig": "RasenBallsport Leipzig",
     "paris saint germain": "Paris Saint Germain", "psg": "Paris Saint Germain",
-    "tottenham hotspur": "Tottenham", "brighton hove albion": "Brighton",
+    "tottenham hotspur": "Tottenham", "brighton hove albion": "Brighton", "tsg hoffenheim": "Hoffenheim",
     "olympique marseille": "Marseille", "olympique lyonnais": "Lyon", "lyon": "Lyon",
     "monaco": "Monaco", "milan": "AC Milan", "napoli": "Napoli", "atletico madrid": "Atletico Madrid",
     "bayern munich": "Bayern Munich", "bayern munchen": "Bayern Munich", "celta vigo": "Celta Vigo",
@@ -44,15 +44,22 @@ def _norm(s):
     return " ".join(w for w in s.split() if w not in QUITAR)
 
 
-def _equipos_ligas(con):
-    """{nombre normalizado: (liga, nombre)} con los equipos de la temporada en curso."""
-    filas = con.execute("""SELECT DISTINCT liga, local FROM us_partidos
-                           WHERE temporada = (SELECT MAX(temporada) FROM us_partidos)""").fetchall()
-    return {_norm(n): (l, n) for l, n in filas}
+_CACHE_EQ = {}
 
 
-def emparejar(con, nombre_espn):
-    eqs = _equipos_ligas(con)
+def _equipos_ligas(con, todas=False):
+    """{nombre normalizado: (liga, nombre)} con los equipos de la temporada en curso (o de todas)."""
+    clave = (id(con), todas)
+    if clave not in _CACHE_EQ:
+        filtro = "" if todas else "WHERE temporada = (SELECT MAX(temporada) FROM us_partidos)"
+        filas = con.execute(f"SELECT liga, local, MAX(temporada) FROM us_partidos {filtro} "
+                            "GROUP BY liga, local ORDER BY 3").fetchall()
+        _CACHE_EQ[clave] = {_norm(n): (l, n) for l, n, _ in filas}
+    return _CACHE_EQ[clave]
+
+
+def emparejar(con, nombre_espn, todas=False):
+    eqs = _equipos_ligas(con, todas)
     por_nombre = {n: (l, n) for l, n in eqs.values()}
     clave = _norm(nombre_espn)
     alias = ALIAS.get(clave) or ALIAS.get(_norm(nombre_espn.replace("-", " ")))
@@ -60,7 +67,13 @@ def emparejar(con, nombre_espn):
         return por_nombre[alias]
     if clave in eqs:
         return eqs[clave]
-    m = difflib.get_close_matches(clave, list(eqs), n=1, cutoff=0.82)
+    # coincidencia por palabras completas (p. ej. "tottenham hotspur" contiene "tottenham");
+    # nada de parecidos aproximados: "rangers" no debe ser "angers"
+    palabras = set(clave.split())
+    cand = [k for k in eqs if k and (set(k.split()) <= palabras or palabras <= set(k.split()))]
+    if len(cand) == 1:
+        return eqs[cand[0]]
+    m = difflib.get_close_matches(clave, list(eqs), n=1, cutoff=0.93)
     return eqs[m[0]] if m else (None, None)
 
 

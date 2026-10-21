@@ -200,7 +200,7 @@ def exportar(desde, hasta):
 
     salida = {"generado": pd.Timestamp.now(tz="Europe/Madrid").strftime("%Y-%m-%d %H:%M"),
               "ultimo_dato": con.execute("SELECT MAX(fecha) FROM us_partidos WHERE jugado=1").fetchone()[0],
-              "dias": []}
+              "dias": [], "correlaciones": C.CORRELACION}
     dia = desde
     while dia <= hasta:
         guardado = CACHE / f"{dia.isoformat()}.json"

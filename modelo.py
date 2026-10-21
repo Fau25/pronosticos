@@ -51,6 +51,18 @@ NOMBRES = {
 
 # Nivel relativo aproximado de cada liga (solo para partidos entre ligas, p. ej. Champions)
 FUERZA = {"premier": 1.08, "laliga": 1.05, "seriea": 1.03, "bundesliga": 1.02, "ligue1": 0.95}
+# si existe la medición real (medir_ligas.py, con los cruces europeos), sustituye a los valores a ojo
+try:
+    import json as _json
+    _f = Path(__file__).resolve().parent / "datos" / "fuerza_ligas.json"
+    if _f.exists():
+        FUERZA.update(_json.loads(_f.read_text(encoding="utf-8")).get("fuerza_final", {}))
+except Exception:
+    pass
+
+# Ajustes de contexto (se activan solo si mejoran el backtest)
+USAR = {"arbitro": False, "cansancio": False}   # probados en oct-2026: ninguno de los dos mejora el backtest
+DECAY_ARB, PRIOR_ARB = 0.97, 6.0   # memoria y prudencia del índice de cada árbitro
 
 DECAY = 0.92       # peso de cada partido anterior (más bajo = más importancia a lo reciente)
 PRIOR = 4.0        # partidos "ficticios" en la media de la liga para equipos con poco historial
@@ -114,6 +126,50 @@ def unir_fuentes(con=None):
     return m, nombre
 
 
+def partidos_europeos(con=None):
+    """Partidos europeos (Champions/Europa/Conference) de equipos de nuestras ligas: fecha (España), liga, equipo."""
+    import json
+    import champions as UCL
+    con = con or sqlite3.connect(BD)
+    filas = []
+    try:
+        filas += [tuple(r) for r in con.execute("SELECT fecha_utc, local, visitante FROM europa_partidos")]
+    except sqlite3.Error:
+        pass
+    hist = Path(__file__).resolve().parent / "datos" / "europa_historico.json"
+    if not filas and hist.exists():
+        filas = [(x["fecha_utc"], x["local"], x["visitante"]) for x in json.loads(hist.read_text(encoding="utf-8"))]
+    try:
+        filas += [tuple(r) for r in con.execute("SELECT fecha_utc, local, visitante FROM ucl_partidos")]
+    except sqlite3.Error:
+        pass
+    out = []
+    for f, a, b in filas:
+        dia = pd.Timestamp(f).tz_convert("Europe/Madrid").normalize().tz_localize(None)
+        for n in (a, b):
+            liga, eq = UCL.emparejar(con, n, todas=True)
+            if eq:
+                out.append((dia, liga, eq))
+    return pd.DataFrame(out, columns=["fecha", "liga", "equipo"]).drop_duplicates()
+
+
+def marcar_europa(df, eu, dias=4):
+    """Añade europa_local / europa_visitante: el equipo jugó en Europa en los 'dias' anteriores."""
+    if eu is None or eu.empty:
+        return df.assign(europa_local=False, europa_visitante=False)
+    por_eq = eu.groupby(["liga", "equipo"]).fecha.apply(lambda s: sorted(s)).to_dict()
+
+    def jugo(liga, eq, fecha):
+        for f in por_eq.get((liga, eq), []):
+            if pd.Timedelta(days=1) <= fecha - f <= pd.Timedelta(days=dias):
+                return True
+        return False
+    df = df.copy()
+    df["europa_local"] = [jugo(l, e, f) for l, e, f in zip(df.liga, df.local, df.fecha)]
+    df["europa_visitante"] = [jugo(l, e, f) for l, e, f in zip(df.liga, df.visitante, df.fecha)]
+    return df
+
+
 # ------------------------------------------------------------------ modelo
 
 class Modelo:
@@ -128,6 +184,8 @@ class Modelo:
         self.dispersion = {}      # métrica -> varianza/media (o desviación típica para xG)
         self.partidos = defaultdict(int)  # partidos vistos por equipo
         self.platt = {}           # métrica -> (a, b) corrección de exceso de confianza
+        self.arb = defaultdict(lambda: [0.0, 0.0])   # (liga, árbitro) -> [pesos, suma de ratios de tarjetas]
+        self.ajuste_cansancio = {}                   # métrica -> (factor propio, factor del rival) tras jugar en Europa
 
     def media_liga(self, liga, met, lado):
         v = self.liga[liga][met][lado]
@@ -139,7 +197,11 @@ class Modelo:
             return (s_a + PRIOR) / (sw_a + PRIOR)
         return (s_d + PRIOR) / (sw_d + PRIOR)
 
-    def esperado(self, liga, local, visitante, met, liga_v=None):
+    def factor_arbitro(self, liga, arbitro):
+        w, s = self.arb[(liga, arbitro)]
+        return (s + PRIOR_ARB) / (w + PRIOR_ARB)
+
+    def esperado(self, liga, local, visitante, met, liga_v=None, ctx=None):
         """Valor esperado (local, visitante). Con liga_v distinta: partido entre ligas (Champions),
         se usa la media de ambas ligas y un ajuste aproximado por nivel de cada liga."""
         liga_v = liga_v or liga
@@ -154,10 +216,28 @@ class Modelo:
         f = 1.0 if (liga_v == liga or met == "tarjetas") else FUERZA.get(liga, 1) / FUERZA.get(liga_v, 1)
         el = lh * self._indice(liga, local, met, "ataque") * self._indice(liga_v, visitante, met, "defensa") * f
         ev = la * self._indice(liga_v, visitante, met, "ataque") * self._indice(liga, local, met, "defensa") / f
+        if ctx:
+            if met == "tarjetas" and USAR["arbitro"] and ctx.get("arbitro"):
+                k = self.factor_arbitro(liga, ctx["arbitro"])
+                el, ev = el * k, ev * k
+            if USAR["cansancio"] and met in self.ajuste_cansancio:
+                propio, rival = self.ajuste_cansancio[met]
+                if ctx.get("europa_local"):
+                    el, ev = el * propio, ev * rival
+                if ctx.get("europa_visitante"):
+                    ev, el = ev * propio, el * rival
         return el, ev
 
     def actualizar(self, fila):
         liga, loc, vis = fila["liga"], fila["local"], fila["visitante"]
+        arb = fila.get("arbitro")
+        tl, tv = fila.get("tarjetas_local"), fila.get("tarjetas_visitante")
+        if arb and isinstance(arb, str) and tl is not None and tv is not None and not (pd.isna(tl) or pd.isna(tv)):
+            mh, ma = self.media_liga(liga, "tarjetas", "h"), self.media_liga(liga, "tarjetas", "a")
+            if mh and ma:
+                e = self.arb[(liga, arb.strip())]
+                e[0] = e[0] * DECAY_ARB + 1
+                e[1] = e[1] * DECAY_ARB + (float(tl) + float(tv)) / (mh + ma)
         for met, (cl, cv, _) in METRICAS.items():
             yl, yv = fila.get(cl), fila.get(cv)
             if yl is None or yv is None or pd.isna(yl) or pd.isna(yv):
@@ -210,11 +290,11 @@ class Modelo:
                     mejor = (prob, lado, float(l))
         return mejor
 
-    def pronosticar(self, liga, local, visitante, liga_v=None):
+    def pronosticar(self, liga, local, visitante, liga_v=None, ctx=None):
         """Pronóstico completo de un partido -> lista de dicts, una por métrica."""
         salida = []
         for met in METRICAS:
-            e = self.esperado(liga, local, visitante, met, liga_v)
+            e = self.esperado(liga, local, visitante, met, liga_v, ctx)
             if e is None:
                 continue
             total = e[0] + e[1]

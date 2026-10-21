@@ -9,7 +9,9 @@ objetivo con la MAYOR probabilidad de acierto posible.
 """
 
 import itertools
+import json
 import math
+from pathlib import Path
 
 import numpy as np
 
@@ -18,6 +20,30 @@ FAMILIA = {"goles": "goles", "goles_1t": "goles", "goles_2t": "goles",
            "tiros": "tiros", "remates": "remates", "corners": "corners", "tarjetas": "tarjetas"}
 MARGEN = 0.06          # margen típico de la casa por selección
 P_MIN, P_MAX = 0.55, 0.92   # por encima de ~92 % las casas apenas pagan (cuota < 1,05)
+
+
+# Acierto conjunto real / producto de probabilidades, para dos selecciones del MISMO partido
+# (medido en el backtest: misma dirección suelen salir juntas, direcciones opuestas al revés)
+_CORR_F = Path(__file__).resolve().parent / "datos" / "correlaciones.json"
+CORRELACION = json.loads(_CORR_F.read_text(encoding="utf-8")) if _CORR_F.exists() else {}
+ORDEN_FAM = ["goles", "tiros", "remates", "corners", "tarjetas"]
+
+
+def _lado(texto):
+    return "más" if texto.startswith("Más") else "menos"
+
+
+def factor_correlacion(selecciones):
+    """Corrige la probabilidad conjunta de las selecciones que comparten partido."""
+    f = 1.0
+    for a, b in itertools.combinations(selecciones, 2):
+        if a["slot"][0] != b["slot"][0]:
+            continue
+        (fa, la), (fb, lb) = sorted([(a["slot"][1], _lado(a["texto"])), (b["slot"][1], _lado(b["texto"]))],
+                                    key=lambda x: ORDEN_FAM.index(x[0]))
+        f *= CORRELACION.get(f"{fa}|{la}|{fb}|{lb}", 1.0)
+    # solo se penaliza (probado: premiar las que van juntas hace que el buscador infle la probabilidad)
+    return min(f, 1.0)
 
 
 def cuota_casa_estimada(p):
@@ -79,7 +105,7 @@ def mejor_por_acierto(mod, partidos, prob_minima, patas=(1, 2, 3, 4), cuotas_rea
     for n in patas:
         for combo_slots in itertools.combinations(list(slots), n):
             for sel in itertools.product(*(slots[s] for s in combo_slots)):
-                prob = math.prod(c["prob"] for c in sel)
+                prob = min(math.prod(c["prob"] for c in sel) * factor_correlacion(sel), 0.995)
                 if prob < prob_minima:
                     continue
                 cuota = math.prod(c["cuota_casa"] for c in sel)
@@ -107,7 +133,7 @@ def mejor_combinada(mod, partidos, cuota_objetivo, patas=(2, 3, 4), cuotas_reale
                 cuota = math.prod(c["cuota_casa"] for c in sel)
                 if cuota < cuota_objetivo:
                     continue
-                prob = math.prod(c["prob"] for c in sel)
+                prob = min(math.prod(c["prob"] for c in sel) * factor_correlacion(sel), 0.995)
                 if mejor is None or prob > mejor["prob"]:
                     mejor = dict(selecciones=list(sel), prob=prob, cuota_casa=cuota,
                                  cuota_justa=1 / prob)

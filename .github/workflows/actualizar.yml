@@ -44,6 +44,14 @@ jobs:
         continue-on-error: true
         run: python champions.py 2>&1 | tee registro_champions.txt
 
+      - name: Partidos europeos (ESPN)
+        continue-on-error: true
+        run: python europa.py
+
+      - name: Medir el nivel de cada liga
+        continue-on-error: true
+        run: python medir_ligas.py 2>&1 | tee registro_ligas.txt
+
       - name: Guardar la base de datos
         if: always() && hashFiles('pronosticos.db') != ''
         uses: actions/cache/save@v4
@@ -61,6 +69,7 @@ jobs:
           cp docs/index.html index.html && touch .nojekyll
           mkdir -p registro && cp registro_actualizacion.txt registro/ultima_actualizacion.txt 2>/dev/null || true
           cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
-          git add docs dias index.html .nojekyll registro
+          cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
+          git add docs dias index.html .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
           git push
