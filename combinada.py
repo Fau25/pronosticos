@@ -28,7 +28,8 @@ def candidatos(mod, partido, cuotas_reales=None):
     """Todas las selecciones razonables de un partido: (prob, texto, slot, cuota_est, cuota_real)."""
     out = []
     for met, fam in FAMILIA.items():
-        e = mod.esperado(partido["liga"], partido["local"], partido["visitante"], met)
+        e = mod.esperado(partido.get("liga_local", partido["liga"]), partido["local"], partido["visitante"],
+                         met, partido.get("liga_visitante"))
         if e is None:
             continue
         total = e[0] + e[1]

@@ -38,6 +38,7 @@ LIGAS = {
     "premier":    ("E0",  "EPL"),
     "bundesliga": ("D1",  "Bundesliga"),
     "ligue1":     ("F1",  "Ligue_1"),
+    "seriea":     ("I1",  "Serie_A"),
 }
 # temporada football-data, temporada Understat (año de inicio)
 TEMPORADAS = [("2425", 2024), ("2526", 2025), ("2627", 2026)]
@@ -73,11 +74,11 @@ def log(msg=""):
 
 # ---------------------------------------------------------------- football-data
 
-def descargar_football_data(ligas):
+def descargar_football_data(ligas, temporadas):
     tablas = []
     for nombre in ligas:
         codigo = LIGAS[nombre][0]
-        for temp_fd, _ in TEMPORADAS:
+        for temp_fd, _ in temporadas:
             url = f"https://www.football-data.co.uk/mmz4281/{temp_fd}/{codigo}.csv"
             try:
                 df = pd.read_csv(url, encoding="latin-1")
@@ -96,19 +97,23 @@ def descargar_football_data(ligas):
     todo = pd.concat(tablas, ignore_index=True)
     with sqlite3.connect(BD) as con:
         existe = con.execute("SELECT 1 FROM sqlite_master WHERE name='partidos'").fetchone()
-        if RAPIDO and existe:
-            # solo se reemplaza la temporada actual; el histórico se conserva
+        if existe:
+            # se reemplazan solo esas ligas y temporadas; el resto se conserva
             temps = sorted(todo.temporada.unique())
             con.execute(f"DELETE FROM partidos WHERE temporada IN ({','.join('?' * len(temps))}) "
                         f"AND liga IN ({','.join('?' * len(ligas))})", [*temps, *ligas])
             cols = [r[1] for r in con.execute("PRAGMA table_info(partidos)")]
-            todo = todo[[c for c in cols if c in todo.columns]]
+            for c in todo.columns:
+                if c not in cols:
+                    con.execute(f'ALTER TABLE partidos ADD COLUMN "{c}"')
             todo.to_sql("partidos", con, if_exists="append", index=False)
         else:
             todo.to_sql("partidos", con, if_exists="replace", index=False)
-    log(f"  -> tabla 'partidos': {len(todo)} filas")
+    log(f"  -> tabla 'partidos': {len(todo)} filas ({', '.join(ligas)})")
 
-    # Próximos partidos (se actualiza cada día en football-data)
+
+def descargar_proximos(ligas):
+    """Próximos partidos con cuotas (se actualiza cada día en football-data)."""
     try:
         fx = pd.read_csv("https://www.football-data.co.uk/fixtures.csv", encoding="utf-8-sig")
         codigos = {LIGAS[n][0]: n for n in ligas}
@@ -273,13 +278,13 @@ def guardar_tiros(con, match_id, tiros):
     con.commit()
 
 
-def descargar_understat(ligas):
+def descargar_understat(ligas, temporadas):
     with sqlite3.connect(BD) as con:
         preparar_tablas(con)
 
         for nombre in ligas:
             liga_us = LIGAS[nombre][1]
-            for _, temp_us in TEMPORADAS:
+            for _, temp_us in temporadas:
                 try:
                     partidos = understat_calendario(liga_us, temp_us)
                 except Exception as e:
@@ -380,6 +385,7 @@ def crear_vistas():
 # ---------------------------------------------------------------- main
 
 RAPIDO = False
+TODAS = list(TEMPORADAS)
 
 if __name__ == "__main__":
     if "rapido" in [a.lower() for a in sys.argv[1:]]:
@@ -387,9 +393,30 @@ if __name__ == "__main__":
         TEMPORADAS = TEMPORADAS[-1:]   # solo la temporada en curso
     elegidas = [a.lower() for a in sys.argv[1:] if a.lower() in LIGAS] or list(LIGAS)
     log(f"Actualización {datetime.now():%Y-%m-%d %H:%M}  ligas: {', '.join(elegidas)}\n")
+    # ligas sin histórico (recién añadidas): se descargan completas aunque sea modo rápido
+    def sin_historia(tabla, col_temp, valor):
+        if not (RAPIDO and BD.exists()):
+            return []
+        with sqlite3.connect(BD) as con:
+            try:
+                hay = {r[0] for r in con.execute(f"SELECT DISTINCT liga FROM {tabla} WHERE {col_temp} = ?", (valor,))}
+            except sqlite3.Error:
+                hay = set()
+        return [l for l in elegidas if l not in hay]
+
+    def por_grupos(funcion, nuevas):
+        if nuevas:
+            log(f"  Ligas sin histórico, descarga completa: {', '.join(nuevas)}")
+        normales = [l for l in elegidas if l not in nuevas]
+        if normales:
+            funcion(normales, TEMPORADAS)
+        if nuevas:
+            funcion(nuevas, TODAS)
+
     log("1) football-data.co.uk")
-    descargar_football_data(elegidas)
+    por_grupos(descargar_football_data, sin_historia("partidos", "temporada", TODAS[0][0]))
+    descargar_proximos(elegidas)
     log("\n2) Understat")
-    descargar_understat(elegidas)
+    por_grupos(descargar_understat, sin_historia("us_partidos", "temporada", TODAS[0][1]))
     crear_vistas()
     log("\nTerminado.")

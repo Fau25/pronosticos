@@ -34,13 +34,16 @@ CLASICOS = {
     "bundesliga": [("Bayern Munich", "Borussia Dortmund"), ("Borussia Dortmund", "Schalke 04"),
                    ("Hamburger SV", "Werder Bremen"), ("Borussia M.Gladbach", "FC Cologne"),
                    ("Bayer Leverkusen", "FC Cologne"), ("Bayer Leverkusen", "Bayern Munich")],
+    "seriea": [("AC Milan", "Inter"), ("Lazio", "Roma"), ("Juventus", "Torino"), ("Inter", "Juventus"),
+               ("AC Milan", "Juventus"), ("Juventus", "Napoli"), ("Inter", "Napoli"), ("Genoa", "Sampdoria"),
+               ("Atalanta", "Inter")],
     "ligue1": [("Marseille", "Paris Saint Germain"), ("Lyon", "Marseille"),
                ("Lens", "Lille"), ("Monaco", "Nice"), ("Lyon", "Paris Saint Germain"),
                ("Paris FC", "Paris Saint Germain")],
 }
 
-NOMBRE_LIGA = {"laliga": "LaLiga", "premier": "Premier League",
-               "bundesliga": "Bundesliga", "ligue1": "Ligue 1"}
+NOMBRE_LIGA = {"laliga": "LaLiga", "premier": "Premier League", "seriea": "Serie A",
+               "bundesliga": "Bundesliga", "ligue1": "Ligue 1", "ucl": "Champions"}
 
 
 def clasificacion(con, liga, temporada=TEMPORADA_ACTUAL):
@@ -144,3 +147,54 @@ if __name__ == "__main__":
     import sys
     dia = date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else None
     print(seleccionar(dia).to_string())
+
+
+# ------------------------------------------------------------------ Champions
+
+def partidos_ucl_del_dia(con, dia=None):
+    """Partidos de Champions de un día (hora de España) con cada equipo emparejado con su liga."""
+    import champions as UCL
+    dia = dia or date.today()
+    try:
+        p = pd.read_sql("SELECT * FROM ucl_partidos", con)
+    except Exception:
+        return pd.DataFrame()
+    if p.empty:
+        return p
+    t = pd.to_datetime(p.fecha_utc, utc=True, errors="coerce").dt.tz_convert(MADRID)
+    p["fecha"], p["hora"] = t.dt.strftime("%Y-%m-%d"), t.dt.strftime("%H:%M")
+    p = p[p.fecha == dia.isoformat()].copy()
+    filas = []
+    for r in p.itertuples():
+        ll, nl = UCL.emparejar(con, r.local)
+        lv, nv = UCL.emparejar(con, r.visitante)
+        filas.append(dict(espn_id=r.espn_id, fecha=r.fecha, hora=r.hora, local_espn=r.local,
+                          visitante_espn=r.visitante, liga_local=ll, liga_visitante=lv,
+                          local=nl or r.local, visitante=nv or r.visitante,
+                          jugado=int(r.completado or 0)))
+    return pd.DataFrame(filas)
+
+
+def puntuar_ucl(con, partidos):
+    if partidos.empty:
+        return partidos
+    tablas = {}
+    puntos, motivos = [], []
+    for r in partidos.itertuples():
+        if not r.liga_local or not r.liga_visitante:
+            puntos.append(0); motivos.append("Champions"); continue
+        for l in (r.liga_local, r.liga_visitante):
+            if l not in tablas:
+                tablas[l] = clasificacion(con, l).set_index("equipo")
+        a = tablas[r.liga_local].loc[r.local] if r.local in tablas[r.liga_local].index else None
+        b = tablas[r.liga_visitante].loc[r.visitante] if r.visitante in tablas[r.liga_visitante].index else None
+        if a is None or b is None:
+            puntos.append(30); motivos.append("Champions"); continue
+        nivel = min((a.ppp + b.ppp) / 2 / 2.5, 1)
+        igualdad = max(0, 1 - abs(a.ppp - b.ppp) / 1.5)
+        forma = (a.forma + b.forma) / 30
+        score = 100 * (0.40 * nivel + 0.20 * igualdad + 0.25 + 0.15 * forma)
+        puntos.append(round(score, 1))
+        motivos.append(f"Champions · {int(a.pos)}º {NOMBRE_LIGA[r.liga_local]} vs "
+                       f"{int(b.pos)}º {NOMBRE_LIGA[r.liga_visitante]}")
+    return partidos.assign(relevancia=puntos, motivo=motivos)

@@ -49,6 +49,9 @@ NOMBRES = {
     "corners": "Córners", "tarjetas": "Tarjetas",
 }
 
+# Nivel relativo aproximado de cada liga (solo para partidos entre ligas, p. ej. Champions)
+FUERZA = {"premier": 1.08, "laliga": 1.05, "seriea": 1.03, "bundesliga": 1.02, "ligue1": 0.95}
+
 DECAY = 0.92       # peso de cada partido anterior (más bajo = más importancia a lo reciente)
 PRIOR = 4.0        # partidos "ficticios" en la media de la liga para equipos con poco historial
 VENTANA_LIGA = 300  # partidos para calcular la media de la liga
@@ -136,12 +139,21 @@ class Modelo:
             return (s_a + PRIOR) / (sw_a + PRIOR)
         return (s_d + PRIOR) / (sw_d + PRIOR)
 
-    def esperado(self, liga, local, visitante, met):
+    def esperado(self, liga, local, visitante, met, liga_v=None):
+        """Valor esperado (local, visitante). Con liga_v distinta: partido entre ligas (Champions),
+        se usa la media de ambas ligas y un ajuste aproximado por nivel de cada liga."""
+        liga_v = liga_v or liga
         lh, la = self.media_liga(liga, met, "h"), self.media_liga(liga, met, "a")
+        if liga_v != liga:
+            vh, va = self.media_liga(liga_v, met, "h"), self.media_liga(liga_v, met, "a")
+            if None in (lh, la, vh, va):
+                return None
+            lh, la = (lh + vh) / 2, (la + va) / 2
         if lh is None or la is None:
             return None
-        el = lh * self._indice(liga, local, met, "ataque") * self._indice(liga, visitante, met, "defensa")
-        ev = la * self._indice(liga, visitante, met, "ataque") * self._indice(liga, local, met, "defensa")
+        f = 1.0 if (liga_v == liga or met == "tarjetas") else FUERZA.get(liga, 1) / FUERZA.get(liga_v, 1)
+        el = lh * self._indice(liga, local, met, "ataque") * self._indice(liga_v, visitante, met, "defensa") * f
+        ev = la * self._indice(liga_v, visitante, met, "ataque") * self._indice(liga, local, met, "defensa") / f
         return el, ev
 
     def actualizar(self, fila):
@@ -198,11 +210,11 @@ class Modelo:
                     mejor = (prob, lado, float(l))
         return mejor
 
-    def pronosticar(self, liga, local, visitante):
+    def pronosticar(self, liga, local, visitante, liga_v=None):
         """Pronóstico completo de un partido -> lista de dicts, una por métrica."""
         salida = []
         for met in METRICAS:
-            e = self.esperado(liga, local, visitante, met)
+            e = self.esperado(liga, local, visitante, met, liga_v)
             if e is None:
                 continue
             total = e[0] + e[1]

@@ -40,6 +40,10 @@ jobs:
       - name: Descargar resultados y calendario nuevos
         run: python actualizar_datos.py rapido
 
+      - name: Champions (ESPN)
+        continue-on-error: true
+        run: python champions.py 2>&1 | tee registro_champions.txt
+
       - name: Guardar la base de datos
         if: always() && hashFiles('pronosticos.db') != ''
         uses: actions/cache/save@v4
@@ -55,6 +59,8 @@ jobs:
           git config user.name "pronosticos-bot"
           git config user.email "pronosticos-bot@users.noreply.github.com"
           cp docs/index.html index.html && touch .nojekyll
-          git add docs dias index.html .nojekyll
+          mkdir -p registro && cp registro_actualizacion.txt registro/ultima_actualizacion.txt 2>/dev/null || true
+          cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
+          git add docs dias index.html .nojekyll registro
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
           git push
