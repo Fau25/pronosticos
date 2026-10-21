@@ -1,0 +1,28 @@
+{
+ "fuerza": {
+  "bundesliga": 0.9713,
+  "laliga": 0.9583,
+  "ligue1": 1.0256,
+  "premier": 1.1394,
+  "seriea": 0.9193
+ },
+ "partidos_ajuste": 191,
+ "partidos_validacion": 14,
+ "validacion_desviacion": {
+  "sin_ajuste": 16.95,
+  "a_ojo": 15.84,
+  "medido": 16.41
+ },
+ "validacion_cruzada": {
+  "sin_ajuste": 328.12,
+  "a_ojo": 325.84,
+  "medido": 319.67
+ },
+ "fuerza_final": {
+  "bundesliga": 0.9717,
+  "laliga": 0.9691,
+  "ligue1": 1.0134,
+  "premier": 1.1424,
+  "seriea": 0.9173
+ }
+}
