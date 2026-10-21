@@ -1,0 +1,59 @@
+name: Actualizar pronósticos
+
+on:
+  schedule:
+    - cron: "30 7 * * *"     # cada día a las 07:30 UTC (9:30 en verano / 8:30 en invierno, hora de España)
+  workflow_dispatch:          # botón "Run workflow" para lanzarlo a mano
+
+permissions:
+  contents: write
+
+concurrency:
+  group: actualizar
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar librerías
+        run: pip install pandas scipy "scrapling[fetchers]"
+
+      - name: Recuperar la base de datos
+        uses: actions/cache/restore@v4
+        with:
+          path: pronosticos.db
+          key: bd-${{ github.run_id }}
+          restore-keys: bd-
+
+      - name: Base inicial si no hay copia
+        run: test -f pronosticos.db || cp datos/semilla.db pronosticos.db
+
+      - name: Descargar resultados y calendario nuevos
+        run: python actualizar_datos.py rapido
+
+      - name: Guardar la base de datos
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: pronosticos.db
+          key: bd-${{ github.run_id }}
+
+      - name: Calcular pronósticos y generar la web
+        run: python exportar_web.py
+
+      - name: Publicar
+        run: |
+          git config user.name "pronosticos-bot"
+          git config user.email "pronosticos-bot@users.noreply.github.com"
+          git add docs dias
+          git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
+          git push

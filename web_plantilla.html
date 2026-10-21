@@ -1,0 +1,678 @@
+<title>Pronósticos de la jornada</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;0,800;1,300;1,500;1,700&display=swap">
+<style>
+/* Layout: app móvil oscura (máx. 480px centrada; en escritorio 2 columnas de fichas). Tarjeta estrella en lima, fichas oscuras muy redondeadas, barra de navegación flotante abajo. Diseño de un solo tema (oscuro) por elección. */
+:root {
+  --bg: #121411;
+  --bg-2: #262c22;
+  --card: #1d201c;
+  --card-2: #272a26;
+  --card-3: #31352f;
+  --ink: #f3f5ef;
+  --muted: #9ba196;
+  --line: #343832;
+  --lime: #d4f53c;
+  --lime-ink: #151810;
+  --lime-dim: #3a4316;
+  --win: #8fe36a;
+  --draw: #6b7066;
+  --loss: #ff6f5e;
+  --font: "Urbanist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--bg); }
+body {
+  margin: 0; min-height: 100%;
+  background: radial-gradient(120% 60% at 50% 0%, var(--bg-2) 0%, var(--bg) 60%) fixed, var(--bg);
+  color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 calc(110px + env(safe-area-inset-bottom, 0px));
+  font-variant-numeric: tabular-nums;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 980px; margin: 0 auto; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 12px; }
+
+/* ---------- cabecera ---------- */
+.saludo { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 22px; }
+.saludo .yo { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--lime); color: var(--lime-ink); display: grid; place-items: center; font-weight: 800; font-size: 1.05rem; }
+.saludo small { display: block; color: var(--muted); font-size: .82rem; }
+.saludo b { font-weight: 700; font-size: 1.02rem; }
+.redondo { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; font-weight: 700; color: var(--ink); }
+.titular { margin: 22px 0 18px; font-size: clamp(2rem, 7vw, 2.6rem); line-height: 1.12; font-weight: 300; font-style: italic; letter-spacing: -.01em; text-wrap: balance; }
+.titular strong { font-weight: 700; display: block; }
+
+/* chips de liga */
+.ligas { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px 4px; margin: 0 -2px; }
+.ligas::-webkit-scrollbar, .dias::-webkit-scrollbar { display: none; }
+.liga-f { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 16px 6px 6px; font-weight: 600; font-size: .92rem; color: var(--muted); }
+.liga-f .ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: .66rem; font-weight: 800; background: var(--card-3); color: var(--muted); letter-spacing: .02em; }
+.liga-f[aria-pressed="true"] { border-color: var(--lime); color: var(--ink); background: var(--card-2); }
+.liga-f[aria-pressed="true"] .ico { background: var(--lime); color: var(--lime-ink); }
+
+/* días */
+.dias-caja { margin-top: 18px; background: var(--card); border-radius: 26px; padding: 14px; }
+.dias { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.dias { justify-content: flex-start; }
+.dia { flex: 1 0 54px; max-width: 96px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 999px; border: 0; background: var(--card-2); color: var(--muted); }
+.dia small { font-size: .78rem; font-weight: 600; }
+.dia b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: .95rem; font-weight: 700; color: var(--ink); background: var(--card-3); }
+.dia i { font-style: normal; font-size: .68rem; }
+.dia[aria-pressed="true"] { background: var(--lime-dim); color: var(--lime); box-shadow: inset 0 0 0 2px var(--lime); }
+.dia[aria-pressed="true"] b { background: var(--lime); color: var(--lime-ink); }
+
+/* secciones */
+.sec { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 34px 4px 16px; }
+.sec h2 { margin: 0; font-size: 1.45rem; font-weight: 700; letter-spacing: -.01em; }
+.sec span { color: var(--muted); font-size: .88rem; }
+.rejilla { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 820px) { .rejilla { grid-template-columns: 1fr 1fr; align-items: start; } .rejilla .ancho { grid-column: 1 / -1; } }
+
+/* escudo-monograma */
+.escudo { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 1.05rem; letter-spacing: .02em; position: relative; flex: 0 0 auto;
+  background: linear-gradient(135deg, var(--c1) 0 62%, var(--c2) 62% 100%); box-shadow: inset 0 0 0 4px var(--c2), 0 0 0 2px rgba(0,0,0,.25); }
+.escudo::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, .35); }
+.escudo.peq { width: 44px; height: 44px; font-size: .78rem; }
+.escudo.peq { box-shadow: inset 0 0 0 3px var(--c2); }
+.escudo.peq::after { inset: 5px; border-width: 1px; }
+
+/* ---------- tarjeta estrella (lima) ---------- */
+.estrella { background: var(--lime); color: var(--lime-ink); border-radius: 30px; padding: 22px 22px 20px; position: relative; display: flex; flex-direction: column; gap: 18px; }
+.estrella .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.estrella .top b { font-weight: 800; font-size: 1.08rem; }
+.etq { border-radius: 999px; padding: 5px 12px; font-size: .76rem; font-weight: 700; background: var(--lime-ink); color: var(--lime); white-space: nowrap; }
+.duelo-g { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+.duelo-g .eq { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; }
+.duelo-g .eq b { font-weight: 800; font-size: 1.02rem; line-height: 1.2; text-transform: uppercase; overflow-wrap: anywhere; }
+.duelo-g .eq small { font-size: .8rem; font-weight: 600; opacity: .75; }
+.centro { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.centro small { font-size: .78rem; font-weight: 600; opacity: .75; }
+.centro .hora { font-size: 2.1rem; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
+.estrella .escudo::after { border-color: rgba(21, 24, 16, .25); }
+.picks-e { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pick-e { background: rgba(21, 24, 16, .09); border-radius: 18px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.pick-e small { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.pick-e span { font-weight: 600; font-size: .95rem; line-height: 1.3; }
+.pick-e b { font-size: 1.25rem; font-weight: 800; }
+.estrella .abrir { align-self: center; background: var(--lime-ink); color: var(--lime); border: 0; border-radius: 999px; padding: 10px 20px; font-weight: 700; font-size: .9rem; }
+
+/* ---------- fichas oscuras ---------- */
+.ficha { background: var(--card); border-radius: 28px; padding: 20px; display: flex; flex-direction: column; gap: 18px; border: 1px solid transparent; }
+.ficha .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.ficha .top b { font-weight: 700; font-size: 1rem; }
+.etq.osc { background: var(--card-3); color: var(--muted); }
+.etq.cla { background: var(--lime); color: var(--lime-ink); }
+.ficha .duelo-g .eq b { font-size: .95rem; }
+.ficha .centro .hora { font-size: 1.7rem; }
+.ficha .centro small { color: var(--muted); opacity: 1; }
+.ficha .duelo-g .eq small { color: var(--muted); opacity: 1; }
+.racha { display: inline-flex; gap: 4px; }
+.racha i { width: 7px; height: 7px; border-radius: 50%; }
+.racha .V { background: var(--win); } .racha .E { background: var(--draw); } .racha .D { background: var(--loss); }
+.estrella .racha .V { background: #2f6b12; } .estrella .racha .E { background: rgba(21,24,16,.35); } .estrella .racha .D { background: #b3321f; }
+.pie-ficha { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card-2); border-radius: 20px; padding: 10px 10px 10px 16px; }
+.pie-ficha .txt { min-width: 0; display: flex; flex-direction: column; }
+.pie-ficha .txt small { color: var(--muted); font-size: .74rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.pie-ficha .txt span { font-weight: 600; font-size: .95rem; line-height: 1.3; }
+.prob { flex: 0 0 auto; min-width: 54px; height: 40px; border-radius: 999px; display: grid; place-items: center; background: var(--lime); color: var(--lime-ink); font-weight: 800; font-size: .95rem; padding: 0 12px; }
+.prob.seg { background: transparent; color: var(--lime); box-shadow: inset 0 0 0 2px var(--lime); }
+.abrir-f { border: 0; background: none; color: var(--muted); font-weight: 600; font-size: .9rem; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 2px; }
+.abrir-f::after { content: "⌄"; font-size: 1.1rem; line-height: 1; transition: transform .2s; }
+.abierta .abrir-f::after { transform: rotate(180deg); }
+
+/* detalle */
+.detalle { display: flex; flex-direction: column; gap: 18px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--ink); }
+.estrella .detalle { background: var(--card); border-radius: 24px; padding: 18px; border: 0; margin: 0 -8px -6px; }
+.lectura { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: .95rem; line-height: 1.6; color: var(--muted); }
+.lectura strong { color: var(--ink); font-weight: 700; }
+.tramos { display: flex; gap: 6px; background: var(--card-2); border-radius: 999px; padding: 5px; width: fit-content; }
+.tramos button { border: 0; background: none; border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: .88rem; color: var(--muted); }
+.tramos button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
+.met { background: var(--card-2); border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.met-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.met-cab b { font-weight: 700; }
+.met-cab span { color: var(--muted); font-size: .85rem; }
+.barra { display: grid; grid-template-columns: 40px 1fr 40px; gap: 12px; align-items: center; font-weight: 700; font-size: .9rem; }
+.barra span:last-child { text-align: right; color: var(--muted); }
+.barra .pista { height: 8px; border-radius: 999px; background: var(--card-3); position: relative; overflow: hidden; }
+.barra .pista i { position: absolute; inset: 0 auto 0 0; background: var(--lime); border-radius: 999px; }
+.opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opc { background: var(--card-3); border-radius: 16px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: .9rem; font-weight: 600; }
+.opc b { font-weight: 800; color: var(--lime); }
+.opc.seg { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
+.opc.flojo { color: var(--muted); font-weight: 500; }
+.nota { color: var(--muted); font-size: .84rem; margin: 0; line-height: 1.55; }
+.leyenda-eq { display: flex; justify-content: space-between; color: var(--muted); font-size: .82rem; font-weight: 600; }
+.leyenda-eq span:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); margin-right: 6px; }
+
+/* ---------- combinada ---------- */
+.lista-p { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+.lista-p .op { min-width: 0; }
+@media (min-width: 820px) { .lista-p { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.op { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1.5px solid transparent; border-radius: 22px; padding: 12px 16px 12px 12px; text-align: left; width: 100%; }
+.op .t { flex: 1; min-width: 0; }
+.op .t b { display: block; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.op .t small { color: var(--muted); font-size: .84rem; }
+.op .check { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); display: grid; place-items: center; font-weight: 800; font-size: .8rem; color: var(--lime-ink); flex: 0 0 auto; }
+.op[aria-pressed="true"] { border-color: var(--lime); background: var(--card-2); }
+.op[aria-pressed="true"] .check { background: var(--lime); box-shadow: none; }
+.op[aria-pressed="true"] .check::after { content: "✓"; }
+.op[disabled] { opacity: .45; cursor: not-allowed; }
+.ver-todos { border: 0; background: none; color: var(--lime); font-weight: 700; margin: 4px 4px 0; padding: 4px 0; }
+.modo { display: flex; background: var(--card); border-radius: 999px; padding: 5px; width: fit-content; }
+.modo button { border: 0; background: none; border-radius: 999px; padding: 10px 18px; font-weight: 700; color: var(--muted); }
+.modo button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
+.objetivo { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.rapido { border: 0; background: var(--card); border-radius: 999px; padding: 12px 18px; font-weight: 700; color: var(--ink); }
+.rapido[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
+.objetivo input, .pata input {
+  font: 700 1rem var(--font); color: var(--ink); background: var(--card-2); border: 1.5px solid var(--line); border-radius: 999px; padding: 10px 14px; width: 104px; text-align: center;
+}
+.objetivo label { color: var(--muted); font-size: .9rem; }
+.boleto { background: var(--card); border-radius: 30px; overflow: hidden; }
+.boleto-cab { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px 6px; gap: 10px; }
+.boleto-cab b { font-weight: 800; font-size: 1.2rem; }
+.patas { list-style: none; margin: 0; padding: 6px 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+.pata { background: var(--card-2); border-radius: 22px; padding: 14px 14px 14px 16px; display: flex; align-items: center; gap: 14px; }
+.pata .s { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.pata .s small { color: var(--muted); font-size: .8rem; }
+.pata .s b { font-weight: 700; line-height: 1.3; }
+.pata .s em { font-style: normal; color: var(--muted); font-size: .8rem; }
+.pata .s em i { font-style: normal; color: var(--lime); font-weight: 700; }
+.pata .q { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pata .q label { font-size: .68rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.pata input { width: 84px; padding: 8px 10px; }
+.marcador { margin: 4px 14px 14px; background: var(--lime); color: var(--lime-ink); border-radius: 24px; padding: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.marcador div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.marcador small { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+.marcador b { font-size: 1.75rem; font-weight: 800; line-height: 1.1; }
+.veredicto { margin: 0; padding: 0 22px 22px; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.veredicto.pos { color: var(--win); }
+.vacio { background: var(--card); border-radius: 26px; padding: 36px 24px; text-align: center; color: var(--muted); line-height: 1.7; }
+
+/* ---------- resultados ---------- */
+.res { width: 26px; height: 26px; border-radius: 50%; display: inline-grid; place-items: center; font-weight: 800; font-size: .82rem; flex: 0 0 auto; line-height: 1; }
+.res.ok { background: var(--win); color: #0f1a0a; }
+.res.ko { background: var(--loss); color: #1f0b07; }
+.pie-ficha .der { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.pie-ficha.ok { box-shadow: inset 0 0 0 1.5px var(--win); }
+.pie-ficha.ko { box-shadow: inset 0 0 0 1.5px var(--loss); opacity: .85; }
+.pick-e { position: relative; }
+.pick-e .res { position: absolute; top: 10px; right: 10px; }
+.pick-e.ok { background: rgba(21, 24, 16, .16); }
+.pick-e.ko { background: rgba(21, 24, 16, .05); }
+.pick-e.ko b, .pick-e.ko span { opacity: .55; }
+.opc .der { display: flex; align-items: center; gap: 8px; }
+.opc .res { width: 22px; height: 22px; font-size: .72rem; }
+.met-cab .realv { color: var(--ink); font-weight: 700; }
+.centro .final { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.ficha .centro .final { color: var(--lime); }
+.pata .res { margin-right: -4px; }
+.boleto-cab .estado { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: .9rem; }
+.dia.pasado b { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
+
+/* ---------- aciertos ---------- */
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.kpi { background: var(--card); border-radius: 28px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.kpi.lima { background: var(--lime); color: var(--lime-ink); }
+.kpi small { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .75; }
+.kpi b { font-size: 2.8rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.kpi span { font-size: .9rem; font-weight: 600; opacity: .8; }
+.kpi .bar { height: 8px; border-radius: 999px; background: rgba(21, 24, 16, .15); overflow: hidden; }
+.kpi:not(.lima) .bar { background: var(--card-3); }
+.kpi .bar i { display: block; height: 100%; border-radius: 999px; background: var(--lime-ink); }
+.kpi:not(.lima) .bar i { background: var(--lime); }
+.tabla-ac { background: var(--card); border-radius: 28px; padding: 8px 18px; }
+.fila-ac { display: grid; grid-template-columns: minmax(0, 1.3fr) 1fr 1fr; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.fila-ac:last-child { border-bottom: 0; }
+.fila-ac.cab { color: var(--muted); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 12px 0 8px; }
+.fila-ac .nom { font-weight: 700; min-width: 0; }
+.fila-ac .nom small { display: block; color: var(--muted); font-weight: 500; font-size: .8rem; }
+.mini { display: flex; flex-direction: column; gap: 5px; }
+.mini b { font-weight: 800; font-size: 1rem; }
+.mini b small { color: var(--muted); font-weight: 600; font-size: .78rem; margin-left: 4px; }
+.mini .bar { height: 6px; border-radius: 999px; background: var(--card-3); overflow: hidden; }
+.mini .bar i { display: block; height: 100%; background: var(--lime); border-radius: 999px; }
+.mini.seg .bar i { background: transparent; box-shadow: inset 0 0 0 2px var(--lime); }
+.mini.vacio-m b { color: var(--muted); font-weight: 600; }
+
+/* ---------- navegación inferior ---------- */
+.nav {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  display: flex; gap: 6px; background: rgba(29, 32, 28, .92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px; box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+}
+.nav button { border: 0; background: none; border-radius: 999px; padding: 12px 22px; font-weight: 700; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.nav button svg { width: 18px; height: 18px; }
+.nav button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
+
+.pie { margin-top: 44px; color: var(--muted); font-size: .82rem; line-height: 1.7; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; }
+.pie .ley { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.pie .ley span { display: inline-flex; align-items: center; gap: 8px; }
+.pie .muestra { width: 34px; height: 22px; border-radius: 999px; display: inline-block; background: var(--lime); }
+.pie .muestra.seg { background: transparent; box-shadow: inset 0 0 0 2px var(--lime); }
+
+@media (max-width: 480px) {
+  .nav { width: calc(100% - 32px); justify-content: space-between; }
+  .nav button { flex: 1; justify-content: center; padding: 11px 6px; font-size: .86rem; gap: 5px; }
+  .nav button svg { width: 16px; height: 16px; }
+  .kpi b { font-size: 2.3rem; }
+  .fila-ac { grid-template-columns: minmax(0, 1fr) 82px 82px; gap: 10px; }
+  .escudo { width: 56px; height: 56px; font-size: .95rem; }
+  .centro .hora { font-size: 1.8rem; }
+  .picks-e, .opciones { grid-template-columns: 1fr; }
+  .marcador { grid-template-columns: 1fr 1fr; row-gap: 14px; }
+  .nav button { padding: 12px 18px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="saludo">
+    <div class="yo">
+      <div class="avatar" aria-hidden="true">P</div>
+      <div><small id="saludo">Buenos días</small><b>Tus pronósticos</b></div>
+    </div>
+    <div class="redondo" title="Datos actualizados" id="sello-mini" aria-hidden="true">i</div>
+  </header>
+
+  <h1 class="titular" id="titular">Elige tu<strong>partido del día</strong></h1>
+
+  <div class="ligas" id="ligas" role="group" aria-label="Filtrar ligas"></div>
+  <div class="dias-caja" id="dias-caja"><nav class="dias" id="dias" aria-label="Día"></nav></div>
+
+  <main id="vista-partidos"></main>
+  <main id="vista-combinada" hidden></main>
+  <main id="vista-aciertos" hidden></main>
+
+  <footer class="pie">
+    <div class="ley">
+      <span><i class="muestra"></i>Más probable en la línea habitual</span>
+      <span><i class="muestra seg"></i>Línea segura (≥ 80 %, paga poco)</span>
+    </div>
+    <div id="sello"></div>
+    <div>Backtest LaLiga 2025-26: línea segura ≈ 84 % de acierto · combinada a 1,40 ≈ 66 % · a 1,80 ≈ 51 %. El modelo no ve bajas, rotaciones ni árbitro. +18 · Juega con responsabilidad · 900 200 225.</div>
+  </footer>
+</div>
+
+<nav class="nav" aria-label="Vista">
+  <button id="v-partidos" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg>Partidos</button>
+  <button id="v-combinada" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z"/><path d="M10 7v12" stroke-dasharray="2 2"/></svg>Combinada</button>
+  <button id="v-aciertos" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>Aciertos</button>
+</nav>
+
+<script id="datos" type="application/json">__DATOS__</script>
+<script>
+const D = JSON.parse(document.getElementById('datos').textContent);
+const LIGAS = {laliga: 'LaLiga', premier: 'Premier', bundesliga: 'Bundesliga', ligue1: 'Ligue 1'};
+const LIGA_ICO = {laliga: 'LL', premier: 'PL', bundesliga: 'BL', ligue1: 'L1'};
+const ORDEN = ['laliga', 'premier', 'bundesliga', 'ligue1'];
+const DSEM = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+const GRUPOS = [
+  {n: 'Goles', t: {p: 'goles', '1': 'goles_1t', '2': 'goles_2t'}},
+  {n: 'Tiros', t: {p: 'tiros', '1': 'tiros_1t', '2': 'tiros_2t'}},
+  {n: 'Remates a puerta', t: {p: 'remates', '1': 'remates_1t', '2': 'remates_2t'}},
+  {n: 'Goles esperados (xG)', t: {p: 'xg', '1': 'xg_1t', '2': 'xg_2t'}},
+  {n: 'Córners', t: {p: 'corners'}},
+  {n: 'Tarjetas', t: {p: 'tarjetas'}},
+];
+const APOSTABLES = new Set(['goles', 'goles_1t', 'goles_2t', 'tiros', 'remates', 'corners', 'tarjetas']);
+const pct = p => Math.round(p * 100) + '%';
+const q2 = q => q.toFixed(2).replace('.', ',');
+const n1 = n => Number(n).toFixed(1).replace('.', ',');
+const lin = l => String(l).replace('.', ',');
+const dec = s => s.replace(/(\d)\.(\d)/g, '$1,$2');
+const cap = s => s[0].toUpperCase() + s.slice(1);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+/* monograma: iniciales + color estable por equipo */
+const PALETA = ['#3a5bd9', '#c23b4e', '#1f8a70', '#8a4fd1', '#d07a1c', '#2b7fb8', '#b0306e', '#4a7d2a', '#6b5ae0', '#c4572a', '#227a8f', '#9b2f2f'];
+function siglas(n) {
+  const w = n.replace(/[^A-Za-zÀ-ÿ0-9 ]/g, ' ').split(/\s+/).filter(x => x && !/^(FC|CF|de|la|del|AFC)$/i.test(x));
+  if (w.length >= 2) return w.slice(0, 3).map(x => x[0]).join('').toUpperCase();
+  return (w[0] || n).slice(0, 3).toUpperCase();
+}
+const COLORES = {"Augsburg": ["#ba3733", "#46714d"], "Bayer Leverkusen": ["#e32221", "#111111"], "Bayern Munich": ["#dc052d", "#0066b2"], "Borussia Dortmund": ["#fde100", "#111111"], "Borussia M.Gladbach": ["#f2f2f2", "#00a651"], "Eintracht Frankfurt": ["#e1000f", "#111111"], "Elversberg": ["#1c1c1c", "#ffffff"], "FC Cologne": ["#ed1c24", "#ffffff"], "Freiburg": ["#e2001a", "#111111"], "Hamburger SV": ["#0a3f86", "#ffffff"], "Hoffenheim": ["#1961b5", "#ffffff"], "Mainz 05": ["#ed1c24", "#ffffff"], "Paderborn": ["#005ca9", "#111111"], "RasenBallsport Leipzig": ["#ffffff", "#dd0741"], "Schalke 04": ["#004d9d", "#ffffff"], "Union Berlin": ["#eb1923", "#ffffff"], "VfB Stuttgart": ["#ffffff", "#e32219"], "Werder Bremen": ["#1d9053", "#ffffff"], "Alaves": ["#0761af", "#ffffff"], "Athletic Club": ["#ee2523", "#ffffff"], "Atletico Madrid": ["#cb3524", "#272e61"], "Barcelona": ["#a50044", "#004d98"], "Celta Vigo": ["#8ac3ee", "#e5254e"], "Deportivo La Coruna": ["#0062a8", "#ffffff"], "Elche": ["#05642c", "#ffffff"], "Espanyol": ["#007fc8", "#ffffff"], "Getafe": ["#005999", "#ffffff"], "Levante": ["#b4053f", "#004d98"], "Malaga": ["#0081c6", "#ffffff"], "Osasuna": ["#d91a21", "#0a346f"], "Racing Santander": ["#00915a", "#ffffff"], "Rayo Vallecano": ["#ffffff", "#e53027"], "Real Betis": ["#0bb363", "#ffffff"], "Real Madrid": ["#ffffff", "#febe10"], "Real Sociedad": ["#0067b1", "#ffffff"], "Sevilla": ["#ffffff", "#d70f21"], "Valencia": ["#ffffff", "#ee8707"], "Villarreal": ["#ffe114", "#005187"], "Angers": ["#111111", "#ffffff"], "Auxerre": ["#ffffff", "#0b2c69"], "Brest": ["#e30613", "#ffffff"], "Le Havre": ["#87ceeb", "#002d62"], "Le Mans": ["#e2001a", "#f6d200"], "Lens": ["#ffd400", "#e2001a"], "Lille": ["#e01e13", "#20325f"], "Lorient": ["#f58113", "#111111"], "Lyon": ["#ffffff", "#14387f"], "Marseille": ["#ffffff", "#2faee0"], "Monaco": ["#e51b22", "#ffffff"], "Nice": ["#e2001a", "#111111"], "Paris FC": ["#1b2a56", "#ffffff"], "Paris Saint Germain": ["#004170", "#da291c"], "Rennes": ["#e13327", "#111111"], "Strasbourg": ["#009fe3", "#ffffff"], "Toulouse": ["#6a1f8f", "#ffffff"], "Troyes": ["#0055a4", "#ffffff"], "Arsenal": ["#ef0107", "#ffffff"], "Aston Villa": ["#670e36", "#95bfe5"], "Bournemouth": ["#da291c", "#111111"], "Brentford": ["#e30613", "#ffffff"], "Brighton": ["#0057b8", "#ffffff"], "Chelsea": ["#034694", "#ffffff"], "Coventry": ["#75b2dd", "#ffffff"], "Crystal Palace": ["#1b458f", "#c4122e"], "Everton": ["#003399", "#ffffff"], "Fulham": ["#ffffff", "#111111"], "Hull": ["#f5a12d", "#111111"], "Ipswich": ["#0044a9", "#ffffff"], "Leeds": ["#ffffff", "#1d428a"], "Liverpool": ["#c8102e", "#f6eb61"], "Manchester City": ["#6cabdd", "#1c2c5b"], "Manchester United": ["#da291c", "#fbe122"], "Newcastle United": ["#241f20", "#ffffff"], "Nottingham Forest": ["#dd0000", "#ffffff"], "Sunderland": ["#eb172b", "#ffffff"], "Tottenham": ["#ffffff", "#132257"]};
+function idx(n) { let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % PALETA.length; }
+function colores(n, rival) {
+  if (COLORES[n]) return COLORES[n];
+  let i = idx(n); if (rival && !COLORES[rival] && idx(rival) === i) i = (i + 5) % PALETA.length;
+  return [PALETA[i], '#ffffff'];
+}
+function textoSobre(hex) {
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#141414' : '#ffffff';
+}
+const escudo = (n, peq, rival) => {
+  const [a, b] = colores(n, rival);
+  const txt = a.toLowerCase() === '#ffffff' || a.toLowerCase() === '#f2f2f2' ? (textoSobre(b) === '#ffffff' ? b : '#141414') : textoSobre(a);
+  return `<div class="escudo ${peq ? 'peq' : ''}" style="--c1:${a};--c2:${b};color:${txt};text-shadow:${txt === '#ffffff' ? '0 1px 3px rgba(0,0,0,.45)' : '0 1px 2px rgba(255,255,255,.5)'}" aria-hidden="true">${esc(siglas(n))}</div>`;
+};
+
+const E = {vista: 'partidos', dia: null, ligas: new Set(ORDEN), abiertos: new Set(), tramo: {},
+           modo: 'cuota', objetivo: 1.80, elegidos: null, verTodos: false, ambito: 'destacados'};
+try { const g = JSON.parse(localStorage.getItem('pron-ligas') || 'null'); if (Array.isArray(g) && g.length) E.ligas = new Set(g); } catch (e) {}
+const hoy = new Date().toISOString().slice(0, 10);
+E.dia = (D.dias.find(d => d.dia >= hoy) || D.dias[0] || {}).dia;
+if (location.hash === '#combinada') E.vista = 'combinada';
+if (location.hash === '#aciertos') E.vista = 'aciertos';
+const hora = new Date().getHours();
+document.getElementById('saludo').textContent = hora < 13 ? 'Buenos días' : hora < 21 ? 'Buenas tardes' : 'Buenas noches';
+const sello = `Datos hasta el ${D.ultimo_dato.split('-').reverse().join('/')} · actualizado ${D.generado.replace(' ', ' a las ')}`;
+document.getElementById('sello').textContent = sello;
+document.getElementById('sello-mini').title = sello;
+
+const partidosDia = () => { const d = D.dias.find(x => x.dia === E.dia); return d ? d.partidos.filter(p => E.ligas.has(p.liga)) : []; };
+
+/* ---------- barra ---------- */
+function pintarBarra() {
+  document.getElementById('ligas').innerHTML = ORDEN.map(l =>
+    `<button class="liga-f" data-liga="${l}" aria-pressed="${E.ligas.has(l)}"><span class="ico">${LIGA_ICO[l]}</span>${LIGAS[l]}</button>`).join('');
+  document.getElementById('dias').innerHTML = D.dias.map(d => {
+    const f = new Date(d.dia + 'T12:00:00'), n = d.partidos.filter(p => E.ligas.has(p.liga)).length;
+    return `<button class="dia ${d.jugado ? 'pasado' : ''}" data-dia="${d.dia}" aria-pressed="${d.dia === E.dia}"><small>${DSEM[f.getDay()]}</small><b>${f.getDate()}</b><i>${d.jugado ? 'jugado' : n + ' part.'}</i></button>`;
+  }).join('');
+  document.getElementById('titular').innerHTML = {partidos: 'Elige tu<strong>partido del día</strong>',
+    combinada: 'Arma tu<strong>combinada</strong>', aciertos: 'Así va<strong>el modelo</strong>'}[E.vista];
+  for (const v of ['partidos', 'combinada', 'aciertos']) {
+    document.getElementById('v-' + v).setAttribute('aria-pressed', E.vista === v);
+    document.getElementById('vista-' + v).hidden = E.vista !== v;
+  }
+  document.getElementById('dias-caja').hidden = E.vista === 'aciertos';
+  const sel = document.querySelector('.dia[aria-pressed="true"]');
+  if (sel) { const c = document.getElementById('dias'); c.scrollLeft = sel.offsetLeft - c.clientWidth / 2 + sel.clientWidth / 2; }
+}
+document.getElementById('dias').addEventListener('click', e => {
+  const b = e.target.closest('[data-dia]'); if (!b) return;
+  E.dia = b.dataset.dia; E.elegidos = null; E.verTodos = false; render();
+});
+document.getElementById('ligas').addEventListener('click', e => {
+  const b = e.target.closest('[data-liga]'); if (!b) return;
+  const l = b.dataset.liga;
+  if (E.ligas.has(l)) { if (E.ligas.size > 1) E.ligas.delete(l); } else E.ligas.add(l);
+  try { localStorage.setItem('pron-ligas', JSON.stringify([...E.ligas])); } catch (e) {}
+  E.elegidos = null; render();
+});
+['partidos', 'combinada', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
+  E.vista = v; try { history.replaceState(null, '', '#' + v); } catch (e) {} render(); window.scrollTo({top: 0});
+}));
+
+/* ---------- resultados ---------- */
+function acierto(p, met, lado, linea) {
+  if (!p.real || p.real[met] == null || !lado) return null;
+  const v = p.real[met];
+  return lado.toLowerCase().startsWith('m\u00e1s') ? v > linea : v < linea;
+}
+const marca = ok => ok == null ? '' : `<span class="res ${ok ? 'ok' : 'ko'}" role="img" aria-label="${ok ? 'Acertado' : 'Fallado'}">${ok ? '✓' : '✗'}</span>`;
+const clase = ok => ok == null ? '' : ok ? 'ok' : 'ko';
+const okNormal = (p, f) => f ? acierto(p, f.metrica, f.eleccion, f.linea) : null;
+const okSegura = (p, f) => f ? acierto(p, f.metrica, f.segura_lado, f.segura_linea) : null;
+
+/* ---------- partidos ---------- */
+const racha = t => `<span class="racha" aria-label="Últimos 5: ${esc(t || '')}">${[...(t || '')].map(c => `<i class="${c}"></i>`).join('')}</span>`;
+function destacados(p) {
+  const ap = p.pronosticos.filter(f => APOSTABLES.has(f.metrica));
+  return {
+    normal: ap.filter(f => f.prob >= 0.55).sort((a, b) => b.prob - a.prob)[0],
+    segura: ap.filter(f => f.segura_prob).sort((a, b) => a.segura_prob - b.segura_prob)[0],
+  };
+}
+const txtNormal = f => `${cap(f.eleccion)} de ${lin(f.linea)} ${f.nombre.toLowerCase()}`;
+const txtSegura = f => `${cap(f.segura_lado)} de ${lin(f.segura_linea)} ${f.nombre.toLowerCase()}`;
+function etiqueta(p, estrella) {
+  if (/clásico/.test(p.motivo)) return `<span class="etq ${estrella ? '' : 'cla'}">Clásico</span>`;
+  const m = p.motivo.split(' · ').slice(1)[0];
+  return m ? `<span class="etq ${estrella ? '' : 'osc'}">${esc(cap(m))}</span>` : '';
+}
+function duelo(p) {
+  const c = p.contexto, eq = (n, rival) => `<div class="eq">${escudo(n, false, rival)}<b>${esc(n)}</b><small>${c[n] ? c[n].posicion + 'º · ' : ''}${c[n] ? racha(c[n].ultimos_5) : ''}</small></div>`;
+  const centro = p.real && p.real.marcador
+    ? `<span class="final">Final</span><span class="hora">${p.real.marcador[0]} – ${p.real.marcador[1]}</span><small>${p.hora} · ${LIGAS[p.liga]}</small>`
+    : `<small>Interés ${Math.round(p.relevancia)}</small><span class="hora">${p.hora}</span><small>${LIGAS[p.liga]}</small>`;
+  return `<div class="duelo-g">${eq(p.local)}<div class="centro">${centro}</div>${eq(p.visitante, p.local)}</div>`;
+}
+function lecturaCorta(md) {
+  const it = md.split('\n').filter(l => l.startsWith('- ')).map(l => l.slice(2)).filter(l => /^\*\*(Dominio|Por partes|Ojo)/.test(l));
+  return '<ul class="lectura">' + it.map(l => '<li>' + dec(esc(l)).replace(/\*\*(.+?):\*\*/g, '<strong>$1:</strong>') + '</li>').join('') + '</ul>';
+}
+function detalle(p) {
+  const tr = E.tramo[p.understat_id] || 'p', por = Object.fromEntries(p.pronosticos.map(f => [f.metrica, f]));
+  const mets = GRUPOS.map(g => {
+    const f = por[g.t[tr]]; if (!f) return '';
+    const tot = (f.esperado_local + f.esperado_visitante) || 1;
+    const normal = f.prob >= 0.55 ? `<div class="opc"><span>${cap(f.eleccion)} de ${lin(f.linea)}</span><span class="der"><b>${pct(f.prob)}</b>${marca(okNormal(p, f))}</span></div>` : `<div class="opc flojo"><span>Sin opción clara en ${lin(f.linea)}</span></div>`;
+    const segura = f.segura_lado ? `<div class="opc seg"><span>${cap(f.segura_lado)} de ${lin(f.segura_linea)}</span><span class="der"><b>${pct(f.segura_prob)}</b>${marca(okSegura(p, f))}</span></div>` : '';
+    const rv = p.real && p.real[f.metrica] != null ? ` · real <span class="realv">${n1(p.real[f.metrica])}</span>` : '';
+    return `<div class="met"><div class="met-cab"><b>${g.n}</b><span>esperado ${n1(f.esperado_total)}${rv}</span></div>
+      <div class="barra"><span>${n1(f.esperado_local)}</span><div class="pista"><i style="width:${f.esperado_local / tot * 100}%"></i></div><span>${n1(f.esperado_visitante)}</span></div>
+      <div class="opciones">${normal}${segura}</div></div>`;
+  }).join('');
+  return `<div class="detalle">
+    ${lecturaCorta(p.lectura)}
+    <div class="tramos" role="group" aria-label="Tramo">${[['p', 'Partido'], ['1', '1ª parte'], ['2', '2ª parte']].map(([k, n]) =>
+      `<button data-tramo="${k}" data-id="${p.understat_id}" aria-pressed="${tr === k}">${n}</button>`).join('')}</div>
+    ${tr !== 'p' ? '<p class="nota">Córners y tarjetas solo están disponibles para el partido completo.</p>' : ''}
+    <div class="leyenda-eq"><span>${esc(p.local)}</span><span>${esc(p.visitante)}</span></div>
+    ${mets}
+    ${p.pocos_datos.length ? `<p class="nota">Pocos partidos en la liga para ${esc(p.pocos_datos.join(', '))}: pronóstico menos fiable.</p>` : ''}
+  </div>`;
+}
+function estrella(p) {
+  const {normal, segura} = destacados(p), ab = E.abiertos.has(p.understat_id);
+  return `<article class="estrella ancho ${ab ? 'abierta' : ''}">
+    <div class="top"><b>${LIGAS[p.liga]} · el más interesante</b>${etiqueta(p, true)}</div>
+    ${duelo(p)}
+    <div class="picks-e">
+      ${normal ? `<div class="pick-e ${clase(okNormal(p, normal))}">${marca(okNormal(p, normal))}<small>Más probable</small><span>${txtNormal(normal)}</span><b>${pct(normal.prob)}</b></div>` : ''}
+      ${segura ? `<div class="pick-e ${clase(okSegura(p, segura))}">${marca(okSegura(p, segura))}<small>Línea segura</small><span>${txtSegura(segura)}</span><b>${pct(segura.segura_prob)}</b></div>` : ''}
+    </div>
+    <button class="abrir" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
+    ${ab ? detalle(p) : ''}
+  </article>`;
+}
+function ficha(p) {
+  const {normal, segura} = destacados(p), ab = E.abiertos.has(p.understat_id);
+  return `<article class="ficha ${ab ? 'abierta' : ''}">
+    <div class="top"><b>${LIGAS[p.liga]}</b>${etiqueta(p, false)}</div>
+    ${duelo(p)}
+    ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span></div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marca(okNormal(p, normal))}</span></div>` : ''}
+    ${segura ? `<div class="pie-ficha ${clase(okSegura(p, segura))}"><div class="txt"><small>Línea segura</small><span>${txtSegura(segura)}</span></div><span class="der"><span class="prob seg">${pct(segura.segura_prob)}</span>${marca(okSegura(p, segura))}</span></div>` : ''}
+    <button class="abrir-f" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
+    ${ab ? detalle(p) : ''}
+  </article>`;
+}
+function pintarPartidos() {
+  const ps = partidosDia(), v = document.getElementById('vista-partidos');
+  if (!ps.length) { v.innerHTML = '<div class="vacio" style="margin-top:28px">No hay partidos de las ligas elegidas este día.<br>Prueba con otro día o activa más ligas.</div>'; return; }
+  const orden = [...ps].sort((a, b) => b.relevancia - a.relevancia);
+  const top = orden[0], dest = orden.filter(p => p.destacado && p !== top);
+  const resto = orden.filter(p => !p.destacado && p !== top).sort((a, b) => a.hora.localeCompare(b.hora));
+  v.innerHTML = `
+    <div class="sec"><h2>Partido estrella</h2><span>${ps.length} partidos este día</span></div>
+    <div class="rejilla">${estrella(top)}</div>
+    ${dest.length ? `<div class="sec"><h2>Destacados</h2><span>los 2 mejores de cada liga</span></div><div class="rejilla">${dest.map(ficha).join('')}</div>` : ''}
+    ${resto.length ? `<div class="sec"><h2>Resto del día</h2><span>${resto.length} partidos</span></div><div class="rejilla">${resto.map(ficha).join('')}</div>` : ''}`;
+}
+document.getElementById('vista-partidos').addEventListener('click', e => {
+  const t = e.target.closest('[data-tramo]');
+  if (t) { E.tramo[t.dataset.id] = t.dataset.tramo; pintarPartidos(); return; }
+  const a = e.target.closest('[data-abrir]');
+  if (a) { const id = Number(a.dataset.abrir); E.abiertos.has(id) ? E.abiertos.delete(id) : E.abiertos.add(id); pintarPartidos(); }
+});
+
+/* ---------- combinada ---------- */
+function slots(ps) {
+  const out = [];
+  ps.forEach(p => {
+    const fam = {};
+    p.selecciones.forEach(s => (fam[s.familia] = fam[s.familia] || []).push({...s, partido: `${p.local} – ${p.visitante}`, pid: p.understat_id, ok: acierto(p, s.metrica, s.lado, s.linea)}));
+    Object.values(fam).forEach(op => out.push({pid: p.understat_id, op}));
+  });
+  return out;
+}
+function* comb(a, k, i = 0, acc = []) { if (acc.length === k) { yield acc; return; } for (let j = i; j < a.length; j++) yield* comb(a, k, j + 1, [...acc, a[j]]); }
+function buscar(ps, modo, obj) {
+  const ss = slots(ps), n = new Set(ps.map(p => p.understat_id)).size;
+  let mejor = null;
+  for (const k of (modo === 'cuota' ? [2, 3, 4] : [1, 2, 3, 4])) {
+    for (const cb of comb(ss, k)) {
+      if (modo === 'cuota' && new Set(cb.map(s => s.pid)).size < n) continue;
+      const rec = (i, sel, pr, q) => {
+        if (i === cb.length) {
+          if (modo === 'cuota' ? (q >= obj && (!mejor || pr > mejor.prob)) : (pr >= obj && (!mejor || q > mejor.cuota))) mejor = {sel: [...sel], prob: pr, cuota: q};
+          return;
+        }
+        for (const o of cb[i].op) { const np = pr * o.prob; if (modo === 'acierto' && np < obj) continue; sel.push(o); rec(i + 1, sel, np, q * o.cuota); sel.pop(); }
+      };
+      rec(0, [], 1, 1);
+    }
+  }
+  return mejor;
+}
+function pintarCombinada() {
+  const v = document.getElementById('vista-combinada');
+  const ps = [...partidosDia()].sort((a, b) => b.relevancia - a.relevancia);
+  if (!ps.length) { v.innerHTML = '<div class="vacio" style="margin-top:28px">No hay partidos de las ligas elegidas este día.</div>'; return; }
+  if (!E.elegidos) E.elegidos = ps.slice(0, Math.min(2, ps.length)).map(p => p.understat_id);
+  E.elegidos = E.elegidos.filter(id => ps.some(p => p.understat_id === id));
+  const vis = E.verTodos ? ps : ps.filter(p => p.destacado || E.elegidos.includes(p.understat_id));
+  const ocultos = ps.length - vis.length;
+  const rap = E.modo === 'cuota' ? [1.40, 1.60, 1.80, 2.00] : [0.70, 0.75, 0.80, 0.85];
+  v.innerHTML = `
+    <div class="sec"><h2>Elige 1 o 2 partidos</h2><span>${E.elegidos.length} de 2</span></div>
+    <div class="lista-p">${vis.map(p => {
+      const on = E.elegidos.includes(p.understat_id), lleno = !on && E.elegidos.length >= 2;
+      return `<button class="op" data-elegir="${p.understat_id}" aria-pressed="${on}" ${lleno ? 'disabled' : ''}>
+        ${escudo(p.local, true)}<span class="t"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${p.hora} · ${LIGAS[p.liga]} · interés ${Math.round(p.relevancia)}</small></span><span class="check"></span></button>`;
+    }).join('')}</div>
+    ${ocultos > 0 || E.verTodos ? `<button class="ver-todos" data-vertodos>${E.verTodos ? 'Mostrar solo destacados' : `Ver los otros ${ocultos} partidos`}</button>` : ''}
+    <div class="sec"><h2>¿Qué buscas?</h2></div>
+    <div class="modo" role="group" aria-label="Modo">
+      <button data-modo="cuota" aria-pressed="${E.modo === 'cuota'}">Una cuota</button>
+      <button data-modo="acierto" aria-pressed="${E.modo === 'acierto'}">Un acierto mínimo</button>
+    </div>
+    <div class="objetivo">
+      ${rap.map(r => `<button class="rapido" data-rapido="${r}" aria-pressed="${Math.abs(r - E.objetivo) < 1e-6}">${E.modo === 'cuota' ? q2(r) : Math.round(r * 100) + '%'}</button>`).join('')}
+      <label for="obj">u otra:</label>
+      <input id="obj" type="number" step="${E.modo === 'cuota' ? 0.05 : 1}" min="${E.modo === 'cuota' ? 1.05 : 50}" max="${E.modo === 'cuota' ? 5 : 95}" value="${E.modo === 'cuota' ? E.objetivo.toFixed(2) : Math.round(E.objetivo * 100)}">
+    </div>
+    <div class="sec"><h2>Tu boleto</h2></div>
+    <div id="boleto"></div>`;
+  pintarBoleto(ps);
+}
+function pintarBoleto(ps) {
+  const b = document.getElementById('boleto'), sel = ps.filter(p => E.elegidos.includes(p.understat_id));
+  if (!sel.length) { b.innerHTML = '<div class="vacio">Elige al menos un partido.</div>'; return; }
+  const m = buscar(sel, E.modo, E.objetivo);
+  if (!m) { b.innerHTML = `<div class="vacio">No hay ninguna combinación que cumpla eso con ${sel.length === 1 ? 'este partido' : 'estos partidos'}.<br>Prueba otro objetivo${sel.length === 1 ? ' o añade un segundo partido' : ''}.</div>`; return; }
+  b.innerHTML = `<div class="boleto">
+    <div class="boleto-cab"><b>${m.sel.length} selecciones</b>${m.sel.every(s => s.ok != null) ? `<span class="estado">${m.sel.every(s => s.ok) ? 'Acertada' : 'Fallada'} ${marca(m.sel.every(s => s.ok))}</span>` : ''}<span class="etq osc">${E.modo === 'cuota' ? 'objetivo ' + q2(E.objetivo) : 'mín. ' + Math.round(E.objetivo * 100) + '%'}</span></div>
+    <ul class="patas">${m.sel.map((s, i) => `<li class="pata">
+      <span class="s"><small>${esc(s.partido)}</small><b>${dec(esc(s.texto))}</b><em>prob. <i>${pct(s.prob)}</i> · cuota ${s.real ? 'Bet365' : 'est.'} ${q2(s.cuota)}</em></span>
+      ${marca(s.ok)}<span class="q"><label for="q${i}">Tu cuota</label><input id="q${i}" type="number" step="0.01" min="1.01" value="${s.cuota.toFixed(2)}"></span>
+    </li>`).join('')}</ul>
+    <div class="marcador" id="marcador"></div>
+    <p class="veredicto" id="veredicto"></p>
+  </div>`;
+  const calc = () => {
+    let q = 1; m.sel.forEach((s, i) => { const x = parseFloat(document.getElementById('q' + i).value); q *= x > 1 ? x : s.cuota; });
+    const ev = m.prob * q - 1;
+    document.getElementById('marcador').innerHTML = `
+      <div><small>Acierto</small><b>${pct(m.prob)}</b></div>
+      <div><small>Cuota</small><b>${q2(q)}</b></div>
+      <div><small>Cuota justa</small><b>${q2(1 / m.prob)}</b></div>
+      <div><small>Valor</small><b>${ev > 0 ? '+' : ''}${Math.round(ev * 100)}%</b></div>`;
+    const ve = document.getElementById('veredicto');
+    ve.className = 'veredicto' + (ev > 0 ? ' pos' : '');
+    ve.textContent = ev > 0 ? 'Con estas cuotas la combinada tiene valor según el modelo.'
+      : 'Con estas cuotas la casa tiene ventaja, que es lo habitual. Solo compensa si tu cuota total supera la cuota justa: cambia "Tu cuota" por la de tu casa.';
+  };
+  b.querySelectorAll('.pata input').forEach(i => i.addEventListener('input', calc));
+  calc();
+}
+document.getElementById('vista-combinada').addEventListener('click', e => {
+  const el = e.target.closest('[data-elegir]');
+  if (el && !el.disabled) { const id = Number(el.dataset.elegir); E.elegidos = E.elegidos.includes(id) ? E.elegidos.filter(x => x !== id) : [...E.elegidos, id].slice(-2); pintarCombinada(); return; }
+  if (e.target.closest('[data-vertodos]')) { E.verTodos = !E.verTodos; pintarCombinada(); return; }
+  const mo = e.target.closest('[data-modo]');
+  if (mo && mo.dataset.modo !== E.modo) { E.modo = mo.dataset.modo; E.objetivo = E.modo === 'cuota' ? 1.80 : 0.80; pintarCombinada(); return; }
+  const r = e.target.closest('[data-rapido]');
+  if (r) { E.objetivo = Number(r.dataset.rapido); pintarCombinada(); }
+});
+document.getElementById('vista-combinada').addEventListener('change', e => {
+  if (e.target.id !== 'obj') return;
+  const x = parseFloat(e.target.value); if (!(x > 0)) return;
+  E.objetivo = E.modo === 'cuota' ? x : x / 100; pintarCombinada();
+});
+
+/* ---------- aciertos ---------- */
+const NOM_MET = {goles: 'Goles', goles_1t: 'Goles 1ª parte', goles_2t: 'Goles 2ª parte', xg: 'xG', xg_1t: 'xG 1ª parte', xg_2t: 'xG 2ª parte',
+  tiros: 'Tiros', tiros_1t: 'Tiros 1ª parte', tiros_2t: 'Tiros 2ª parte', remates: 'Remates a puerta', remates_1t: 'Remates 1ª parte',
+  remates_2t: 'Remates 2ª parte', corners: 'Córners', tarjetas: 'Tarjetas'};
+const cuenta = () => ({a: 0, n: 0});
+const suma = (c, ok) => { if (ok != null) { c.n++; if (ok) c.a++; } };
+const ratio = c => c.n ? c.a / c.n : null;
+function mini(c, seg) {
+  const r = ratio(c);
+  if (r == null) return `<div class="mini vacio-m"><b>–</b></div>`;
+  return `<div class="mini ${seg ? 'seg' : ''}"><b>${pct(r)}<small>${c.a}/${c.n}</small></b><div class="bar"><i style="width:${r * 100}%"></i></div></div>`;
+}
+function pintarAciertos() {
+  const v = document.getElementById('vista-aciertos');
+  const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {};
+  let partidos = 0;
+  D.dias.filter(d => d.jugado).forEach(d => {
+    const dd = {dia: d.dia, n: cuenta(), s: cuenta()};
+    d.partidos.filter(p => E.ligas.has(p.liga) && p.real && (E.ambito === 'todos' || p.destacado)).forEach(p => {
+      partidos++;
+      const {normal, segura} = destacados(p);
+      suma(tot.n, okNormal(p, normal)); suma(dd.n, okNormal(p, normal));
+      suma(tot.s, okSegura(p, segura)); suma(dd.s, okSegura(p, segura));
+      p.pronosticos.forEach(f => {
+        const m = porMet[f.metrica] = porMet[f.metrica] || {n: cuenta(), s: cuenta()};
+        if (f.prob >= 0.55) suma(m.n, okNormal(p, f));
+        suma(m.s, okSegura(p, f));
+      });
+    });
+    if (dd.n.n || dd.s.n) porDia.push(dd);
+  });
+  if (!partidos) { v.innerHTML = '<div class="vacio" style="margin-top:28px">Todavía no hay partidos jugados con estas ligas.</div>'; return; }
+  const rn = ratio(tot.n), rs = ratio(tot.s);
+  v.innerHTML = `
+    <div class="sec"><h2>Resumen</h2><span>${partidos} partidos jugados</span></div>
+    <div class="modo" role="group" aria-label="Qué partidos contar" style="margin-bottom:14px">
+      <button data-ambito="destacados" aria-pressed="${E.ambito === 'destacados'}">Destacados</button>
+      <button data-ambito="todos" aria-pressed="${E.ambito === 'todos'}">Todos los partidos</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi lima"><small>Más probable</small><b>${rn == null ? '–' : pct(rn)}</b><span>${tot.n.a} de ${tot.n.n} acertados</span><div class="bar"><i style="width:${(rn || 0) * 100}%"></i></div></div>
+      <div class="kpi"><small>Línea segura</small><b>${rs == null ? '–' : pct(rs)}</b><span>${tot.s.a} de ${tot.s.n} acertados</span><div class="bar"><i style="width:${(rs || 0) * 100}%"></i></div></div>
+    </div>
+    <div class="sec"><h2>Por día</h2><span>pronósticos destacados de cada ficha</span></div>
+    <div class="tabla-ac">
+      <div class="fila-ac cab"><span>Día</span><span>Más probable</span><span>Línea segura</span></div>
+      ${porDia.slice().reverse().map(d => { const f = new Date(d.dia + 'T12:00:00');
+        return `<div class="fila-ac"><span class="nom">${DSEM[f.getDay()]} ${f.getDate()}/${f.getMonth() + 1}</span>${mini(d.n)}${mini(d.s, true)}</div>`; }).join('')}
+    </div>
+    <div class="sec"><h2>Por tipo</h2><span>todos los pronósticos de cada partido</span></div>
+    <div class="tabla-ac">
+      <div class="fila-ac cab"><span>Pronóstico</span><span>Más probable</span><span>Línea segura</span></div>
+      ${Object.keys(NOM_MET).filter(k => porMet[k]).map(k => `<div class="fila-ac"><span class="nom">${NOM_MET[k]}</span>${mini(porMet[k].n)}${mini(porMet[k].s, true)}</div>`).join('')}
+    </div>
+    <p class="nota" style="margin:16px 4px 0">Los pronósticos de días pasados se calcularon solo con los partidos anteriores a cada día, sin conocer el resultado. "Más probable" solo cuenta cuando el modelo daba al menos un 55 %.</p>`;
+}
+document.getElementById('vista-aciertos').addEventListener('click', e => {
+  const b = e.target.closest('[data-ambito]'); if (b) { E.ambito = b.dataset.ambito; pintarAciertos(); }
+});
+
+function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, aciertos: pintarAciertos})[E.vista](); }
+render();
+</script>
