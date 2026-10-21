@@ -1,0 +1,26 @@
+name: Sonda de datos
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  sonda:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar muestras
+        run: |
+          mkdir -p registro/muestras
+          B=https://site.api.espn.com/apis/site/v2/sports/soccer
+          curl -s "$B/uefa.champions/scoreboard?dates=20250531" -o registro/muestras/ucl_final_2025.json
+          curl -s "$B/uefa.champions/scoreboard?dates=20261021" -o registro/muestras/ucl_20261021.json
+          curl -s "$B/uefa.champions/scoreboard?dates=20261001" -o registro/muestras/ucl_20261001.json
+          curl -s "$B/uefa.champions/scoreboard?dates=20260930" -o registro/muestras/ucl_20260930.json
+          curl -s "$B/uefa.champions/scoreboard?dates=20260901-20261020" -o registro/muestras/ucl_rango.json
+          ID=$(python3 -c "import json;d=json.load(open('registro/muestras/ucl_final_2025.json'));print(d['events'][0]['id'])")
+          curl -s "$B/uefa.champions/summary?event=$ID" -o registro/muestras/ucl_summary_final.json
+          curl -s "https://www.football-data.co.uk/mmz4281/2627/I1.csv" -o registro/muestras/I1.csv
+          ls -la registro/muestras
+      - name: Guardar
+        run: |
+          git config user.name "pronosticos-bot"; git config user.email "pronosticos-bot@users.noreply.github.com"
+          git add registro; git commit -m "Muestras de datos" && git push
