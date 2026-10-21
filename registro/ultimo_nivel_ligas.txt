@@ -1,29 +1,49 @@
-cruces entre ligas: 205 partidos
+cruces entre ligas: 611 partidos
 {
  "fuerza": {
-  "bundesliga": 0.9713,
-  "laliga": 0.9583,
-  "ligue1": 1.0256,
-  "premier": 1.1394,
-  "seriea": 0.9193
+  "aut": 0.8491,
+  "bel": 1.0151,
+  "bundesliga": 1.2413,
+  "den": 0.9487,
+  "gre": 0.8528,
+  "laliga": 1.1868,
+  "ligue1": 1.2213,
+  "ned": 0.9342,
+  "nor": 0.8231,
+  "por": 0.9685,
+  "premier": 1.378,
+  "sco": 0.8125,
+  "seriea": 1.199,
+  "swe": 0.8528,
+  "tur": 0.9349
  },
- "partidos_ajuste": 191,
- "partidos_validacion": 14,
+ "partidos_ajuste": 563,
+ "partidos_validacion": 48,
  "validacion_desviacion": {
-  "sin_ajuste": 16.95,
-  "a_ojo": 16.22,
-  "medido": 16.41
+  "sin_ajuste": 83.14,
+  "a_ojo": 67.8,
+  "medido": 69.07
  },
  "validacion_cruzada": {
-  "sin_ajuste": 328.12,
-  "a_ojo": 316.43,
-  "medido": 319.67
+  "sin_ajuste": 1103.65,
+  "a_ojo": 976.26,
+  "medido": 973.33
  },
  "fuerza_final": {
-  "bundesliga": 0.9717,
-  "laliga": 0.9691,
-  "ligue1": 1.0134,
-  "premier": 1.1424,
-  "seriea": 0.9173
+  "aut": 0.8281,
+  "bel": 1.0175,
+  "bundesliga": 1.2285,
+  "den": 0.9384,
+  "gre": 0.8654,
+  "laliga": 1.2036,
+  "ligue1": 1.2073,
+  "ned": 0.936,
+  "nor": 0.8191,
+  "por": 0.9571,
+  "premier": 1.3959,
+  "sco": 0.8106,
+  "seriea": 1.1818,
+  "swe": 0.8878,
+  "tur": 0.94
  }
 }
