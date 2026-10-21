@@ -614,7 +614,7 @@ function buscar(ps, modo, obj) {
           if (modo === 'cuota' ? (q >= obj && (!mejor || pr > mejor.prob)) : (pr >= obj && (!mejor || q > mejor.cuota))) mejor = {sel: [...sel], prob: pr, cuota: q};
           return;
         }
-        for (const o of cb[i].op) { const np = pr * o.prob; if (modo === 'acierto' && np < obj) continue; sel.push(o); rec(i + 1, sel, np, q * o.cuota); sel.pop(); }
+        for (const o of cb[i].op) { const np = pr0 * o.prob; if (modo === 'acierto' && np < obj) continue; sel.push(o); rec(i + 1, sel, np, q * o.cuota); sel.pop(); }
       };
       rec(0, [], 1, 1);
     }
