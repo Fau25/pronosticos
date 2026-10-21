@@ -258,6 +258,24 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .intento small { color: var(--muted); font-size: .84rem; line-height: 1.5; }
 .lista-int { display: flex; flex-direction: column; gap: 10px; }
 
+.opcion { background: var(--card); border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; border: 1.5px solid transparent; }
+.opcion .letra { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--card-3); color: var(--muted); flex: 0 0 auto; }
+.opcion .t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.opcion .t small { color: var(--muted); font-size: .8rem; }
+.opcion .t b { font-weight: 700; line-height: 1.3; }
+.opcion .t .por { color: var(--lime); font-weight: 600; }
+.opcion .der { text-align: right; display: flex; flex-direction: column; gap: 2px; flex: 0 0 auto; }
+.opcion .der b { color: var(--lime); font-weight: 800; font-size: 1.1rem; }
+.opcion .der small { color: var(--muted); font-size: .78rem; }
+.opcion.rec { background: var(--lime); color: var(--lime-ink); flex-wrap: wrap; padding: 18px 20px; }
+.opcion.rec .etq { background: var(--lime-ink); color: var(--lime); }
+.opcion.rec .t { flex-basis: 100%; order: 2; }
+.opcion.rec .t small, .opcion.rec .der small { color: var(--lime-ink); opacity: .7; }
+.opcion.rec .t .por { color: var(--lime-ink); opacity: 1; font-weight: 700; }
+.opcion.rec .t b { font-size: 1.15rem; }
+.opcion.rec .der { order: 3; flex-direction: row; align-items: baseline; gap: 10px; text-align: left; }
+.opcion.rec .der b { color: var(--lime-ink); font-size: 1.4rem; }
+
 /* ---------- aciertos ---------- */
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .kpi { background: var(--card); border-radius: 28px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
@@ -730,7 +748,7 @@ document.getElementById('vista-aciertos').addEventListener('click', e => {
 const META = 20, APUESTA = 10;
 function pasosEscalera() {
   const pasos = [];
-  D.dias.forEach(d => (d.escalera || []).forEach(e => {
+  D.dias.forEach(d => (d.escalera || []).filter(e => e.recomendada !== false).forEach(e => {
     const p = d.partidos.find(x => x.understat_id === e.understat_id);
     pasos.push({...e, dia: d.dia, ok: p ? acierto(p, e.metrica, e.lado, e.linea) : null,
                 real: p && p.real ? p.real[e.metrica] : null});
@@ -759,7 +777,16 @@ function pintarEscalera() {
   const pMedia = todos.length ? todos.reduce((a, p) => a + p.prob, 0) / todos.length : 0.8;
   const qMedia = todos.length ? todos.reduce((a, p) => a + p.cuota, 0) / todos.length : 1.175;
   const probResto = Math.pow(pMedia, META - n);
-  const prox = pendientes.slice(0, Math.max(2, Math.min(4, META - n)));
+  const prox = pendientes.slice(0, Math.min(4, META - n));
+  const diaHoy = D.dias.find(d => d.dia >= hoy && (d.escalera || []).length);
+  const opcion = (e, i) => {
+    const p = diaHoy.partidos.find(x => x.understat_id === e.understat_id);
+    const ok = p ? acierto(p, e.metrica, e.lado, e.linea) : null;
+    return `<div class="opcion ${e.recomendada ? 'rec' : ''}">
+      ${e.recomendada ? '<span class="etq">Recomendada</span>' : `<span class="letra">${'ABCD'[i]}</span>`}
+      <div class="t"><small>${e.hora} · ${LIGAS[e.liga]} · ${esc(e.partido)}</small><b>${esc(e.texto)}</b>${e.motivo ? `<small class="por">${esc(e.motivo)}</small>` : ''}</div>
+      <div class="der"><b>${pct(e.prob)}</b><small>cuota ~${q2(e.cuota)}</small></div>${marca(ok)}</div>`;
+  };
   const barras = Array.from({length: META}, (_, i) =>
     `<i class="${i < n ? 'ok' : i < n + prox.length ? 'sig' : ''} ${i === META - 1 ? 'meta' : ''}" style="height:${(i + 1) / META * 100}%"></i>`).join('');
   const completadas = intentos.filter(x => x.fin === 'completa').length;
@@ -781,8 +808,11 @@ function pintarEscalera() {
         <div><small>Si la acabas</small><b>${euros(banco * Math.pow(qMedia, META - n))}</b></div>
       </div>
     </div>
-    <div class="sec"><h2>Próximos escalones</h2><span>2 apuestas por día · cuota 1,15–1,20</span></div>
-    <div class="lista-int">${prox.length ? prox.map((p, i) => tarjeta(p, n + i + 1, 'pend')).join('') : '<div class="vacio">Aún no hay partidos programados para los próximos días.</div>'}</div>
+    ${diaHoy ? `<div class="sec"><h2>Escalón del ${fechaCorta(diaHoy.dia).toLowerCase()}</h2><span>4 opciones · cuota 1,15–1,20</span></div>
+    <div class="lista-int">${diaHoy.escalera.map(opcion).join('')}</div>
+    <p class="nota" style="margin:10px 4px 0">La escalera sube con la recomendada. Si en tu casa no está o la paga peor, cualquiera de las otras tiene una probabilidad parecida.</p>` : ''}
+    ${prox.length > 1 ? `<div class="sec"><h2>Próximos días</h2><span>recomendada de cada día</span></div>
+    <div class="lista-int">${prox.slice(1).map((p, i) => tarjeta(p, n + i + 2, 'pend')).join('')}</div>` : ''}
     ${n ? `<div class="sec"><h2>Escalones superados</h2><span>${n}</span></div>
     <div class="lista-int">${actual.slice().reverse().slice(0, 5).map((p, i) => tarjeta(p, n - i, 'ok')).join('')}
       ${n > 5 ? `<details><summary class="ver-todos" style="list-style:none;cursor:pointer">Ver los ${n - 5} anteriores</summary><div class="lista-int" style="margin-top:10px">${actual.slice().reverse().slice(5).map((p, i) => tarjeta(p, n - 5 - i, 'ok')).join('')}</div></details>` : ''}</div>` : ''}
@@ -793,7 +823,7 @@ function pintarEscalera() {
         <div class="mini-esc">${x.pasos.map(p => `<i class="${p.ok ? 'ok' : 'ko'}"></i>`).join('')}</div>
         <small>${fechaCorta(x.pasos[0].dia)} → ${fechaCorta(ult.dia)}${x.fin === 'fallo' ? ` · cayó en «${esc(ult.texto)}», ${esc(ult.partido)}${ult.real != null ? ' (real ' + n1(ult.real) + ')' : ''}` : ''}</small></div>`;
     }).join('') : '<div class="vacio">Todavía no ha caído ninguna escalera.</div>'}</div>
-    <p class="nota" style="margin:16px 4px 0">Cada escalón es una apuesta con cuota estimada entre 1,15 y 1,20, en partidos distintos. Esa cuota corresponde a una probabilidad real de ~80 %: completar 20 seguidos sale aproximadamente 1 de cada 90 veces y de media la escalera cae hacia el escalón 4. La cuota es estimada; comprueba la de tu casa antes de apostar.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
+    <p class="nota" style="margin:16px 4px 0">Cada día sube un escalón con la apuesta recomendada (cuota estimada entre 1,15 y 1,20). Esa cuota corresponde a una probabilidad real de ~80 %: completar 20 seguidos sale aproximadamente 1 de cada 90 veces y de media la escalera cae hacia el escalón 4. La cuota es estimada; comprueba la de tu casa antes de apostar.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
 }
 
 function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, aciertos: pintarAciertos})[E.vista](); }

@@ -147,7 +147,7 @@ ESC_CUOTA_MIN, ESC_CUOTA_MAX, ESC_CUOTA_OBJ = 1.15, 1.20, 1.175
 
 
 def escalera_dia(mod, partidos):
-    """Las 2 apuestas del día para la escalera: en 2 partidos distintos, línea con cuota estimada 1,15-1,20."""
+    """4 opciones del día para la escalera (partidos distintos, cuota estimada 1,15-1,20) y una recomendada."""
     mejores = []
     for p in partidos:
         cand = None
@@ -168,9 +168,21 @@ def escalera_dia(mod, partidos):
         if cand:
             mejores.append(cand)
     # se prefieren ligas a Champions (experimental), y luego la probabilidad
-    # entre las candidatas, las más probables (cuota más cerca de 1,15), y ligas antes que Champions
-    mejores.sort(key=lambda c: (c["liga"] == "ucl", -c["prob"]))
-    return sorted(mejores[:2], key=lambda c: c["hora"])
+    # 4 opciones del día; la recomendada es la más probable, con preferencia por mercados que ofrecen
+    # todas las casas (goles, córners, tarjetas) y por ligas antes que Champions (experimental)
+    habitual = {"goles", "goles_1t", "goles_2t", "corners", "tarjetas"}
+    for c in mejores:
+        c["puntos"] = c["prob"] + (0.01 if c["metrica"] in habitual else 0) - (0.03 if c["liga"] == "ucl" else 0)
+    mejores.sort(key=lambda c: -c["puntos"])
+    opciones = mejores[:4]
+    for i, c in enumerate(opciones):
+        c["recomendada"] = i == 0
+        motivos = ["la más segura del día" if i == 0 else None,
+                   "mercado que ofrecen todas las casas" if c["metrica"] in habitual else None,
+                   "pronóstico experimental (Champions)" if c["liga"] == "ucl" else None]
+        c["motivo"] = " · ".join(m for m in motivos if m)
+        del c["puntos"]
+    return sorted(opciones, key=lambda c: (not c["recomendada"], c["hora"]))
 
 
 def exportar(desde, hasta):
