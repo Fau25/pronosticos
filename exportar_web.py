@@ -141,6 +141,35 @@ def _partidos_ucl(con, mod, ucl):
     return partidos
 
 
+ESC_FAM = {"goles", "goles_1t", "goles_2t", "tiros", "remates", "corners", "tarjetas"}
+ESC_MIN, ESC_MAX = 0.88, 0.93   # banda de probabilidad de cada escalón (~90 %)
+
+
+def escalera_dia(mod, partidos):
+    """Las 2 apuestas del día para la escalera: en 2 partidos distintos, la línea más cercana al 90 %."""
+    mejores = []
+    for p in partidos:
+        cand = None
+        for f in p["pronosticos"]:
+            if f["metrica"] not in ESC_FAM:
+                continue
+            for l in [x + 0.5 for x in range(0, 45)]:
+                pm = mod.prob_mas(f["metrica"], f["esperado_total"], l)
+                for prob, lado in ((pm, "más"), (1 - pm, "menos")):
+                    if ESC_MIN <= prob <= ESC_MAX and (cand is None or abs(prob - 0.90) < abs(cand["prob"] - 0.90)):
+                        nombre = M.NOMBRES[f["metrica"]].lower()
+                        cand = dict(understat_id=p["understat_id"], liga=p["liga"], hora=p["hora"],
+                                    partido=f"{p['local']} – {p['visitante']}", metrica=f["metrica"],
+                                    lado=lado, linea=l, prob=round(prob, 4),
+                                    cuota=round(C.cuota_casa_estimada(prob), 3),
+                                    texto=f"{lado.capitalize()} de {str(l).replace('.', ',')} {nombre}")
+        if cand:
+            mejores.append(cand)
+    # se prefieren ligas a Champions (experimental), y luego la probabilidad
+    mejores.sort(key=lambda c: (c["liga"] == "ucl", abs(c["prob"] - 0.90)))
+    return sorted(mejores[:2], key=lambda c: c["hora"])
+
+
 def exportar(desde, hasta):
     CACHE.mkdir(exist_ok=True)
     df, nombres = M.unir_fuentes()
@@ -183,7 +212,8 @@ def exportar(desde, hasta):
         if not ucl.empty:
             partidos += _partidos_ucl(con, mod, ucl)
         if partidos:
-            dj = {"dia": dia.isoformat(), "jugado": jugado_dia, "partidos": partidos}
+            dj = {"dia": dia.isoformat(), "jugado": jugado_dia, "partidos": partidos,
+                  "escalera": escalera_dia(mod, partidos)}
             dj["completo"] = bool(todo_jugado and _completo(dj))
             if dj["completo"]:
                 guardado.write_text(json.dumps(dj, ensure_ascii=False, default=float), encoding="utf-8")

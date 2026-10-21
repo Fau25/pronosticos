@@ -219,6 +219,45 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .boleto-cab .estado { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: .9rem; }
 .dia.pasado b { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
 
+/* ---------- escalera ---------- */
+.esc-hero { background: var(--lime); color: var(--lime-ink); border-radius: 30px; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+.esc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.esc-top small { display: block; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
+.esc-top .grande { font-size: 3rem; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+.esc-top .grande span { font-size: 1.3rem; opacity: .6; }
+.esc-top .der { text-align: right; }
+.esc-top .der b { font-size: 1.5rem; font-weight: 800; }
+.escalones { display: flex; align-items: flex-end; gap: 4px; height: 130px; }
+.escalones i { flex: 1; border-radius: 6px 6px 3px 3px; background: rgba(21, 24, 16, .12); position: relative; }
+.escalones i.ok { background: var(--lime-ink); }
+.escalones i.sig { background: transparent; box-shadow: inset 0 0 0 2.5px var(--lime-ink); }
+.escalones i.meta::after { content: "🏁"; position: absolute; top: -26px; left: 50%; transform: translateX(-50%); font-size: 1rem; }
+@media (prefers-reduced-motion: no-preference) { .escalones i.sig { animation: latido 1.6s ease-in-out infinite; } }
+@keyframes latido { 50% { opacity: .45; } }
+.esc-pie { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.esc-pie div { background: rgba(21, 24, 16, .09); border-radius: 16px; padding: 10px 12px; }
+.esc-pie small { display: block; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+.esc-pie b { font-size: 1.2rem; font-weight: 800; }
+.paso-c { background: var(--card); border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+.paso-c .num { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--card-3); flex: 0 0 auto; }
+.paso-c.ok .num { background: var(--win); color: #0f1a0a; }
+.paso-c.ko .num { background: var(--loss); color: #1f0b07; }
+.paso-c.pend .num { background: var(--lime); color: var(--lime-ink); }
+.paso-c .t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.paso-c .t small { color: var(--muted); font-size: .8rem; }
+.paso-c .t b { font-weight: 700; line-height: 1.3; }
+.paso-c .der { text-align: right; display: flex; flex-direction: column; gap: 2px; }
+.paso-c .der b { color: var(--lime); font-weight: 800; }
+.paso-c .der small { color: var(--muted); font-size: .78rem; }
+.intento { background: var(--card); border-radius: 22px; padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
+.intento .cab { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.intento .cab b { font-weight: 700; }
+.mini-esc { display: flex; gap: 3px; }
+.mini-esc i { width: 10px; height: 10px; border-radius: 3px; background: var(--card-3); }
+.mini-esc i.ok { background: var(--win); } .mini-esc i.ko { background: var(--loss); }
+.intento small { color: var(--muted); font-size: .84rem; line-height: 1.5; }
+.lista-int { display: flex; flex-direction: column; gap: 10px; }
+
 /* ---------- aciertos ---------- */
 .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .kpi { background: var(--card); border-radius: 28px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
@@ -262,7 +301,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 @media (max-width: 480px) {
   .nav { width: calc(100% - 32px); justify-content: space-between; }
-  .nav button { flex: 1; justify-content: center; padding: 11px 6px; font-size: .86rem; gap: 5px; }
+  .nav button { flex: 1; justify-content: center; padding: 10px 4px; font-size: .78rem; gap: 4px; flex-direction: column; }
   .nav button svg { width: 16px; height: 16px; }
   .kpi b { font-size: 2.3rem; }
   .fila-ac { grid-template-columns: minmax(0, 1fr) 82px 82px; gap: 10px; }
@@ -291,6 +330,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
   <main id="vista-partidos"></main>
   <main id="vista-combinada" hidden></main>
+  <main id="vista-escalera" hidden></main>
   <main id="vista-aciertos" hidden></main>
 
   <footer class="pie">
@@ -306,6 +346,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 <nav class="nav" aria-label="Vista">
   <button id="v-partidos" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg>Partidos</button>
   <button id="v-combinada" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z"/><path d="M10 7v12" stroke-dasharray="2 2"/></svg>Combinada</button>
+  <button id="v-escalera" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 20h4v-4h4v-4h4V8h4V4"/></svg>Escalera</button>
   <button id="v-aciertos" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>Aciertos</button>
 </nav>
 
@@ -372,6 +413,7 @@ const hoy = new Date().toISOString().slice(0, 10);
 E.dia = (D.dias.find(d => d.dia >= hoy) || D.dias[0] || {}).dia;
 if (location.hash === '#combinada') E.vista = 'combinada';
 if (location.hash === '#aciertos') E.vista = 'aciertos';
+if (location.hash === '#escalera') E.vista = 'escalera';
 const hora = new Date().getHours();
 document.getElementById('saludo').textContent = hora < 13 ? 'Buenos días' : hora < 21 ? 'Buenas tardes' : 'Buenas noches';
 const sello = `Datos hasta el ${D.ultimo_dato.split('-').reverse().join('/')} · actualizado ${D.generado.replace(' ', ' a las ')}`;
@@ -389,12 +431,13 @@ function pintarBarra() {
     return `<button class="dia ${d.jugado ? 'pasado' : ''}" data-dia="${d.dia}" aria-pressed="${d.dia === E.dia}"><small>${DSEM[f.getDay()]}</small><b>${f.getDate()}</b><i>${d.jugado ? 'jugado' : n + ' part.'}</i></button>`;
   }).join('');
   document.getElementById('titular').innerHTML = {partidos: 'Elige tu<strong>partido del día</strong>',
-    combinada: 'Arma tu<strong>combinada</strong>', aciertos: 'Así va<strong>el modelo</strong>'}[E.vista];
-  for (const v of ['partidos', 'combinada', 'aciertos']) {
+    combinada: 'Arma tu<strong>combinada</strong>', escalera: 'Sube la<strong>escalera</strong>', aciertos: 'Así va<strong>el modelo</strong>'}[E.vista];
+  for (const v of ['partidos', 'combinada', 'escalera', 'aciertos']) {
     document.getElementById('v-' + v).setAttribute('aria-pressed', E.vista === v);
     document.getElementById('vista-' + v).hidden = E.vista !== v;
   }
-  document.getElementById('dias-caja').hidden = E.vista === 'aciertos';
+  document.getElementById('dias-caja').hidden = E.vista === 'aciertos' || E.vista === 'escalera';
+  document.getElementById('ligas').hidden = E.vista === 'escalera';
   const sel = document.querySelector('.dia[aria-pressed="true"]');
   if (sel) { const c = document.getElementById('dias'); c.scrollLeft = sel.offsetLeft - c.clientWidth / 2 + sel.clientWidth / 2; }
 }
@@ -409,7 +452,7 @@ document.getElementById('ligas').addEventListener('click', e => {
   try { localStorage.setItem('pron-ligas-v2', JSON.stringify({sel: [...E.ligas], conocidas: ORDEN})); } catch (e) {}
   E.elegidos = null; render();
 });
-['partidos', 'combinada', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
+['partidos', 'combinada', 'escalera', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
   E.vista = v; try { history.replaceState(null, '', '#' + v); } catch (e) {} render(); window.scrollTo({top: 0});
 }));
 
@@ -683,6 +726,73 @@ document.getElementById('vista-aciertos').addEventListener('click', e => {
   const b = e.target.closest('[data-ambito]'); if (b) { E.ambito = b.dataset.ambito; pintarAciertos(); }
 });
 
-function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, aciertos: pintarAciertos})[E.vista](); }
+/* ---------- escalera ---------- */
+const META = 20, APUESTA = 10;
+function pasosEscalera() {
+  const pasos = [];
+  D.dias.forEach(d => (d.escalera || []).forEach(e => {
+    const p = d.partidos.find(x => x.understat_id === e.understat_id);
+    pasos.push({...e, dia: d.dia, ok: p ? acierto(p, e.metrica, e.lado, e.linea) : null,
+                real: p && p.real ? p.real[e.metrica] : null});
+  }));
+  return pasos;
+}
+function simular(pasos) {
+  const intentos = []; let cur = [];
+  const pendientes = [];
+  for (const p of pasos) {
+    if (p.ok == null) { pendientes.push(p); continue; }
+    cur.push(p);
+    if (!p.ok) { intentos.push({pasos: cur, fin: 'fallo'}); cur = []; }
+    else if (cur.length === META) { intentos.push({pasos: cur, fin: 'completa'}); cur = []; }
+  }
+  return {intentos, actual: cur, pendientes};
+}
+const fechaCorta = iso => { const f = new Date(iso + 'T12:00:00'); return `${DSEM[f.getDay()]} ${f.getDate()}/${f.getMonth() + 1}`; };
+const euros = x => x.toFixed(2).replace('.', ',') + ' €';
+function pintarEscalera() {
+  const v = document.getElementById('vista-escalera');
+  const {intentos, actual, pendientes} = simular(pasosEscalera());
+  const n = actual.length;
+  const banco = actual.reduce((b, p) => b * p.cuota, APUESTA);
+  const probResto = Math.pow(0.9, META - n);
+  const prox = pendientes.slice(0, Math.max(2, Math.min(4, META - n)));
+  const barras = Array.from({length: META}, (_, i) =>
+    `<i class="${i < n ? 'ok' : i < n + prox.length ? 'sig' : ''} ${i === META - 1 ? 'meta' : ''}" style="height:${(i + 1) / META * 100}%"></i>`).join('');
+  const completadas = intentos.filter(x => x.fin === 'completa').length;
+  const media = intentos.length ? intentos.reduce((a, x) => a + (x.fin === 'completa' ? META : x.pasos.length - 1), 0) / intentos.length : null;
+  const tarjeta = (p, i, cls) => `<div class="paso-c ${cls}"><span class="num">${i}</span>
+      <span class="t"><small>${fechaCorta(p.dia)} · ${p.hora} · ${LIGAS[p.liga]}</small><b>${esc(p.texto)}</b><small>${esc(p.partido)}${p.real != null ? ' · real ' + n1(p.real) : ''}</small></span>
+      <span class="der"><b>${pct(p.prob)}</b><small>cuota ~${q2(p.cuota)}</small></span>${p.ok != null ? marca(p.ok) : ''}</div>`;
+  v.innerHTML = `
+    <div class="sec"><h2>Escalera actual</h2><span>${META} escalones sin fallar</span></div>
+    <div class="esc-hero">
+      <div class="esc-top">
+        <div><small>Escalón</small><div class="grande">${n}<span> / ${META}</span></div></div>
+        <div class="der"><small>Si empezaste con ${APUESTA} €</small><b>${euros(banco)}</b></div>
+      </div>
+      <div class="escalones" aria-label="${n} de ${META} escalones superados">${barras}</div>
+      <div class="esc-pie">
+        <div><small>Cada escalón</small><b>~90%</b></div>
+        <div><small>Completarla</small><b>${pct(probResto)}</b></div>
+        <div><small>Si la acabas</small><b>${euros(banco * Math.pow(1.048, META - n))}</b></div>
+      </div>
+    </div>
+    <div class="sec"><h2>Próximos escalones</h2><span>2 apuestas por día</span></div>
+    <div class="lista-int">${prox.length ? prox.map((p, i) => tarjeta(p, n + i + 1, 'pend')).join('') : '<div class="vacio">Aún no hay partidos programados para los próximos días.</div>'}</div>
+    ${n ? `<div class="sec"><h2>Escalones superados</h2><span>${n}</span></div>
+    <div class="lista-int">${actual.slice().reverse().slice(0, 5).map((p, i) => tarjeta(p, n - i, 'ok')).join('')}
+      ${n > 5 ? `<details><summary class="ver-todos" style="list-style:none;cursor:pointer">Ver los ${n - 5} anteriores</summary><div class="lista-int" style="margin-top:10px">${actual.slice().reverse().slice(5).map((p, i) => tarjeta(p, n - 5 - i, 'ok')).join('')}</div></details>` : ''}</div>` : ''}
+    <div class="sec"><h2>Intentos anteriores</h2><span>${intentos.length} · ${completadas} completadas</span></div>
+    <div class="lista-int">${intentos.length ? intentos.slice().reverse().map((x, k) => {
+      const ult = x.pasos[x.pasos.length - 1], sup = x.fin === 'completa' ? META : x.pasos.length - 1;
+      return `<div class="intento"><div class="cab"><b>Intento ${intentos.length - k} · ${x.fin === 'completa' ? '¡Completada!' : sup + ' escalones'}</b>${marca(x.fin === 'completa')}</div>
+        <div class="mini-esc">${x.pasos.map(p => `<i class="${p.ok ? 'ok' : 'ko'}"></i>`).join('')}</div>
+        <small>${fechaCorta(x.pasos[0].dia)} → ${fechaCorta(ult.dia)}${x.fin === 'fallo' ? ` · cayó en «${esc(ult.texto)}», ${esc(ult.partido)}${ult.real != null ? ' (real ' + n1(ult.real) + ')' : ''}` : ''}</small></div>`;
+    }).join('') : '<div class="vacio">Todavía no ha caído ninguna escalera.</div>'}</div>
+    <p class="nota" style="margin:16px 4px 0">Cada escalón es la línea más cercana al 90 % del día, en partidos distintos. En la temporada pasada estos pronósticos acertaron el 88–90 %, pero solo 5–7 de cada 50 escaleras llegaron a 20 (de media caen hacia el escalón 7–8). Una apuesta del 90 % vale 1,11 sin margen y las casas suelen pagarla a 1,03–1,07: la cuota que ves es estimada.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
+}
+
+function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, aciertos: pintarAciertos})[E.vista](); }
 render();
 </script>
