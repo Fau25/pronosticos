@@ -1,28 +1,46 @@
 {
  "fuerza": {
-  "bundesliga": 0.9713,
-  "laliga": 0.9583,
-  "ligue1": 1.0256,
-  "premier": 1.1394,
-  "seriea": 0.9193
+  "aut": 0.887,
+  "bel": 1.0453,
+  "bundesliga": 1.2478,
+  "den": 0.9629,
+  "gre": 0.8541,
+  "laliga": 1.1886,
+  "ligue1": 1.2221,
+  "ned": 0.9355,
+  "nor": 0.8332,
+  "por": 0.9963,
+  "premier": 1.375,
+  "sco": 0.8444,
+  "swe": 0.8604,
+  "tur": 0.9327
  },
- "partidos_ajuste": 191,
- "partidos_validacion": 14,
+ "partidos_ajuste": 441,
+ "partidos_validacion": 35,
  "validacion_desviacion": {
-  "sin_ajuste": 16.95,
-  "a_ojo": 16.22,
-  "medido": 16.41
+  "sin_ajuste": 59.3,
+  "a_ojo": 56.17,
+  "medido": 45.49
  },
  "validacion_cruzada": {
-  "sin_ajuste": 328.12,
-  "a_ojo": 316.43,
-  "medido": 319.67
+  "sin_ajuste": 850.39,
+  "a_ojo": 826.26,
+  "medido": 752.65
  },
  "fuerza_final": {
-  "bundesliga": 0.9717,
-  "laliga": 0.9691,
-  "ligue1": 1.0134,
-  "premier": 1.1424,
-  "seriea": 0.9173
+  "aut": 0.868,
+  "bel": 1.0472,
+  "bundesliga": 1.238,
+  "den": 0.9559,
+  "gre": 0.8692,
+  "laliga": 1.2114,
+  "ligue1": 1.2106,
+  "ned": 0.9362,
+  "nor": 0.832,
+  "por": 0.987,
+  "premier": 1.3964,
+  "sco": 0.8433,
+  "swe": 0.8617,
+  "tur": 0.9351
  }
 }

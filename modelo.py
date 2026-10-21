@@ -122,8 +122,44 @@ def unir_fuentes(con=None):
     m["goles_visitante_2t"] = m.goles_visitante - m.goles_visitante_1t
     m["tarjetas_local"] = m.amarillas_local + m.rojas_local
     m["tarjetas_visitante"] = m.amarillas_visitante + m.rojas_visitante
+    ext = partidos_extra(con)
+    if not ext.empty:
+        m = pd.concat([m, ext], ignore_index=True)
     m = m.sort_values(["fecha", "liga"]).reset_index(drop=True)
     return m, nombre
+
+
+def partidos_extra(con=None):
+    """Partidos jugados de las ligas adicionales (ESPN) con las mismas columnas que el resto.
+    No tienen xG ni tiros por partes: esas métricas quedan vacías y el modelo las ignora."""
+    import json
+    con = con or sqlite3.connect(BD)
+    try:
+        e = pd.read_sql("SELECT * FROM extra_partidos WHERE completado = 1", con)
+    except Exception:
+        f = Path(__file__).resolve().parent / "datos" / "extra_historico.json"
+        if not f.exists():
+            return pd.DataFrame()
+        e = pd.DataFrame([x for x in json.loads(f.read_text(encoding="utf-8")) if x.get("completado")])
+    if e.empty:
+        return e
+    e = e.dropna(subset=["goles_local", "goles_visitante"]).copy()
+    e["fecha"] = pd.to_datetime(e.fecha_utc, utc=True).dt.tz_convert("Europe/Madrid").dt.normalize().dt.tz_localize(None)
+    out = pd.DataFrame({
+        "fecha": e.fecha, "liga": e.liga, "local": e.local, "visitante": e.visitante,
+        "goles_local": e.goles_local, "goles_visitante": e.goles_visitante,
+        "goles_local_1t": e.get("goles_local_1t"), "goles_visitante_1t": e.get("goles_visitante_1t"),
+        "tiros_local": e.tiros_local, "tiros_visitante": e.tiros_visitante,
+        "remates_local": e.remates_local, "remates_visitante": e.remates_visitante,
+        "tiros_puerta_local": e.remates_local, "tiros_puerta_visitante": e.remates_visitante,
+        "corners_local": e.corners_local, "corners_visitante": e.corners_visitante,
+    })
+    out["goles_local_2t"] = out.goles_local - out.goles_local_1t
+    out["goles_visitante_2t"] = out.goles_visitante - out.goles_visitante_1t
+    tiene_tarj = e.amarillas_local.notna()
+    out["tarjetas_local"] = (e.amarillas_local + e.rojas_local.fillna(0)).where(tiene_tarj)
+    out["tarjetas_visitante"] = (e.amarillas_visitante + e.rojas_visitante.fillna(0)).where(tiene_tarj)
+    return out
 
 
 def partidos_europeos(con=None):

@@ -43,13 +43,25 @@ CLASICOS = {
 }
 
 NOMBRE_LIGA = {"laliga": "LaLiga", "premier": "Premier League", "seriea": "Serie A",
-               "bundesliga": "Bundesliga", "ligue1": "Ligue 1", "ucl": "Champions"}
+               "bundesliga": "Bundesliga", "ligue1": "Ligue 1", "ucl": "Champions",
+               "por": "Primeira Liga", "ned": "Eredivisie", "bel": "Pro League", "sco": "Premiership",
+               "tur": "Süper Lig", "aut": "Bundesliga (AUT)", "gre": "Super League", "den": "Superliga",
+               "nor": "Eliteserien", "swe": "Allsvenskan"}
 
 
 def clasificacion(con, liga, temporada=TEMPORADA_ACTUAL):
-    p = pd.read_sql("""SELECT fecha, local, visitante, goles_local gl, goles_visitante gv
-                       FROM us_partidos WHERE liga=? AND temporada=? AND jugado=1
-                       ORDER BY fecha""", con, params=(liga, temporada))
+    import extra_ligas as X
+    if liga in X.EXTRA:
+        try:
+            p = pd.read_sql("""SELECT substr(fecha_utc,1,10) fecha, local, visitante, goles_local gl, goles_visitante gv
+                               FROM extra_partidos WHERE liga=? AND completado=1 AND fecha_utc >= ?
+                               ORDER BY fecha_utc""", con, params=(liga, X.inicio_temporada(liga).isoformat()))
+        except Exception:
+            p = pd.DataFrame(columns=["fecha", "local", "visitante", "gl", "gv"])
+    else:
+        p = pd.read_sql("""SELECT fecha, local, visitante, goles_local gl, goles_visitante gv
+                           FROM us_partidos WHERE liga=? AND temporada=? AND jugado=1
+                           ORDER BY fecha""", con, params=(liga, temporada))
     filas = []
     for r in p.itertuples():
         pl = 3 if r.gl > r.gv else 1 if r.gl == r.gv else 0

@@ -54,7 +54,15 @@ def _equipos_ligas(con, todas=False):
         filtro = "" if todas else "WHERE temporada = (SELECT MAX(temporada) FROM us_partidos)"
         filas = con.execute(f"SELECT liga, local, MAX(temporada) FROM us_partidos {filtro} "
                             "GROUP BY liga, local ORDER BY 3").fetchall()
-        _CACHE_EQ[clave] = {_norm(n): (l, n) for l, n, _ in filas}
+        eqs = {_norm(n): (l, n) for l, n, _ in filas}
+        # ligas adicionales (ESPN): los nombres ya coinciden con los de la Champions
+        try:
+            filtro_x = "" if todas else "WHERE fecha_utc >= date('now', '-400 days')"
+            for l, n in con.execute(f"SELECT DISTINCT liga, local FROM extra_partidos {filtro_x}"):
+                eqs.setdefault(_norm(n), (l, n))
+        except sqlite3.Error:
+            pass
+        _CACHE_EQ[clave] = eqs
     return _CACHE_EQ[clave]
 
 
