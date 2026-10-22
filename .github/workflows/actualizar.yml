@@ -28,32 +28,52 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Recuperar la base de datos
+        id: cache
         uses: actions/cache/restore@v4
         with:
           path: pronosticos.db
           key: bd-${{ github.run_id }}
           restore-keys: bd-
 
-      - name: Base inicial si no hay copia
-        run: test -f pronosticos.db || cp datos/semilla.db pronosticos.db
+      - name: Si no hay caché, copia semanal (release) y si no, base inicial
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -f pronosticos.db ]; then echo "ORIGEN_BD=cache" >> $GITHUB_ENV; exit 0; fi
+          if gh release download copia-bd -p pronosticos.db.gz -D . 2>/dev/null && gunzip -f pronosticos.db.gz; then
+            echo "Base recuperada de la copia semanal"; echo "ORIGEN_BD=copia" >> $GITHUB_ENV
+          else
+            cp datos/semilla.db pronosticos.db; echo "Base recuperada de la semilla"; echo "ORIGEN_BD=semilla" >> $GITHUB_ENV
+          fi
 
       - name: Descargar resultados y calendario nuevos
+        id: futdata
+        continue-on-error: true
+        shell: bash
         run: python actualizar_datos.py rapido
 
       - name: Champions (ESPN)
+        id: champions
         continue-on-error: true
+        shell: bash
         run: python champions.py 2>&1 | tee registro_champions.txt
 
       - name: Partidos europeos (ESPN)
+        id: europa
         continue-on-error: true
+        shell: bash
         run: python europa.py
 
       - name: Ligas adicionales (ESPN)
+        id: extra
         continue-on-error: true
+        shell: bash
         run: python extra_ligas.py 2>&1 | tee registro_extra.txt
 
       - name: Medir el nivel de cada liga
+        id: nivel
         continue-on-error: true
+        shell: bash
         run: python medir_ligas.py 2>&1 | tee registro_ligas.txt
 
       - name: Guardar la base de datos
@@ -63,6 +83,30 @@ jobs:
           path: pronosticos.db
           key: bd-${{ github.run_id }}
 
+      - name: Copia semanal de la base (lunes, o si aún no existe)
+        if: always() && hashFiles('pronosticos.db') != '' && env.ORIGEN_BD != 'semilla'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(date -u +%u)" = "1" ] || ! gh release view copia-bd >/dev/null 2>&1; then
+            gh release view copia-bd >/dev/null 2>&1 || gh release create copia-bd --title "Copia de la base de datos" \
+              --notes "Copia semanal automática de pronosticos.db. Se usa si la caché de GitHub se pierde." --latest=false
+            gzip -kf pronosticos.db
+            gh release upload copia-bd pronosticos.db.gz --clobber
+            echo "Copia semanal subida"
+          fi
+
+      - name: Estado de las fuentes
+        if: always()
+        run: |
+          cat > estado.json <<EOF
+          {"origen_bd": "${ORIGEN_BD:-desconocido}", "pasos": {"futdata": "${{ steps.futdata.outcome }}",
+           "champions": "${{ steps.champions.outcome }}", "europa": "${{ steps.europa.outcome }}",
+           "extra": "${{ steps.extra.outcome }}", "nivel": "${{ steps.nivel.outcome }}"}}
+          EOF
+          cat estado.json
+
       - name: Calcular pronósticos y generar la web
         run: python exportar_web.py
 
@@ -70,11 +114,13 @@ jobs:
         run: |
           git config user.name "pronosticos-bot"
           git config user.email "pronosticos-bot@users.noreply.github.com"
-          cp docs/index.html index.html && touch .nojekyll && rm -rf web && cp -r docs/web web
+          touch .nojekyll && rm -rf web && cp -r docs/web web
+          cp docs/index.html docs/sw.js docs/manifest.webmanifest docs/*.png .
           mkdir -p registro && cp registro_actualizacion.txt registro/ultima_actualizacion.txt 2>/dev/null || true
           cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
           cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
           cp registro_extra.txt registro/ultimas_ligas_extra.txt 2>/dev/null || true
-          git add -A docs web dias index.html .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
+          cp estado.json registro/estado.json 2>/dev/null || true
+          git add -A docs web dias index.html sw.js manifest.webmanifest *.png .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
           git push

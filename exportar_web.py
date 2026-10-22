@@ -318,8 +318,25 @@ def indice(d):
                                              _ok(p, f["metrica"], f.get("segura_lado"), f.get("segura_linea"))]
                               for f in p["pronosticos"]}})
         dias.append({"dia": x["dia"], "jugado": x["jugado"], "n": cuenta, "escalera": esc, "res": res})
-    return {"generado": d["generado"], "ultimo_dato": d["ultimo_dato"],
+    return {"generado": d["generado"], "ultimo_dato": d["ultimo_dato"], "estado": estado_fuentes(),
             "correlaciones": d.get("correlaciones", {}), "dias": dias}
+
+
+NOMBRE_FUENTE = {"futdata": "resultados de las 5 ligas", "champions": "Champions", "europa": "competiciones europeas",
+                 "extra": "ligas adicionales", "nivel": "nivel de las ligas"}
+
+
+def estado_fuentes():
+    """Lee estado.json (lo escribe el workflow con el resultado de cada paso) -> {fallos: [...], origen_bd}."""
+    f = Path(__file__).resolve().parent / "estado.json"
+    try:
+        e = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"fallos": []}
+    fallos = [NOMBRE_FUENTE.get(k, k) for k, v in (e.get("pasos") or {}).items() if v == "failure"]
+    if e.get("origen_bd") == "semilla":
+        fallos.append("la base de datos guardada (se recuperó la copia inicial)")
+    return {"fallos": fallos, "origen_bd": e.get("origen_bd")}
 
 
 if __name__ == "__main__":
@@ -350,10 +367,21 @@ if __name__ == "__main__":
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Pronósticos">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23121411'/%3E%3Ccircle cx='32' cy='32' r='18' fill='%23d4f53c'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 """
     cuerpo = plantilla.replace("__DATOS__", datos).replace('<div class="wrap">', '</head>\n<body>\n<div class="wrap">', 1)
     html = cabeza + cuerpo + "\n</body>\n</html>\n"
     (raiz / "docs" / "index.html").write_text(html, encoding="utf-8")
     (raiz / "docs" / ".nojekyll").write_text("", encoding="utf-8")
+    # app instalable: iconos, manifest y service worker (versión = sello de esta generación)
+    import shutil
+    for f in (raiz / "estaticos").iterdir():
+        if f.name == "sw.js":
+            version = d["generado"].replace(" ", "-").replace(":", "")
+            (raiz / "docs" / "sw.js").write_text(f.read_text(encoding="utf-8").replace("__VERSION__", version),
+                                                 encoding="utf-8")
+        else:
+            shutil.copy(f, raiz / "docs" / f.name)
     print("listo", d["generado"], "->", raiz / "docs" / "index.html", f"({len(html) // 1024} KB)")

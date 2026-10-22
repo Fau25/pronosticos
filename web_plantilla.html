@@ -402,6 +402,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .nav button { padding: 12px 18px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.aviso-datos { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 18px; padding: 14px 16px; border-radius: 18px;
+  background: rgba(255, 111, 94, .12); border: 1px solid rgba(255, 111, 94, .35); color: var(--ink); font-size: 14px; line-height: 1.45; }
+.aviso-datos.suave { background: var(--card); border-color: var(--line); color: var(--muted); }
+.aviso-datos b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px; }
+.aviso-datos .pto { flex: none; width: 10px; height: 10px; margin-top: 6px; border-radius: 50%; background: var(--loss); }
+.aviso-datos.suave .pto { background: var(--muted); }
 </style>
 
 <div class="wrap">
@@ -412,6 +418,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
     </div>
     <div class="redondo" title="Datos actualizados" id="sello-mini" aria-hidden="true">i</div>
   </header>
+
+  <div class="aviso-datos" id="aviso-datos" role="status" hidden></div>
 
   <h1 class="titular" id="titular">Elige tu<strong>partido del día</strong></h1>
 
@@ -509,6 +517,31 @@ document.getElementById('saludo').textContent = hora < 13 ? 'Buenos días' : hor
 const sello = `Datos hasta el ${D.ultimo_dato.split('-').reverse().join('/')} · actualizado ${D.generado.replace(' ', ' a las ')}`;
 document.getElementById('sello').textContent = sello;
 document.getElementById('sello-mini').title = sello;
+
+/* avisos: datos sin actualizar, fuentes que fallaron hoy, sin conexión */
+function pintarAviso() {
+  const caja = document.getElementById('aviso-datos');
+  const avisos = [];
+  const gen = new Date(D.generado.replace(' ', 'T') + ':00');
+  const horas = (Date.now() - gen.getTime()) / 36e5;
+  if (horas > 30) avisos.push(['fuerte', 'Datos sin actualizar', `La última actualización fue hace ${horas < 48 ? Math.round(horas) + ' horas' : Math.floor(horas / 24) + ' días'}. Puede que la actualización automática haya fallado: los pronósticos y aciertos no incluyen lo más reciente.`]);
+  const mal = (D.estado && D.estado.fallos) || [];
+  if (mal.length) avisos.push(['fuerte', 'Actualización incompleta', `Hoy no se pudo leer: ${mal.join(', ')}. Lo de esas fuentes puede estar desfasado.`]);
+  if (!navigator.onLine) avisos.push(['suave', 'Sin conexión', 'Estás viendo la última copia guardada en el móvil.']);
+  caja.hidden = !avisos.length;
+  if (!avisos.length) return;
+  const fuerte = avisos.some(a => a[0] === 'fuerte');
+  caja.className = 'aviso-datos' + (fuerte ? '' : ' suave');
+  caja.innerHTML = '<i class="pto"></i><div>' + avisos.map(a => `<b>${a[1]}</b>${a[2]}`).join('<br><br>') + '</div>';
+}
+pintarAviso();
+addEventListener('online', pintarAviso);
+addEventListener('offline', pintarAviso);
+
+/* app instalable: copia sin conexión de la última versión vista */
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+}
 
 /* cada día se descarga solo cuando se abre (web/dias/AAAA-MM-DD.json) */
 const CARGADOS = {}, CARGANDO = {};
