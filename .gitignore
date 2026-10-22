@@ -2,5 +2,5 @@ pronosticos.db
 registro_actualizacion.txt
 debug_understat_partido.html
 __pycache__/
-estado.json
-pronosticos.db.gz
+/estado.json
+/pronosticos.db.gz
