@@ -402,6 +402,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .nav button { padding: 12px 18px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+.graf { position: relative; background: var(--card); border-radius: 24px; padding: 18px 16px 12px; margin-bottom: 8px; }
+.graf-cab { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.graf-ley { display: flex; gap: 14px; font-size: 13px; color: var(--muted); }
+.graf-ley i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.graf svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.graf svg text { font-family: var(--font); font-size: 11px; fill: var(--muted); }
+.graf .tip { position: absolute; pointer-events: none; background: var(--card-3); border: 1px solid var(--line); border-radius: 12px;
+  padding: 8px 10px; font-size: 13px; line-height: 1.4; color: var(--ink); white-space: nowrap; transform: translateX(-50%); }
+.graf .tip b { display: block; font-size: 12px; color: var(--muted); font-weight: 600; }
+.graf .tip i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.seg-graf { display: inline-flex; background: var(--card-2); border-radius: 999px; padding: 3px; }
+.seg-graf button { border: 0; background: none; color: var(--muted); font: 600 12px var(--font); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.seg-graf button[aria-pressed="true"] { background: var(--card-3); color: var(--ink); }
 .aviso-datos { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 18px; padding: 14px 16px; border-radius: 18px;
   background: rgba(255, 111, 94, .12); border: 1px solid rgba(255, 111, 94, .35); color: var(--ink); font-size: 14px; line-height: 1.45; }
 .aviso-datos.suave { background: var(--card); border-color: var(--line); color: var(--muted); }
@@ -870,6 +883,75 @@ function mini(c, seg) {
   if (r == null) return `<div class="mini vacio-m"><b>–</b></div>`;
   return `<div class="mini ${seg ? 'seg' : ''}"><b>${pct(r)}<small>${c.a}/${c.n}</small></b><div class="bar"><i style="width:${r * 100}%"></i></div></div>`;
 }
+
+/* gráfica de aciertos en el tiempo (SVG propio, sin librerías) */
+const COL_N = '#d4f53c', COL_S = '#7fb4ff';
+function grafica(porDia) {
+  const modo = E.graf || 'acum';
+  let aN = 0, nN = 0, aS = 0, nS = 0;
+  const pts = porDia.map(d => {
+    aN += d.n.a; nN += d.n.n; aS += d.s.a; nS += d.s.n;
+    return modo === 'acum'
+      ? {dia: d.dia, n: nN ? aN / nN : null, s: nS ? aS / nS : null, cn: [aN, nN], cs: [aS, nS]}
+      : {dia: d.dia, n: ratio(d.n), s: ratio(d.s), cn: [d.n.a, d.n.n], cs: [d.s.a, d.s.n]};
+  });
+  if (pts.length < 2) return '';
+  const W = 340, H = 190, L = 34, R = 10, T = 8, B = 24;
+  const vals = pts.flatMap(p => [p.n, p.s]).filter(v => v != null);
+  const ymin = Math.max(0, Math.min(0.5, Math.floor(Math.min(...vals) * 10) / 10));
+  const x = i => L + (W - L - R) * (pts.length === 1 ? 0.5 : i / (pts.length - 1));
+  const y = v => T + (H - T - B) * (1 - (v - ymin) / (1 - ymin));
+  const linea = k => { let d = '', pen = false;
+    pts.forEach((p, i) => { if (p[k] == null) { pen = false; return; } d += (pen ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p[k]).toFixed(1); pen = true; });
+    return d; };
+  const marcas = [];
+  for (let v = ymin; v <= 1.0001; v += 0.1) marcas.push(Math.round(v * 10) / 10);
+  const paso = Math.max(1, Math.ceil(pts.length / 5));
+  const etiq = pts.map((p, i) => (i % paso === 0 || i === pts.length - 1) && !(i !== pts.length - 1 && pts.length - 1 - i < paso / 2)
+    ? `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${new Date(p.dia + 'T12:00:00').getDate()}/${new Date(p.dia + 'T12:00:00').getMonth() + 1}</text>` : '').join('');
+  const puntos = k => pts.map((p, i) => p[k] == null ? '' : `<circle cx="${x(i)}" cy="${y(p[k])}" r="${modo === 'acum' ? 2.5 : 3.5}" fill="${k === 'n' ? COL_N : COL_S}" stroke="var(--card)" stroke-width="2"/>`).join('');
+  GRAF_PTS = {pts, x, y, W};
+  return `<div class="graf" id="graf">
+    <div class="graf-cab">
+      <div class="graf-ley"><span><i style="background:${COL_N}"></i>Más probable</span><span><i style="background:${COL_S}"></i>Línea segura</span><span><i style="background:none;border-top:2px dashed var(--muted);height:0"></i>80 %</span></div>
+      <div class="seg-graf" role="group" aria-label="Tipo de gráfica">
+        <button data-graf="acum" aria-pressed="${modo === 'acum'}">Acumulado</button><button data-graf="dia" aria-pressed="${modo === 'dia'}">Cada día</button>
+      </div>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Porcentaje de aciertos ${modo === 'acum' ? 'acumulado' : 'de cada día'}">
+      ${marcas.map(v => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1" ${v === 0.8 ? 'stroke-dasharray="4 4" stroke="var(--muted)"' : ''}/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${Math.round(v * 100)}</text>`).join('')}
+      ${etiq}
+      <line id="graf-cruz" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--muted)" stroke-width="1" visibility="hidden"/>
+      <path d="${linea('s')}" fill="none" stroke="${COL_S}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${linea('n')}" fill="none" stroke="${COL_N}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${puntos('s')}${puntos('n')}
+      <rect x="${L}" y="0" width="${W - L - R}" height="${H}" fill="transparent" id="graf-zona"/>
+    </svg>
+    <div class="tip" id="graf-tip" hidden></div>
+  </div>`;
+}
+let GRAF_PTS = null;
+function moverGraf(ev) {
+  const svg = document.querySelector('#graf svg'); if (!svg || !GRAF_PTS) return;
+  const {pts, x, W} = GRAF_PTS, r = svg.getBoundingClientRect();
+  const px = (ev.clientX - r.left) * W / r.width;
+  let i = 0; pts.forEach((p, j) => { if (Math.abs(x(j) - px) < Math.abs(x(i) - px)) i = j; });
+  const p = pts[i], cruz = document.getElementById('graf-cruz'), tip = document.getElementById('graf-tip');
+  cruz.setAttribute('x1', x(i)); cruz.setAttribute('x2', x(i)); cruz.setAttribute('visibility', 'visible');
+  const f = v => v == null ? '–' : pct(v);
+  tip.innerHTML = `<b>${fechaCorta(p.dia)}${(E.graf || 'acum') === 'acum' ? ' · acumulado' : ''}</b>
+    <div><i style="background:${COL_N}"></i>Más probable ${f(p.n)} <span style="color:var(--muted)">${p.cn[0]}/${p.cn[1]}</span></div>
+    <div><i style="background:${COL_S}"></i>Línea segura ${f(p.s)} <span style="color:var(--muted)">${p.cs[0]}/${p.cs[1]}</span></div>`;
+  tip.hidden = false;
+  const left = x(i) * r.width / W + (r.left - svg.parentElement.getBoundingClientRect().left);
+  const ancho = tip.offsetWidth, caja = svg.parentElement.clientWidth;
+  tip.style.left = Math.min(Math.max(left, ancho / 2 + 4), caja - ancho / 2 - 4) + 'px';
+  tip.style.top = (r.top - svg.parentElement.getBoundingClientRect().top + 4) + 'px';
+}
+function salirGraf() {
+  const c = document.getElementById('graf-cruz'), t = document.getElementById('graf-tip');
+  if (c) c.setAttribute('visibility', 'hidden'); if (t) t.hidden = true;
+}
 function pintarAciertos() {
   const v = document.getElementById('vista-aciertos');
   const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {};
@@ -899,6 +981,7 @@ function pintarAciertos() {
       <div class="kpi lima"><small>Más probable</small><b>${rn == null ? '–' : pct(rn)}</b><span>${tot.n.a} de ${tot.n.n} acertados</span><div class="bar"><i style="width:${(rn || 0) * 100}%"></i></div></div>
       <div class="kpi"><small>Línea segura</small><b>${rs == null ? '–' : pct(rs)}</b><span>${tot.s.a} de ${tot.s.n} acertados</span><div class="bar"><i style="width:${(rs || 0) * 100}%"></i></div></div>
     </div>
+    ${porDia.length >= 2 ? `<div class="sec"><h2>Evolución</h2><span>% de aciertos por fecha</span></div>${grafica(porDia)}` : ''}
     <div class="sec"><h2>Por día</h2><span>pronósticos destacados de cada ficha</span></div>
     <div class="tabla-ac">
       <div class="fila-ac cab"><span>Día</span><span>Más probable</span><span>Línea segura</span></div>
@@ -914,7 +997,11 @@ function pintarAciertos() {
 }
 document.getElementById('vista-aciertos').addEventListener('click', e => {
   const b = e.target.closest('[data-ambito]'); if (b) { E.ambito = b.dataset.ambito; pintarAciertos(); }
+  const g = e.target.closest('[data-graf]'); if (g) { E.graf = g.dataset.graf; pintarAciertos(); }
 });
+document.getElementById('vista-aciertos').addEventListener('pointermove', e => { if (e.target.closest('#graf svg')) moverGraf(e); else salirGraf(); });
+document.getElementById('vista-aciertos').addEventListener('pointerdown', e => { if (e.target.closest('#graf svg')) moverGraf(e); });
+document.getElementById('vista-aciertos').addEventListener('pointerleave', salirGraf);
 
 /* ---------- escalera ---------- */
 const META = 20, APUESTA = 10;
