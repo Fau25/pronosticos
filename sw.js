@@ -1,6 +1,6 @@
 /* Service worker: la app funciona sin conexión con los últimos datos vistos.
    Estrategia "primero la red": si hay conexión siempre se usa lo más nuevo y se guarda copia. */
-const VERSION = 'pronosticos-2026-10-22-0706';
+const VERSION = 'pronosticos-2026-10-22-0727';
 const BASE = ['./', './index.html', './manifest.webmanifest', './icono-192.png', './icono-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
