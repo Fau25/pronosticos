@@ -371,6 +371,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .mini .bar { height: 6px; border-radius: 999px; background: var(--card-3); overflow: hidden; }
 .mini .bar i { display: block; height: 100%; background: var(--lime); border-radius: 999px; }
 .mini.seg .bar i { background: transparent; box-shadow: inset 0 0 0 2px var(--lime); }
+.res.pend { width: auto; height: auto; padding: 3px 8px; border-radius: 999px; font-size: .7rem; font-weight: 700;
+  background: var(--card-3); color: var(--muted); border: 1px dashed var(--line); }
 .mini.vacio-m b { color: var(--muted); font-weight: 600; }
 
 /* ---------- navegación inferior ---------- */
@@ -662,6 +664,9 @@ function acierto(p, met, lado, linea) {
 }
 const marca = ok => ok == null ? '' : `<span class="res ${ok ? 'ok' : 'ko'}" role="img" aria-label="${ok ? 'Acertado' : 'Fallado'}">${ok ? '✓' : '✗'}</span>`;
 const clase = ok => ok == null ? '' : ok ? 'ok' : 'ko';
+/* partido jugado pero sin el dato de esa métrica todavía (llega en la siguiente actualización) */
+const marcaP = (p, ok) => ok == null && p.real && !p.aplazado
+  ? '<span class="res pend" title="El dato de este mercado llega en la próxima actualización">pendiente</span>' : marca(ok);
 const okNormal = (p, f) => f ? acierto(p, f.metrica, f.eleccion, f.linea) : null;
 const okSegura = (p, f) => f ? acierto(p, f.metrica, f.segura_lado, f.segura_linea) : null;
 
@@ -731,8 +736,8 @@ function detalle(p) {
   const mets = GRUPOS.map(g => {
     const f = por[g.t[tr]]; if (!f) return '';
     const tot = (f.esperado_local + f.esperado_visitante) || 1;
-    const normal = f.prob >= 0.55 ? `<div class="opc"><span>${cap(f.eleccion)} de ${lin(f.linea)}</span><span class="der"><b>${pct(f.prob)}</b>${marca(okNormal(p, f))}</span></div>` : `<div class="opc flojo"><span>Sin opción clara en ${lin(f.linea)}</span></div>`;
-    const segura = f.segura_lado ? `<div class="opc seg"><span>${cap(f.segura_lado)} de ${lin(f.segura_linea)}</span><span class="der"><b>${pct(f.segura_prob)}</b>${marca(okSegura(p, f))}</span></div>` : '';
+    const normal = f.prob >= 0.55 ? `<div class="opc"><span>${cap(f.eleccion)} de ${lin(f.linea)}</span><span class="der"><b>${pct(f.prob)}</b>${marcaP(p, okNormal(p, f))}</span></div>` : `<div class="opc flojo"><span>Sin opción clara en ${lin(f.linea)}</span></div>`;
+    const segura = f.segura_lado ? `<div class="opc seg"><span>${cap(f.segura_lado)} de ${lin(f.segura_linea)}</span><span class="der"><b>${pct(f.segura_prob)}</b>${marcaP(p, okSegura(p, f))}</span></div>` : '';
     const rv = p.real && p.real[f.metrica] != null ? ` · real <span class="realv">${n1(p.real[f.metrica])}</span>` : '';
     return `<div class="met"><div class="met-cab"><b>${g.n}</b><span>esperado ${n1(f.esperado_total)}${rv}</span></div>
       <div class="barra"><span>${n1(f.esperado_local)}</span><div class="pista"><i style="width:${f.esperado_local / tot * 100}%"></i></div><span>${n1(f.esperado_visitante)}</span></div>
@@ -755,8 +760,8 @@ function estrella(p) {
     <div class="top"><b>${LIGAS[p.liga]} · el más interesante</b>${etiqueta(p, true)}</div>
     ${duelo(p)}
     <div class="picks-e">
-      ${normal ? `<div class="pick-e ${clase(okNormal(p, normal))}">${marca(okNormal(p, normal))}<small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}<b>${pct(normal.prob)}</b></div>` : ''}
-      ${segura ? `<div class="pick-e ${clase(okSegura(p, segura))}">${marca(okSegura(p, segura))}<small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}<b>${pct(segura.segura_prob)}</b></div>` : ''}
+      ${normal ? `<div class="pick-e ${clase(okNormal(p, normal))}">${marcaP(p, okNormal(p, normal))}<small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}<b>${pct(normal.prob)}</b></div>` : ''}
+      ${segura ? `<div class="pick-e ${clase(okSegura(p, segura))}">${marcaP(p, okSegura(p, segura))}<small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}<b>${pct(segura.segura_prob)}</b></div>` : ''}
     </div>
     <button class="abrir" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
     ${ab ? detalle(p) : ''}
@@ -767,8 +772,8 @@ function ficha(p) {
   return `<article class="ficha ${p.liga === 'ucl' ? 'ucl' : ''} ${ab ? 'abierta' : ''}">
     <div class="top"><b>${LIGAS[p.liga]}</b>${etiqueta(p, false)}</div>
     ${duelo(p)}
-    ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}</div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marca(okNormal(p, normal))}</span></div>` : ''}
-    ${segura ? `<div class="pie-ficha ${clase(okSegura(p, segura))}"><div class="txt"><small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}</div><span class="der"><span class="prob seg">${pct(segura.segura_prob)}</span>${marca(okSegura(p, segura))}</span></div>` : ''}
+    ${normal ? `<div class="pie-ficha ${clase(okNormal(p, normal))}"><div class="txt"><small>Más probable</small><span>${txtNormal(normal)}</span>${porque(p, normal.metrica, normal.eleccion, normal.linea)}</div><span class="der"><span class="prob">${pct(normal.prob)}</span>${marcaP(p, okNormal(p, normal))}</span></div>` : ''}
+    ${segura ? `<div class="pie-ficha ${clase(okSegura(p, segura))}"><div class="txt"><small>Línea segura</small><span>${txtSegura(segura)}</span>${porque(p, segura.metrica, segura.segura_lado, segura.segura_linea)}</div><span class="der"><span class="prob seg">${pct(segura.segura_prob)}</span>${marcaP(p, okSegura(p, segura))}</span></div>` : ''}
     <button class="abrir-f" data-abrir="${p.understat_id}" aria-expanded="${ab}">${ab ? 'Ocultar detalle' : 'Ver todos los pronósticos'}</button>
     ${ab ? detalle(p) : ''}
   </article>`;
