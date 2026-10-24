@@ -1,5 +1,5 @@
 /* Service worker de Pronósticos
-   - Página y datos (index.html, web/*.json): se intenta la red durante 1,5 s; si tarda más o no hay
+   - Página y datos (index.html, web/*.json): se intenta la red durante 0,5 s; si tarda más o no hay
      conexión se muestra lo guardado al momento y la red sigue descargando por detrás. Si llega algo
      distinto de lo que se enseñó, se avisa a la página ("hay datos nuevos").
    - Iconos, manifest y tipografía: siempre desde lo guardado (no cambian).
@@ -9,7 +9,7 @@ const APP = 'app-' + VERSION;
 const DATOS = 'pron-datos';
 const BASE = ['./', './manifest.webmanifest', './icono-192.png', './icono-512.png', './apple-touch-icon.png',
               './urbanist.woff2', './urbanist-italic.woff2'];
-const ESPERA = 1500;
+const ESPERA = 500;   // ms que se espera a la red si ya hay copia guardada
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(APP).then(c => c.addAll(BASE)).then(() => self.skipWaiting()));
@@ -45,13 +45,14 @@ function redPrimeroConPlazo(e, cacheNombre, clave) {
     return {r, cambia: false};
   });
   return new Promise(resolve => {
-    let hecho = false;
-    const fin = x => { if (!hecho && x) { hecho = true; resolve(x); } };
-    const plazo = setTimeout(async () => fin(await guardada), ESPERA);
-    red.then(({r}) => { clearTimeout(plazo); fin(r); })
-       .catch(async () => { clearTimeout(plazo); fin((await guardada) || await caches.match('./', {ignoreSearch: true}) || Response.error()); });
+    let hecho = false, deCache = false;
+    const fin = (x, cache) => { if (!hecho && x) { hecho = true; deCache = !!cache; resolve(x); } };
+    // con copia guardada se espera poco a la red; sin copia, lo que haga falta
+    guardada.then(g => { if (g) setTimeout(() => fin(g, true), ESPERA); });
+    red.then(({r}) => fin(r))
+       .catch(async () => { fin((await guardada) || await caches.match('./', {ignoreSearch: true}) || Response.error()); });
     // si ya se enseñó lo guardado y la red trae algo nuevo, avisar a la página
-    e.waitUntil(red.then(({cambia}) => { if (hecho && cambia) return avisar(clave); }).catch(() => {}));
+    e.waitUntil(red.then(({cambia}) => { if (deCache && cambia) return avisar(clave); }).catch(() => {}));
   });
 }
 
