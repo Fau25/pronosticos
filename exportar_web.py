@@ -454,8 +454,17 @@ if __name__ == "__main__":
         (carpeta / f"{x['dia']}.json").write_text(
             json.dumps({"dia": x["dia"], "partidos": x["partidos"]}, ensure_ascii=False, default=float,
                        separators=(",", ":")), encoding="utf-8")
+    h = historico(d)
     (raiz / "docs" / "web" / "historico.json").write_text(
-        json.dumps(historico(d), ensure_ascii=False, default=float, separators=(",", ":")), encoding="utf-8")
+        json.dumps(h, ensure_ascii=False, default=float, separators=(",", ":")), encoding="utf-8")
+    # resumen para el registro: aciertos totales (destacados / todos) y escalera
+    tot = {}
+    for amb in ("destacados", "todos"):
+        filas = [r for r in h["res"] if amb == "todos" or r[2]]
+        tot[amb] = {k: [sum(r[i][0] for r in filas), sum(r[i][1] for r in filas)] for k, i in (("mas_probable", 3), ("segura", 4))}
+    esc = [e["ok"] for e in h["escalera"] if e.get("ok") is not None]
+    tot["escalera"] = [sum(esc), len(esc)]
+    (raiz / "resumen_aciertos.json").write_text(json.dumps({"generado": d["generado"], **tot}, ensure_ascii=False, indent=1), encoding="utf-8")
     datos = json.dumps(indice(d), ensure_ascii=False, default=float, separators=(",", ":")).replace("</", "<\\/")
     plantilla = (raiz / "web_plantilla.html").read_text(encoding="utf-8")
     cabeza = """<!doctype html>

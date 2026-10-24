@@ -9,3 +9,4 @@ __pycache__/
 /avisos.txt
 # la web se genera en cada actualización y se publica directamente en GitHub Pages
 /docs/
+/resumen_aciertos.json

@@ -158,6 +158,7 @@ jobs:
           cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
           cp registro_extra.txt registro/ultimas_ligas_extra.txt 2>/dev/null || true
           cp estado.json registro/estado.json 2>/dev/null || true
+          cp resumen_aciertos.json registro/resumen_aciertos.json 2>/dev/null || true
           cp avisos.txt registro/avisos.txt 2>/dev/null || rm -f registro/avisos.txt
           # semilla: si hay clave, se guarda cifrada y se retira la copia sin cifrar (una sola vez)
           if [ -n "$BD_CLAVE" ] && [ -f datos/semilla.db ]; then
