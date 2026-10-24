@@ -1,4 +1,4 @@
-Actualización 2026-10-24 13:28  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-24 22:51  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 89 partidos
@@ -10,27 +10,32 @@ Actualización 2026-10-24 13:28  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (89 jugados)
-  [understat] premier 2026: 380 partidos (71 jugados)
-  [understat] bundesliga 2026: 306 partidos (55 jugados)
-  [understat] ligue1 2026: 306 partidos (64 jugados)
-  [understat] seriea 2026: 380 partidos (71 jugados)
-  [understat] tiros: todo al día
+  [understat] laliga 2026: 380 partidos (94 jugados)
+  [understat] premier 2026: 380 partidos (75 jugados)
+  [understat] bundesliga 2026: 306 partidos (61 jugados)
+  [understat] ligue1 2026: 306 partidos (65 jugados)
+  [understat] seriea 2026: 380 partidos (75 jugados)
+
+  [understat] Descargando tiros de 20 partidos (~1 min).
+  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
+
+    1/20  laliga  2026-10-21  Levante - Athletic Club  (33 tiros)
+    20/20  bundesliga  2026-10-24  RasenBallsport Leipzig - Elversberg  (18 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3850 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      97851 filas
-  understat bundesliga 667/667 partidos con tiros
-  understat laliga     849/849 partidos con tiros
-  understat ligue1     676/676 partidos con tiros
-  understat premier    831/831 partidos con tiros
-  understat seriea     831/831 partidos con tiros
+  us_tiros      98391 filas
+  understat bundesliga 673/673 partidos con tiros
+  understat laliga     854/854 partidos con tiros
+  understat ligue1     677/677 partidos con tiros
+  understat premier    835/835 partidos con tiros
+  understat seriea     835/835 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
-   2026-10-23 Alaves 1-1 Malaga | xG 1.80-0.81 | tiros 1T 6-3, 2T 12-4
-   2026-10-19 Getafe 1-1 Rayo Vallecano | xG 0.90-2.29 | tiros 1T 7-5, 2T 5-16
-   2026-10-18 Celta Vigo 2-1 Alaves | xG 0.76-1.18 | tiros 1T 2-3, 2T 4-17
+   2026-10-24 Atletico Madrid 1-0 Deportivo La Coruna | xG 2.22-2.24 | tiros 1T 7-7, 2T 13-8
+   2026-10-24 Racing Santander 2-1 Espanyol | xG 2.83-0.58 | tiros 1T 5-7, 2T 18-4
+   2026-10-24 Rayo Vallecano 0-3 Elche | xG 1.23-2.40 | tiros 1T 7-7, 2T 11-9
 
 Terminado.
