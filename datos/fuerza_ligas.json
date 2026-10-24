@@ -20,12 +20,12 @@
  "partidos_validacion": 62,
  "validacion_desviacion": {
   "sin_ajuste": 101.64,
-  "a_ojo": 83.16,
+  "a_ojo": 83.09,
   "medido": 84.74
  },
  "validacion_cruzada": {
   "sin_ajuste": 1120.99,
-  "a_ojo": 977.12,
+  "a_ojo": 977.17,
   "medido": 987.16
  },
  "fuerza_final": {
