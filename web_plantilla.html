@@ -1,9 +1,10 @@
 <title>Pronósticos de la jornada</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;0,800;1,300;1,500;1,700&display=swap">
+<link rel="preload" href="urbanist.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Tipografía Urbanist (licencia OFL) servida desde la propia web: sin depender de Google Fonts */
+@font-face { font-family: "Urbanist"; src: url(urbanist.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Urbanist"; src: url(urbanist-italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
 /* Layout: app móvil oscura (máx. 480px centrada; en escritorio 2 columnas de fichas). Tarjeta estrella en lima, fichas oscuras muy redondeadas, barra de navegación flotante abajo. Diseño de un solo tema (oscuro) por elección. */
 :root {
   --bg: #121411;
@@ -54,7 +55,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .ligas { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 2px 2px 4px; margin: 0 -2px; }
 .ligas::-webkit-scrollbar, .dias::-webkit-scrollbar { display: none; }
 .liga-f { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 16px 6px 6px; font-weight: 600; font-size: .92rem; color: var(--muted); }
-.liga-f .ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: .66rem; font-weight: 800; background: var(--card-3); color: var(--muted); letter-spacing: .02em; }
+.liga-f .ico { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: .7rem; font-weight: 800; background: var(--card-3); color: var(--muted); letter-spacing: .02em; }
 .liga-f[aria-pressed="true"] { border-color: var(--lime); color: var(--ink); background: var(--card-2); }
 .liga-f[aria-pressed="true"] .ico { background: var(--lime); color: var(--lime-ink); }
 
@@ -65,7 +66,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .dia { flex: 1 0 54px; max-width: 96px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border-radius: 999px; border: 0; background: var(--card-2); color: var(--muted); }
 .dia small { font-size: .78rem; font-weight: 600; }
 .dia b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: .95rem; font-weight: 700; color: var(--ink); background: var(--card-3); }
-.dia i { font-style: normal; font-size: .68rem; }
+.dia i { font-style: normal; font-size: .7rem; }
 .dia[aria-pressed="true"] { background: var(--lime-dim); color: var(--lime); box-shadow: inset 0 0 0 2px var(--lime); }
 .dia[aria-pressed="true"] b { background: var(--lime); color: var(--lime-ink); }
 
@@ -188,7 +189,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pata .s em { font-style: normal; color: var(--muted); font-size: .8rem; }
 .pata .s em i { font-style: normal; color: var(--lime); font-weight: 700; }
 .pata .q { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.pata .q label { font-size: .68rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.pata .q label { font-size: .7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 .pata input { width: 84px; padding: 8px 10px; }
 .marcador { margin: 4px 14px 14px; background: var(--lime); color: var(--lime-ink); border-radius: 24px; padding: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .marcador div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -307,7 +308,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes latido { 50% { opacity: .45; } }
 .esc-pie { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .esc-pie div { background: rgba(21, 24, 16, .09); border-radius: 16px; padding: 10px 12px; }
-.esc-pie small { display: block; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+.esc-pie small { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
 .esc-pie b { font-size: 1.2rem; font-weight: 800; }
 .paso-c { background: var(--card); border-radius: 24px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
 .paso-c .num { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: var(--card-3); flex: 0 0 auto; }
@@ -383,6 +384,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); }
 
 .pie { margin-top: 44px; color: var(--muted); font-size: .82rem; line-height: 1.7; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; }
+.hay-nuevo { position: fixed; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 40;
+  border: 0; border-radius: 999px; padding: 10px 18px; font: 700 .9rem var(--font); background: var(--lime); color: var(--lime-ink); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.aviso-legal { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; color: var(--muted); }
+.aviso-legal b { color: var(--ink); }
+.aviso-legal a, .modal a { color: var(--lime); }
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(0, 0, 0, .7); }
+.modal > div { max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 24px 22px; line-height: 1.55; }
+.modal h2 { margin: 0 0 10px; font-size: 1.3rem; }
+.modal p { margin: 0 0 12px; color: var(--muted); }
+.modal button { width: 100%; margin-top: 6px; border: 0; border-radius: 999px; padding: 14px; font: 700 1rem var(--font); background: var(--lime); color: var(--lime-ink); cursor: pointer; }
 .pie .ley { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
 .pie .ley span { display: inline-flex; align-items: center; gap: 8px; }
 .pie .muestra { width: 34px; height: 22px; border-radius: 999px; display: inline-block; background: var(--lime); }
@@ -399,7 +410,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .centro .hora { font-size: 1.8rem; }
   .picks-e, .opciones { grid-template-columns: 1fr; }
   .marcador { grid-template-columns: 1fr 1fr; row-gap: 14px; }
-  .nav button { padding: 12px 18px; }
+}
+@media (max-width: 360px) {
+  .nav { width: calc(100% - 20px); gap: 2px; padding: 4px; }
+  .nav button { font-size: .72rem; padding: 9px 2px; min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .graf { position: relative; background: var(--card); border-radius: 24px; padding: 18px 16px 12px; margin-bottom: 8px; }
@@ -445,13 +459,24 @@ button { font: inherit; color: inherit; cursor: pointer; }
   <main id="vista-aciertos" hidden></main>
 
   <footer class="pie">
+    <div class="aviso-legal"><b>+18 · Pronósticos estadísticos orientativos, sin ninguna garantía.</b> No son consejos de apuesta ni de inversión. Apostar puede crear adicción: juega con responsabilidad · 900 200 225 · <a href="https://www.jugarbien.es" target="_blank" rel="noopener">jugarbien.es</a></div>
     <div class="ley">
       <span><i class="muestra"></i>Más probable en la línea habitual</span>
       <span><i class="muestra seg"></i>Línea segura (≥ 80 %, paga poco)</span>
     </div>
     <div id="sello"></div>
-    <div>Backtest LaLiga 2025-26: línea segura ≈ 84 % de acierto · combinada a 1,40 ≈ 66 % · a 1,80 ≈ 51 %. El modelo no ve bajas, rotaciones ni árbitro. +18 · Juega con responsabilidad · 900 200 225.</div>
+    <div>Backtest LaLiga 2025-26: línea segura ≈ 84 % de acierto · combinada a 1,40 ≈ 66 % · a 1,80 ≈ 51 %. El modelo no ve bajas, rotaciones ni árbitro. Las horas son de España. En tiros y remates por partes, lo ocurrido en el añadido de la 1ª parte cuenta en la 2ª (la fuente no separa las partes).</div>
+    <div>Datos: football-data.co.uk, Understat y ESPN. Cuotas «mercado»: cuota publicada de una casa para goles ±2,5; el resto son estimadas.</div>
   </footer>
+</div>
+
+<div class="modal" id="aviso-18" role="dialog" aria-modal="true" aria-labelledby="aviso-18-t" hidden>
+  <div>
+    <h2 id="aviso-18-t">Antes de empezar</h2>
+    <p><b style="color:var(--ink)">Solo para mayores de 18 años.</b> Estos pronósticos salen de un modelo estadístico: son orientativos, se equivocan a menudo y no tienen ninguna garantía. No son consejos de apuesta.</p>
+    <p>Si apuestas, hazlo con dinero que puedas permitirte perder. Ayuda y prevención: 900 200 225 · <a href="https://www.jugarbien.es" target="_blank" rel="noopener">jugarbien.es</a></p>
+    <button id="aviso-18-ok">Tengo más de 18 años, entendido</button>
+  </div>
 </div>
 
 <nav class="nav" aria-label="Vista">
@@ -520,7 +545,7 @@ try {
   else if (Array.isArray(v1) && v1.length) { sel = v1; conocidas = ['laliga', 'premier', 'bundesliga', 'ligue1']; }
   if (sel) E.ligas = new Set([...sel.filter(l => ORDEN.includes(l)), ...ORDEN.filter(l => !conocidas.includes(l))]);
 } catch (e) {}
-const hoy = new Date().toISOString().slice(0, 10);
+const hoy = new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Madrid'}).format(new Date());  // AAAA-MM-DD en España
 E.dia = (D.dias.find(d => d.dia >= hoy) || D.dias[0] || {}).dia;
 if (location.hash === '#combinada') E.vista = 'combinada';
 if (location.hash === '#aciertos') E.vista = 'aciertos';
@@ -535,11 +560,13 @@ document.getElementById('sello-mini').title = sello;
 function pintarAviso() {
   const caja = document.getElementById('aviso-datos');
   const avisos = [];
-  const gen = new Date(D.generado.replace(' ', 'T') + ':00');
+  const gen = new Date(D.generado_ts || (D.generado.replace(' ', 'T') + ':00'));
   const horas = (Date.now() - gen.getTime()) / 36e5;
   if (horas > 30) avisos.push(['fuerte', 'Datos sin actualizar', `La última actualización fue hace ${horas < 48 ? Math.round(horas) + ' horas' : Math.floor(horas / 24) + ' días'}. Puede que la actualización automática haya fallado: los pronósticos y aciertos no incluyen lo más reciente.`]);
   const mal = (D.estado && D.estado.fallos) || [];
   if (mal.length) avisos.push(['fuerte', 'Actualización incompleta', `Hoy no se pudo leer: ${mal.join(', ')}. Lo de esas fuentes puede estar desfasado.`]);
+  const info = (D.estado && D.estado.avisos) || [];
+  if (info.length) avisos.push(['suave', 'Avisos de la última actualización', info.map(esc).join('<br>')]);
   if (!navigator.onLine) avisos.push(['suave', 'Sin conexión', 'Estás viendo la última copia guardada en el móvil.']);
   caja.hidden = !avisos.length;
   if (!avisos.length) return;
@@ -548,12 +575,29 @@ function pintarAviso() {
   caja.innerHTML = '<i class="pto"></i><div>' + avisos.map(a => `<b>${a[1]}</b>${a[2]}`).join('<br><br>') + '</div>';
 }
 pintarAviso();
+(() => {  // aviso +18 la primera vez (se recuerda en este navegador)
+  let visto = false;
+  try { visto = localStorage.getItem('pron-aviso18') === '1'; } catch (e) {}
+  if (visto) return;
+  const m = document.getElementById('aviso-18'); m.hidden = false;
+  document.getElementById('aviso-18-ok').addEventListener('click', () => {
+    m.hidden = true; try { localStorage.setItem('pron-aviso18', '1'); } catch (e) {}
+  });
+})();
 addEventListener('online', pintarAviso);
 addEventListener('offline', pintarAviso);
 
 /* app instalable: copia sin conexión de la última versión vista */
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+  // el service worker avisa si, tras enseñar lo guardado, llegan datos nuevos
+  navigator.serviceWorker.addEventListener('message', ev => {
+    if (!ev.data || ev.data.tipo !== 'nuevo' || document.getElementById('hay-nuevo')) return;
+    const b = document.createElement('button');
+    b.id = 'hay-nuevo'; b.className = 'hay-nuevo'; b.textContent = 'Hay datos nuevos · Actualizar';
+    b.addEventListener('click', () => location.reload());
+    document.body.appendChild(b);
+  });
 }
 
 /* cada día se descarga solo cuando se abre (web/dias/AAAA-MM-DD.json) */
@@ -640,7 +684,7 @@ const porque = (p, met, lado, linea) => {
 };
 
 /* ---------- partidos ---------- */
-const racha = t => `<span class="racha" aria-label="Últimos 5: ${esc(t || '')}">${[...(t || '')].map(c => `<i class="${c}"></i>`).join('')}</span>`;
+const racha = t => `<span class="racha" role="img" aria-label="Últimos 5: ${esc(t || '')}">${[...(t || '')].map(c => `<i class="${c}"></i>`).join('')}</span>`;
 function destacados(p) {
   const ap = p.pronosticos.filter(f => APOSTABLES.has(f.metrica));
   return {
@@ -834,7 +878,7 @@ function pintarBoleto(ps) {
   b.innerHTML = `<div class="boleto">
     <div class="boleto-cab"><b>${m.sel.length} selecciones</b>${m.sel.every(s => s.ok != null) ? `<span class="estado">${m.sel.every(s => s.ok) ? 'Acertada' : 'Fallada'} ${marca(m.sel.every(s => s.ok))}</span>` : ''}<span class="etq osc">${E.modo === 'cuota' ? 'objetivo ' + q2(E.objetivo) : 'mín. ' + Math.round(E.objetivo * 100) + '%'}</span></div>
     <ul class="patas">${m.sel.map((s, i) => `<li class="pata">
-      <span class="s"><small>${esc(s.partido)}</small><b>${dec(esc(s.texto))}</b><em>prob. <i>${pct(s.prob)}</i> · cuota ${s.real ? 'Bet365' : 'est.'} ${q2(s.cuota)}</em></span>
+      <span class="s"><small>${esc(s.partido)}</small><b>${dec(esc(s.texto))}</b><em>prob. <i>${pct(s.prob)}</i> · cuota ${s.real ? 'mercado' : 'est.'} ${q2(s.cuota)}</em></span>
       ${marca(s.ok)}<span class="q"><label for="q${i}">Tu cuota</label><input id="q${i}" type="number" step="0.01" min="1.01" value="${s.cuota.toFixed(2)}"></span>
     </li>`).join('')}</ul>
     <div class="marcador" id="marcador"></div>
@@ -954,21 +998,22 @@ function salirGraf() {
 }
 function pintarAciertos() {
   const v = document.getElementById('vista-aciertos');
-  const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {};
+  if (esperandoHist(v)) return;
+  const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {}, dias = {};
+  const add = (c, [a, n]) => { c.a += a; c.n += n; };
   let partidos = 0;
-  D.dias.forEach(d => {
-    const dd = {dia: d.dia, n: cuenta(), s: cuenta()};
-    (d.res || []).filter(r => E.ligas.has(r.l) && (E.ambito === 'todos' || r.d)).forEach(r => {
-      partidos++;
-      suma(tot.n, r.n); suma(dd.n, r.n);
-      suma(tot.s, r.s); suma(dd.s, r.s);
-      Object.entries(r.m || {}).forEach(([met, [okN, okS]]) => {
-        const m = porMet[met] = porMet[met] || {n: cuenta(), s: cuenta()};
-        suma(m.n, okN); suma(m.s, okS);
-      });
+  // filas del histórico: [día, liga, destacado, [a,n] más probable, [a,n] segura, {met: [a,n,a,n]}, nº partidos]
+  (HIST.res || []).filter(r => E.ligas.has(r[1]) && (E.ambito === 'todos' || r[2])).forEach(r => {
+    const dd = dias[r[0]] = dias[r[0]] || {dia: r[0], n: cuenta(), s: cuenta()};
+    partidos += r[6] || 0;
+    add(tot.n, r[3]); add(dd.n, r[3]);
+    add(tot.s, r[4]); add(dd.s, r[4]);
+    Object.entries(r[5] || {}).forEach(([met, x]) => {
+      const m = porMet[met] = porMet[met] || {n: cuenta(), s: cuenta()};
+      add(m.n, [x[0], x[1]]); add(m.s, [x[2], x[3]]);
     });
-    if (dd.n.n || dd.s.n) porDia.push(dd);
   });
+  Object.keys(dias).sort().forEach(k => { if (dias[k].n.n || dias[k].s.n) porDia.push(dias[k]); });
   if (!partidos) { v.innerHTML = '<div class="vacio" style="margin-top:28px">Todavía no hay partidos jugados con estas ligas.</div>'; return; }
   const rn = ratio(tot.n), rs = ratio(tot.s);
   v.innerHTML = `
@@ -985,7 +1030,7 @@ function pintarAciertos() {
     <div class="sec"><h2>Por día</h2><span>pronósticos destacados de cada ficha</span></div>
     <div class="tabla-ac">
       <div class="fila-ac cab"><span>Día</span><span>Más probable</span><span>Línea segura</span></div>
-      ${porDia.slice().reverse().map(d => { const f = new Date(d.dia + 'T12:00:00');
+      ${porDia.slice(-30).reverse().map(d => { const f = new Date(d.dia + 'T12:00:00');
         return `<div class="fila-ac"><span class="nom">${DSEM[f.getDay()]} ${f.getDate()}/${f.getMonth() + 1}</span>${mini(d.n)}${mini(d.s, true)}</div>`; }).join('')}
     </div>
     <div class="sec"><h2>Por tipo</h2><span>todos los pronósticos de cada partido</span></div>
@@ -1005,12 +1050,31 @@ document.getElementById('vista-aciertos').addEventListener('pointerleave', salir
 
 /* ---------- escalera ---------- */
 const META = 20, APUESTA = 10;
+/* histórico completo (aciertos y escalones pasados): se descarga solo al abrir Aciertos o Escalera */
+let HIST = null, HIST_CARGANDO = null;
+function cargarHist() {
+  if (HIST || HIST_CARGANDO) return;
+  HIST_CARGANDO = fetch('web/historico.json', {cache: 'no-cache'})
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => { HIST = j; })
+    .catch(() => { HIST = 'error'; })
+    .finally(() => { HIST_CARGANDO = null; render(); });
+}
+function esperandoHist(v) {
+  if (HIST && HIST !== 'error') return false;
+  cargarHist();
+  v.innerHTML = HIST === 'error'
+    ? '<div class="vacio" style="margin-top:28px">No se pudo cargar el histórico. Comprueba la conexión.</div>'
+    : '<div class="vacio" style="margin-top:28px">Cargando histórico…</div>';
+  return true;
+}
 function pasosEscalera() {
-  const pasos = [];
-  D.dias.forEach(d => (d.escalera || []).filter(e => e.recomendada !== false).forEach(e => {
+  const pasos = [], vistos = new Set();
+  (HIST.escalera || []).forEach(e => { pasos.push(e); vistos.add(e.dia); });
+  D.dias.filter(d => !vistos.has(d.dia)).forEach(d => (d.escalera || []).filter(e => e.recomendada !== false).forEach(e => {
     pasos.push({...e, dia: d.dia});
   }));
-  return pasos;
+  return pasos.sort((a, b) => a.dia < b.dia ? -1 : a.dia > b.dia ? 1 : 0);
 }
 function simular(pasos) {
   const intentos = []; let cur = [];
@@ -1027,6 +1091,7 @@ const fechaCorta = iso => { const f = new Date(iso + 'T12:00:00'); return `${DSE
 const euros = x => x.toFixed(2).replace('.', ',') + ' €';
 function pintarEscalera() {
   const v = document.getElementById('vista-escalera');
+  if (esperandoHist(v)) return;
   const {intentos, actual, pendientes} = simular(pasosEscalera());
   const n = actual.length;
   const banco = actual.reduce((b, p) => b * p.cuota, APUESTA);
@@ -1060,7 +1125,7 @@ function pintarEscalera() {
         <div><small>Escalón</small><div class="grande">${n}<span> / ${META}</span></div></div>
         <div class="der"><small>Si empezaste con ${APUESTA} €</small><b>${euros(banco)}</b></div>
       </div>
-      <div class="escalones" aria-label="${n} de ${META} escalones superados">${barras}</div>
+      <div class="escalones" role="img" aria-label="${n} de ${META} escalones superados">${barras}</div>
       <div class="esc-pie">
         <div><small>Cada escalón</small><b>~${pct(pMedia)}</b></div>
         <div><small>Completarla</small><b>${pct(probResto)}</b></div>

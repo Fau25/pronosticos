@@ -68,6 +68,9 @@ def descargar(desde, hasta, log=print):
         vistos[(f["espn_id"], f["comp"])] = f
     filas = list(vistos.values())
     log(f"  [europa] {len(filas)} partidos ({errores} errores)")
+    if errores >= 5:
+        from comun import avisar
+        avisar(f"ESPN: {errores} errores al leer las competiciones europeas")
     return filas
 
 

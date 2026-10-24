@@ -82,6 +82,9 @@ def descargar(desde, hasta, log=print):
     with ThreadPoolExecutor(max_workers=5) as ex:
         for liga, filas, err in ex.map(lambda l: _una_liga(l, desde, hasta), EXTRA):
             log(f"  [extra] {liga}: {len(filas)} partidos ({err} días con error)")
+            if err >= 5:
+                from comun import avisar
+                avisar(f"ESPN: {err} días sin datos de la liga {liga}")
             todas += filas
     return list({f["espn_id"]: f for f in todas}.values())
 

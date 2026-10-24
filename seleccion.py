@@ -17,9 +17,10 @@ import pandas as pd
 
 MADRID = ZoneInfo("Europe/Madrid")
 
+from comun import temporada
 from modelo import BD
 
-TEMPORADA_ACTUAL = 2026
+TEMPORADA_ACTUAL = temporada()
 
 CLASICOS = {
     "laliga": [("Barcelona", "Real Madrid"), ("Atletico Madrid", "Real Madrid"),

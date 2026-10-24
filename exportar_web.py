@@ -31,9 +31,25 @@ CACHE = Path(__file__).resolve().parent / "dias"
 
 
 def _completo(dia_json):
-    """Un día pasado está cerrado cuando todos sus partidos tienen resultado completo (incl. córners)."""
-    return all(p.get("real") and "corners" in p["real"] and "tarjetas" in p["real"]
+    """Un día pasado está cerrado cuando todos sus partidos tienen resultado completo (incl. córners)
+    o están aplazados (sin resultado varios días después)."""
+    return all(p.get("aplazado") or (p.get("real") and "corners" in p["real"] and "tarjetas" in p["real"])
                for p in dia_json["partidos"])
+
+
+DIAS_APLAZADO = 3     # sin resultado tantos días después -> aplazado (no cuenta en aciertos)
+DIAS_WEB = 30         # días pasados que carga la web al abrir; el resto va resumido en historico.json
+_CLAS = {}
+
+
+def _clas(con, liga):
+    """Clasificación de una liga, calculada una sola vez por ejecución."""
+    if liga not in _CLAS:
+        _CLAS[liga] = S.clasificacion(con, liga).set_index("equipo")
+    return _CLAS[liga]
+
+
+AVISOS = []   # avisos de esta ejecución (se muestran discretos en la web)
 
 
 # ------------------------------------------------------------------ el "porqué": últimos 5 partidos
@@ -77,13 +93,13 @@ def _partidos_liga(con, mod, todos, px, nombres, reales_df):
         uid = int(r.understat_id)
         p = dict(understat_id=uid, liga=r.liga, fecha=r.fecha, hora=r.hora,
                  local=r.local, visitante=r.visitante, motivo=r.motivo,
-                 relevancia=float(r.relevancia), destacado=uid in top)
+                 relevancia=float(r.relevancia), destacado=uid in top, aplazado=bool(getattr(r, "aplazado", False)))
         if mod.partidos[(r.liga, r.local)] < 3 or mod.partidos[(r.liga, r.visitante)] < 3:
             continue
         pron = mod.pronosticar(r.liga, r.local, r.visitante)
         if not pron:
             continue
-        t = S.clasificacion(con, r.liga).set_index("equipo")
+        t = _clas(con, r.liga)
         ctx = {eq: dict(posicion=int(t.loc[eq].pos), puntos=int(t.loc[eq].pts),
                         ultimos_5=t.loc[eq].forma_txt) for eq in (r.local, r.visitante) if eq in t.index}
 
@@ -143,7 +159,7 @@ def _partidos_ucl(con, mod, ucl):
             continue
         ctx = {}
         for eq, lg in ((r.local, r.liga_local), (r.visitante, r.liga_visitante)):
-            t = S.clasificacion(con, lg).set_index("equipo")
+            t = _clas(con, lg)
             if eq in t.index:
                 ctx[eq] = dict(posicion=int(t.loc[eq].pos), puntos=int(t.loc[eq].pts),
                                ultimos_5=t.loc[eq].forma_txt, liga=lg)
@@ -260,7 +276,8 @@ def exportar(desde, hasta):
         reales_df = pd.concat([reales_df, us.set_index("understat_id")[cols]])
         print(f"  {len(us)} partidos con resultado solo en Understat (football-data aún sin publicar)")
 
-    salida = {"generado": pd.Timestamp.now(tz="Europe/Madrid").strftime("%Y-%m-%d %H:%M"),
+    ahora = pd.Timestamp.now(tz="Europe/Madrid")
+    salida = {"generado": ahora.strftime("%Y-%m-%d %H:%M"), "generado_ts": int(ahora.timestamp() * 1000),
               "ultimo_dato": con.execute("SELECT MAX(fecha) FROM us_partidos WHERE jugado=1").fetchone()[0],
               "dias": [], "correlaciones": C.CORRELACION}
     dia = desde
@@ -276,13 +293,20 @@ def exportar(desde, hasta):
         todos = S.puntuar(con, S.partidos_del_dia(con, dia))
         if not todos.empty:  # jugado si lo dice Understat o si football-data ya tiene el resultado
             todos["jugado"] = todos.jugado.astype(bool) | todos.understat_id.astype(int).isin(reales_df.index)
+            todos["aplazado"] = ~todos.jugado & (dia < HOY - timedelta(days=DIAS_APLAZADO))
         ucl = S.puntuar_ucl(con, S.partidos_ucl_del_dia(con, dia))
+        if not ucl.empty and dia >= HOY - timedelta(days=1):
+            fuera = ucl[ucl.liga_local.isna() | ucl.liga_visitante.isna()]
+            if len(fuera):
+                eqs = sorted({e for r in fuera.itertuples() for e, l in ((r.local, r.liga_local), (r.visitante, r.liga_visitante))
+                              if l is None or pd.isna(l)})
+                AVISOS.append(f"{dia:%d/%m}: {len(fuera)} partido(s) de Champions sin pronóstico (sin datos de liga de {', '.join(eqs)})")
         if todos.empty and ucl.empty:
             dia += timedelta(days=1)
             continue
-        estados = list(todos.jugado) if not todos.empty else []
+        estados = list(todos.jugado | todos.aplazado) if not todos.empty else []
         estados += list(ucl.jugado) if not ucl.empty else []
-        jugado_dia = any(estados)
+        jugado_dia = (not todos.empty and bool(todos.jugado.any())) or (not ucl.empty and bool(ucl.jugado.any()))
         todo_jugado = all(estados)
         mod = _modelo_hasta(df, nombres, dia) if jugado_dia else mod_actual
         partidos = []
@@ -303,6 +327,7 @@ def exportar(desde, hasta):
 
 
 INICIO = date(2026, 10, 9)   # primer día con seguimiento de aciertos
+HOY = pd.Timestamp.now(tz="Europe/Madrid").date()
 APOSTABLES = {"goles", "goles_1t", "goles_2t", "tiros", "remates", "corners", "tarjetas"}
 
 
@@ -320,33 +345,72 @@ def _destacados(p):
     return normal, segura
 
 
+def _resumen_dia(x):
+    """Conteos de la web para un día: partidos por liga, escalera con su resultado y aciertos por partido."""
+    cuenta = {}
+    for p in x["partidos"]:
+        cuenta[p["liga"]] = cuenta.get(p["liga"], 0) + 1
+    por_id = {p["understat_id"]: p for p in x["partidos"]}
+    esc = []
+    for e in x.get("escalera", []):
+        p = por_id.get(e["understat_id"])
+        esc.append({**e, "ok": _ok(p, e["metrica"], e["lado"], e["linea"]) if p else None,
+                    "real": ((p or {}).get("real") or {}).get(e["metrica"])})
+    res = []
+    for p in x["partidos"]:
+        if not p.get("real") or p.get("aplazado"):
+            continue
+        normal, segura = _destacados(p)
+        res.append({"l": p["liga"], "d": bool(p["destacado"]),
+                    "n": _ok(p, normal["metrica"], normal["eleccion"], normal["linea"]) if normal else None,
+                    "s": _ok(p, segura["metrica"], segura["segura_lado"], segura["segura_linea"]) if segura else None,
+                    "m": {f["metrica"]: [_ok(p, f["metrica"], f["eleccion"], f["linea"]) if (f.get("prob") or 0) >= 0.55 else None,
+                                         _ok(p, f["metrica"], f.get("segura_lado"), f.get("segura_linea"))]
+                          for f in p["pronosticos"]}})
+    return cuenta, esc, res
+
+
+def _corte():
+    return (HOY - timedelta(days=DIAS_WEB)).isoformat()
+
+
 def indice(d):
-    """Índice ligero para la web: días, conteos por liga, escalera y aciertos ya calculados."""
+    """Índice ligero que va dentro de la página: solo los últimos DIAS_WEB días y los próximos."""
     dias = []
     for x in d["dias"]:
-        cuenta = {}
-        for p in x["partidos"]:
-            cuenta[p["liga"]] = cuenta.get(p["liga"], 0) + 1
-        por_id = {p["understat_id"]: p for p in x["partidos"]}
-        esc = []
-        for e in x.get("escalera", []):
-            p = por_id.get(e["understat_id"])
-            esc.append({**e, "ok": _ok(p, e["metrica"], e["lado"], e["linea"]) if p else None,
-                        "real": ((p or {}).get("real") or {}).get(e["metrica"])})
-        res = []
-        for p in x["partidos"]:
-            if not p.get("real"):
-                continue
-            normal, segura = _destacados(p)
-            res.append({"l": p["liga"], "d": bool(p["destacado"]),
-                        "n": _ok(p, normal["metrica"], normal["eleccion"], normal["linea"]) if normal else None,
-                        "s": _ok(p, segura["metrica"], segura["segura_lado"], segura["segura_linea"]) if segura else None,
-                        "m": {f["metrica"]: [_ok(p, f["metrica"], f["eleccion"], f["linea"]) if (f.get("prob") or 0) >= 0.55 else None,
-                                             _ok(p, f["metrica"], f.get("segura_lado"), f.get("segura_linea"))]
-                              for f in p["pronosticos"]}})
-        dias.append({"dia": x["dia"], "jugado": x["jugado"], "n": cuenta, "escalera": esc, "res": res})
-    return {"generado": d["generado"], "ultimo_dato": d["ultimo_dato"], "estado": estado_fuentes(),
-            "correlaciones": d.get("correlaciones", {}), "dias": dias}
+        if x["dia"] < _corte():
+            continue
+        cuenta, esc, _ = _resumen_dia(x)
+        dias.append({"dia": x["dia"], "jugado": x["jugado"], "n": cuenta, "escalera": esc})
+    return {"generado": d["generado"], "generado_ts": d["generado_ts"], "ultimo_dato": d["ultimo_dato"],
+            "estado": estado_fuentes(), "correlaciones": d.get("correlaciones", {}), "dias": dias}
+
+
+def historico(d):
+    """Todo el histórico, resumido: se descarga solo al abrir Aciertos o Escalera.
+    res: [día, liga, destacado, [aciertos, total] más probable, [aciertos, total] segura,
+          {métrica: [aciertos, total más probable, aciertos, total segura]}, nº de partidos]  (agrupado por día, liga y destacado)
+    escalera: escalones recomendados de cada día."""
+    filas, escalera = {}, []
+    for x in d["dias"]:
+        if not x["jugado"]:
+            continue
+        _, esc, res = _resumen_dia(x)
+        escalera += [{**e, "dia": x["dia"]} for e in esc if e.get("recomendada") is not False]
+        for r in res:
+            k = (x["dia"], r["l"], r["d"])
+            f = filas.setdefault(k, [x["dia"], r["l"], r["d"], [0, 0], [0, 0], {}, 0])
+            f[6] += 1
+            for i, ok in ((3, r["n"]), (4, r["s"])):
+                if ok is not None:
+                    f[i][1] += 1; f[i][0] += int(ok)
+            for met, (okn, oks) in r["m"].items():
+                m = f[5].setdefault(met, [0, 0, 0, 0])
+                if okn is not None:
+                    m[1] += 1; m[0] += int(okn)
+                if oks is not None:
+                    m[3] += 1; m[2] += int(oks)
+    return {"generado": d["generado"], "res": list(filas.values()), "escalera": escalera}
 
 
 NOMBRE_FUENTE = {"futdata": "resultados de las 5 ligas", "champions": "Champions", "europa": "competiciones europeas",
@@ -359,17 +423,23 @@ def estado_fuentes():
     try:
         e = json.loads(f.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return {"fallos": []}
+        return {"fallos": [], "avisos": _avisos()}
     fallos = [NOMBRE_FUENTE.get(k, k) for k, v in (e.get("pasos") or {}).items() if v == "failure"]
     if e.get("origen_bd") == "semilla":
         fallos.append("la base de datos guardada (se recuperó la copia inicial)")
-    return {"fallos": fallos, "origen_bd": e.get("origen_bd")}
+    return {"fallos": fallos, "origen_bd": e.get("origen_bd"), "avisos": _avisos()}
+
+
+def _avisos():
+    """Avisos de los scripts de descarga (avisos.txt) y de esta ejecución."""
+    import comun
+    return (comun.leer() + AVISOS)[:8]
 
 
 if __name__ == "__main__":
     import sys
     a = date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else INICIO
-    b = date.fromisoformat(sys.argv[2]) if len(sys.argv) > 2 else date.today() + timedelta(days=8)
+    b = date.fromisoformat(sys.argv[2]) if len(sys.argv) > 2 else HOY + timedelta(days=8)
     d = exportar(a, b)
     raiz = Path(__file__).resolve().parent
     # un archivo por día (se descarga solo cuando se abre ese día)
@@ -379,9 +449,13 @@ if __name__ == "__main__":
             f.unlink()
     carpeta.mkdir(parents=True, exist_ok=True)
     for x in d["dias"]:
+        if x["dia"] < _corte():
+            continue
         (carpeta / f"{x['dia']}.json").write_text(
             json.dumps({"dia": x["dia"], "partidos": x["partidos"]}, ensure_ascii=False, default=float,
                        separators=(",", ":")), encoding="utf-8")
+    (raiz / "docs" / "web" / "historico.json").write_text(
+        json.dumps(historico(d), ensure_ascii=False, default=float, separators=(",", ":")), encoding="utf-8")
     datos = json.dumps(indice(d), ensure_ascii=False, default=float, separators=(",", ":")).replace("</", "<\\/")
     plantilla = (raiz / "web_plantilla.html").read_text(encoding="utf-8")
     cabeza = """<!doctype html>

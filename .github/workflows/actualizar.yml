@@ -2,7 +2,9 @@ name: Actualizar pronósticos
 
 # Dos actualizaciones al día a las 00:30 y a las 7:30, hora de España, todo el año.
 # GitHub solo entiende hora UTC, así que hay una programación para el horario de verano
-# y otra para el de invierno; el paso "hora" deja pasar solo la que toca según la fecha.
+# y otra para el de invierno; el trabajo "hora" deja pasar solo la que toca según la fecha.
+# La web se publica directamente en GitHub Pages (Settings → Pages → Source: GitHub Actions),
+# sin guardar copias de la web en el historial del repositorio.
 on:
   schedule:
     - cron: "30 22 * * *"   # 00:30 en verano (UTC+2)
@@ -20,7 +22,7 @@ concurrency:
 
 jobs:
   hora:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       toca: ${{ steps.c.outputs.toca }}
     steps:
@@ -34,12 +36,14 @@ jobs:
   actualizar:
     needs: hora
     if: needs.hora.outputs.toca == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
+    env:
+      BD_CLAVE: ${{ secrets.BD_CLAVE }}   # opcional: si existe, la copia semanal y la semilla se guardan cifradas
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache: pip
@@ -48,23 +52,31 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Recuperar la base de datos
-        id: cache
         uses: actions/cache/restore@v4
         with:
           path: pronosticos.db
           key: bd-${{ github.run_id }}
           restore-keys: bd-
 
-      - name: Si no hay caché, copia semanal (release) y si no, base inicial
+      - name: Si no hay caché, copia semanal (release) y si no, semilla
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          descifrar() { openssl enc -d -aes-256-cbc -pbkdf2 -pass env:BD_CLAVE -in "$1" -out "$2"; }
           if [ -f pronosticos.db ]; then echo "ORIGEN_BD=cache" >> $GITHUB_ENV; exit 0; fi
-          if gh release download copia-bd -p pronosticos.db.gz -D . 2>/dev/null && gunzip -f pronosticos.db.gz; then
-            echo "Base recuperada de la copia semanal"; echo "ORIGEN_BD=copia" >> $GITHUB_ENV
+          if [ -n "$BD_CLAVE" ] && gh release download copia-bd -p pronosticos.db.gz.enc -D . 2>/dev/null \
+             && descifrar pronosticos.db.gz.enc pronosticos.db.gz && gunzip -f pronosticos.db.gz; then
+            echo "ORIGEN_BD=copia" >> $GITHUB_ENV
+          elif gh release download copia-bd -p pronosticos.db.gz -D . 2>/dev/null && gunzip -f pronosticos.db.gz; then
+            echo "ORIGEN_BD=copia" >> $GITHUB_ENV
+          elif [ -f datos/semilla.db.enc ] && [ -n "$BD_CLAVE" ]; then
+            descifrar datos/semilla.db.enc pronosticos.db; echo "ORIGEN_BD=semilla" >> $GITHUB_ENV
           else
-            cp datos/semilla.db pronosticos.db; echo "Base recuperada de la semilla"; echo "ORIGEN_BD=semilla" >> $GITHUB_ENV
+            cp datos/semilla.db pronosticos.db; echo "ORIGEN_BD=semilla" >> $GITHUB_ENV
           fi
+
+      - name: Preparar avisos
+        run: rm -f avisos.txt
 
       - name: Descargar resultados y calendario nuevos
         id: futdata
@@ -109,12 +121,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "$(date -u +%u)" = "1" ] || ! gh release view copia-bd >/dev/null 2>&1; then
+          NOMBRE=pronosticos.db.gz; [ -n "$BD_CLAVE" ] && NOMBRE=pronosticos.db.gz.enc
+          if [ "$(date -u +%u)" = "1" ] || ! gh release view copia-bd --json assets --jq '.assets[].name' 2>/dev/null | grep -qx "$NOMBRE"; then
             gh release view copia-bd >/dev/null 2>&1 || gh release create copia-bd --title "Copia de la base de datos" \
               --notes "Copia semanal automática de pronosticos.db. Se usa si la caché de GitHub se pierde." --latest=false
             gzip -kf pronosticos.db
-            gh release upload copia-bd pronosticos.db.gz --clobber
-            echo "Copia semanal subida"
+            if [ -n "$BD_CLAVE" ]; then
+              openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BD_CLAVE -in pronosticos.db.gz -out pronosticos.db.gz.enc
+              gh release upload copia-bd pronosticos.db.gz.enc --clobber
+              gh release delete-asset copia-bd pronosticos.db.gz -y 2>/dev/null || true   # se retira la copia sin cifrar
+            else
+              gh release upload copia-bd pronosticos.db.gz --clobber
+            fi
+            echo "Copia semanal subida ($NOMBRE)"
           fi
 
       - name: Estado de las fuentes
@@ -125,23 +144,45 @@ jobs:
            "champions": "${{ steps.champions.outcome }}", "europa": "${{ steps.europa.outcome }}",
            "extra": "${{ steps.extra.outcome }}", "nivel": "${{ steps.nivel.outcome }}"}}
           EOF
-          cat estado.json
+          cat estado.json; cat avisos.txt 2>/dev/null || true
 
       - name: Calcular pronósticos y generar la web
         run: python exportar_web.py
 
-      - name: Publicar
+      - name: Guardar en el repositorio lo que hay que conservar
         run: |
           git config user.name "pronosticos-bot"
           git config user.email "pronosticos-bot@users.noreply.github.com"
-          touch .nojekyll && rm -rf web && cp -r docs/web web
-          cp docs/index.html docs/sw.js docs/manifest.webmanifest docs/*.png .
           mkdir -p registro && cp registro_actualizacion.txt registro/ultima_actualizacion.txt 2>/dev/null || true
           cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
           cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
           cp registro_extra.txt registro/ultimas_ligas_extra.txt 2>/dev/null || true
           cp estado.json registro/estado.json 2>/dev/null || true
-          git add -A docs web dias index.html sw.js manifest.webmanifest *.png .nojekyll registro $(ls datos/fuerza_ligas.json 2>/dev/null)
+          cp avisos.txt registro/avisos.txt 2>/dev/null || rm -f registro/avisos.txt
+          # semilla: si hay clave, se guarda cifrada y se retira la copia sin cifrar (una sola vez)
+          if [ -n "$BD_CLAVE" ] && [ -f datos/semilla.db ]; then
+            openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BD_CLAVE -in datos/semilla.db -out datos/semilla.db.enc
+            git rm -q datos/semilla.db
+          fi
+          git add -A dias registro datos
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
-          # si alguien ha subido cambios mientras tanto, ponerse al día antes de publicar
+          # si alguien ha subido cambios mientras tanto, ponerse al día antes de subir
           for i in 1 2 3; do git push && break; git pull --rebase -X theirs || git rebase --abort; sleep 5; done
+
+      - name: Preparar la web para publicar
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  publicar:
+    needs: actualizar
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - id: despliegue
+        uses: actions/deploy-pages@v4

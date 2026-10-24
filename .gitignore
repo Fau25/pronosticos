@@ -1,6 +1,11 @@
+# base de datos y temporales (la base vive en la caché de Actions)
 pronosticos.db
-registro_actualizacion.txt
+pronosticos.db.gz
+pronosticos.db.gz.enc
+registro_*.txt
 debug_understat_partido.html
 __pycache__/
 /estado.json
-/pronosticos.db.gz
+/avisos.txt
+# la web se genera en cada actualización y se publica directamente en GitHub Pages
+/docs/

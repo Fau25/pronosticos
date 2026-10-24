@@ -69,35 +69,40 @@ def ejecutar(df, recal=None, registrar=False):
     lados = []             # (fecha, met, e_equipo, y_equipo, e_rival, y_rival, europa) para el cansancio
     filas = []
     mes_calibrado = None
+    cansancio = M.USAR["cansancio"]   # desactivado: no se calcula lo que solo sirve para ese ajuste
     for fecha, jornada in df.groupby("fecha", sort=True):
+        jornada = jornada.to_dict("records")
         # 0) calibración: la primera vez al empezar la evaluación; después, cada mes con los últimos 12 meses
         if fecha >= INICIO_EVAL:
             if not mod.dispersion:
-                ajustar_cansancio(mod, [x[1:] for x in lados])
+                if cansancio:
+                    ajustar_cansancio(mod, [x[1:] for x in lados])
                 _calibrar(mod, calib, fijar_lineas=True)
                 mes_calibrado = (fecha.year, fecha.month)
             elif recal and (fecha.year, fecha.month) != mes_calibrado:
                 desde = fecha - pd.Timedelta(days=365)
                 ventana = [(m, e, r) for f, m, e, r in historia if desde <= f < fecha]
                 if len(ventana) > 2000:
-                    ajustar_cansancio(mod, [x[1:] for x in lados if desde <= x[0] < fecha])
+                    if cansancio:
+                        ajustar_cansancio(mod, [x[1:] for x in lados if desde <= x[0] < fecha])
                     _calibrar(mod, ventana, fijar_lineas=False)
                 mes_calibrado = (fecha.year, fecha.month)
         # 1) pronosticar
-        for _, p in jornada.iterrows():
+        for p in jornada:
+            ctx = contexto(p)
             for met, (cl, cv, _) in M.METRICAS.items():
                 if pd.isna(p.get(cl)) or pd.isna(p.get(cv)):
                     continue
-                if mod.partidos[(p.liga, p.local)] < 5 or mod.partidos[(p.liga, p.visitante)] < 5:
+                if mod.partidos[(p["liga"], p["local"])] < 5 or mod.partidos[(p["liga"], p["visitante"])] < 5:
                     continue
-                e = mod.esperado(p.liga, p.local, p.visitante, met, None, contexto(p))
+                e = mod.esperado(p["liga"], p["local"], p["visitante"], met, None, ctx)
                 if e is None:
                     continue
-                # para medir el cansancio: esperado SIN ajuste y lo real, por equipo
-                e0 = mod.esperado(p.liga, p.local, p.visitante, met)
-                yl, yv = float(p[cl]), float(p[cv])
-                lados.append((fecha, met, e0[0], yl, e0[1], yv, bool(p.get("europa_local"))))
-                lados.append((fecha, met, e0[1], yv, e0[0], yl, bool(p.get("europa_visitante"))))
+                if cansancio:  # para medir el cansancio: esperado SIN ajuste y lo real, por equipo
+                    e0 = mod.esperado(p["liga"], p["local"], p["visitante"], met)
+                    yl, yv = float(p[cl]), float(p[cv])
+                    lados.append((fecha, met, e0[0], yl, e0[1], yv, bool(p.get("europa_local"))))
+                    lados.append((fecha, met, e0[1], yv, e0[0], yl, bool(p.get("europa_visitante"))))
                 real = float(p[cl]) + float(p[cv])
                 esp = e[0] + e[1]
                 if fecha >= pd.Timestamp("2024-11-01"):
@@ -106,7 +111,7 @@ def ejecutar(df, recal=None, registrar=False):
                     if fecha >= pd.Timestamp("2024-11-01"):
                         calib.append((met, esp, real))
                 else:
-                    fila = dict(fecha=fecha, liga=p.liga, local=p.local, visitante=p.visitante,
+                    fila = dict(fecha=fecha, liga=p["liga"], local=p["local"], visitante=p["visitante"],
                                 met=met, esp=esp, real=real,
                                 b365_mas25=p.get("b365_mas25"), b365_menos25=p.get("b365_menos25"))
                     if registrar and mod.dispersion:
@@ -117,8 +122,8 @@ def ejecutar(df, recal=None, registrar=False):
                             fila["seg_p"], fila["seg_lado"], fila["seg_l"] = seg
                     filas.append(fila)
         # 2) aprender del resultado
-        for _, p in jornada.iterrows():
-            mod.actualizar(p.to_dict())
+        for p in jornada:
+            mod.actualizar(p)
     return pd.DataFrame(filas), mod, pd.DataFrame(calib, columns=["met", "esp", "real"])
 
 

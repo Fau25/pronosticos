@@ -17,10 +17,11 @@ import unicodedata
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 
+from comun import avisar, temporada
 from modelo import BD
 
 URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard?dates={}"
-INICIO_TEMPORADA = date(2026, 8, 25)
+INICIO_TEMPORADA = date(temporada(), 7, 1)  # la fase previa empieza en julio
 
 ALIAS = {
     "internazionale": "Inter", "inter milan": "Inter", "rb leipzig": "RasenBallsport Leipzig",
@@ -186,6 +187,7 @@ def descargar(desde, hasta, log=print):
                 log(f"  [champions] {d}: error ({e})")
                 if n_err >= 5:
                     log("  [champions] demasiados errores, paro")
+                    avisar("ESPN: no se pudo leer la Champions")
                     break
             time.sleep(0.4)
             d += timedelta(days=1)

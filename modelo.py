@@ -274,7 +274,7 @@ class Modelo:
         liga, loc, vis = fila["liga"], fila["local"], fila["visitante"]
         arb = fila.get("arbitro")
         tl, tv = fila.get("tarjetas_local"), fila.get("tarjetas_visitante")
-        if arb and isinstance(arb, str) and tl is not None and tv is not None and not (pd.isna(tl) or pd.isna(tv)):
+        if USAR["arbitro"] and arb and isinstance(arb, str) and tl is not None and tv is not None and not (pd.isna(tl) or pd.isna(tv)):
             mh, ma = self.media_liga(liga, "tarjetas", "h"), self.media_liga(liga, "tarjetas", "a")
             if mh and ma:
                 e = self.arb[(liga, arb.strip())]
@@ -304,6 +304,7 @@ class Modelo:
             return float(1 - stats.poisson.cdf(math.floor(linea), media))
         if tipo == "negbin":
             phi = max(self.dispersion.get(met, 1.0), 1.01)
+            media = max(media, 1e-6)       # evita 0/0 si la media esperada es 0
             n = media / (phi - 1)          # varianza = phi * media
             p = n / (n + media)
             return float(1 - stats.nbinom.cdf(math.floor(linea), n, p))
@@ -353,15 +354,6 @@ class Modelo:
                 fila.update(segura_lado=seg[1], segura_linea=seg[2], segura_prob=round(seg[0], 3))
             salida.append(fila)
         return salida
-
-
-def entrenar():
-    """Entrena el modelo con todo el histórico (misma receta que el backtest)."""
-    import backtest
-    df, nombres = unir_fuentes()
-    _, mod, _ = backtest.ejecutar(df)
-    mod.nombres = nombres      # nombre football-data -> nombre Understat
-    return mod, df
 
 
 def elegir_linea(valores):

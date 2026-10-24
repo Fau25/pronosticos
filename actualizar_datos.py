@@ -28,6 +28,8 @@ from pathlib import Path
 import pandas as pd
 from scrapling.fetchers import Fetcher
 
+from comun import avisar, temporadas_fd
+
 CARPETA = Path(__file__).resolve().parent
 BD = CARPETA / "pronosticos.db"
 REGISTRO = CARPETA / "registro_actualizacion.txt"
@@ -40,8 +42,8 @@ LIGAS = {
     "ligue1":     ("F1",  "Ligue_1"),
     "seriea":     ("I1",  "Serie_A"),
 }
-# temporada football-data, temporada Understat (año de inicio)
-TEMPORADAS = [("2425", 2024), ("2526", 2025), ("2627", 2026)]
+# temporada football-data, temporada Understat (año de inicio): las 3 últimas, calculadas por la fecha
+TEMPORADAS = temporadas_fd(3)
 
 PAUSA = 1.0  # segundos entre peticiones a Understat, para no cargar su servidor
 
@@ -63,10 +65,13 @@ COLUMNAS_FD = {
     "Avg>2.5": "media_mas25", "Avg<2.5": "media_menos25",
 }
 
-_log_file = open(REGISTRO, "w", encoding="utf-8")
+_log_file = None
 
 
 def log(msg=""):
+    global _log_file
+    if _log_file is None:
+        _log_file = open(REGISTRO, "w", encoding="utf-8")
     print(msg, flush=True)
     _log_file.write(msg + "\n")
     _log_file.flush()
@@ -84,6 +89,7 @@ def descargar_football_data(ligas, temporadas):
                 df = pd.read_csv(url, encoding="latin-1")
             except Exception as e:
                 log(f"  [football-data] {nombre} {temp_fd}: no disponible ({e})")
+                avisar(f"football-data: sin datos de {nombre} {temp_fd}")
                 continue
             df = df[[c for c in COLUMNAS_FD if c in df.columns]].rename(columns=COLUMNAS_FD)
             df = df.dropna(subset=["local", "visitante"])
@@ -289,6 +295,7 @@ def descargar_understat(ligas, temporadas):
                     partidos = understat_calendario(liga_us, temp_us)
                 except Exception as e:
                     log(f"  [understat] {nombre} {temp_us}: ERROR calendario -> {e}")
+                    avisar(f"Understat: sin calendario de {nombre} {temp_us}")
                     continue
                 guardar_calendario(con, nombre, temp_us, partidos)
                 jugados = sum(1 for p in partidos if p.get("isResult"))
@@ -321,7 +328,8 @@ def descargar_understat(ligas, temporadas):
                 errores_seguidos += 1
                 log(f"    ERROR partido {mid} ({loc} - {vis}): {e}")
                 if errores_seguidos >= 5:
-                    log("\n  5 errores seguidos: paro aquí para no insistir. Avisa a Claude.")
+                    log("\n  5 errores seguidos: paro aquí para no insistir.")
+                    avisar("Understat: no se pudieron descargar los tiros de algunos partidos")
                     return
             time.sleep(PAUSA)
 
