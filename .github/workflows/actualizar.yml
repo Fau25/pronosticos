@@ -1,9 +1,14 @@
 name: Actualizar pronósticos
 
+# Dos actualizaciones al día a las 00:30 y a las 7:30, hora de España, todo el año.
+# GitHub solo entiende hora UTC, así que hay una programación para el horario de verano
+# y otra para el de invierno; el paso "hora" deja pasar solo la que toca según la fecha.
 on:
   schedule:
-    - cron: "15 23 * * *"    # de noche, al acabar los partidos (00:15 en invierno / 01:15 en verano, hora de España)
-    - cron: "15 5 * * *"     # de madrugada, para recoger lo que las fuentes publican tarde (06:15 / 07:15)
+    - cron: "30 22 * * *"   # 00:30 en verano (UTC+2)
+    - cron: "30 23 * * *"   # 00:30 en invierno (UTC+1)
+    - cron: "30 5 * * *"    # 07:30 en verano
+    - cron: "30 6 * * *"    # 07:30 en invierno
   workflow_dispatch:          # botón "Run workflow" para lanzarlo a mano
 
 permissions:
@@ -14,7 +19,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  hora:
+    runs-on: ubuntu-latest
+    outputs:
+      toca: ${{ steps.c.outputs.toca }}
+    steps:
+      - id: c
+        run: |
+          PROG="${{ github.event.schedule }}"
+          if [ -z "$PROG" ]; then echo "toca=true" >> $GITHUB_OUTPUT; exit 0; fi
+          if [ "$(TZ=Europe/Madrid date +%z)" = "+0200" ]; then VALIDAS="30 22 * * *|30 5 * * *"; else VALIDAS="30 23 * * *|30 6 * * *"; fi
+          case "|$VALIDAS|" in *"|$PROG|"*) echo "toca=true" >> $GITHUB_OUTPUT;; *) echo "toca=false" >> $GITHUB_OUTPUT; echo "No toca con este horario ($PROG)";; esac
+
   actualizar:
+    needs: hora
+    if: needs.hora.outputs.toca == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
