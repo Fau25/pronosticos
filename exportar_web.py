@@ -245,6 +245,20 @@ def exportar(desde, hasta):
     reales_df = df.dropna(subset=["understat_id"]).copy()
     reales_df["understat_id"] = reales_df.understat_id.astype(int)
     reales_df = reales_df.drop_duplicates("understat_id").set_index("understat_id")
+    # al revés: Understat ya tiene el resultado pero football-data aún no lo ha publicado.
+    # Se marca lo que ya se sabe con certeza (goles, xG, tiros y remates por partes, todo de Understat);
+    # córners, tarjetas, tiros totales y goles por parte llegan con football-data en la siguiente actualización
+    us = pd.read_sql("SELECT * FROM us_estadisticas", con)
+    us = us[~us.understat_id.astype(int).isin(reales_df.index)].copy()
+    if not us.empty:
+        us = us.rename(columns={"remates_puerta_local_1t": "remates_local_1t", "remates_puerta_visitante_1t": "remates_visitante_1t",
+                                "remates_puerta_local_2t": "remates_local_2t", "remates_puerta_visitante_2t": "remates_visitante_2t"})
+        cols = ["goles_local", "goles_visitante", "xg_local", "xg_visitante", "xg_local_1t", "xg_visitante_1t",
+                "xg_local_2t", "xg_visitante_2t", "tiros_local_1t", "tiros_visitante_1t", "tiros_local_2t",
+                "tiros_visitante_2t", "remates_local_1t", "remates_visitante_1t", "remates_local_2t", "remates_visitante_2t"]
+        us["understat_id"] = us.understat_id.astype(int)
+        reales_df = pd.concat([reales_df, us.set_index("understat_id")[cols]])
+        print(f"  {len(us)} partidos con resultado solo en Understat (football-data aún sin publicar)")
 
     salida = {"generado": pd.Timestamp.now(tz="Europe/Madrid").strftime("%Y-%m-%d %H:%M"),
               "ultimo_dato": con.execute("SELECT MAX(fecha) FROM us_partidos WHERE jugado=1").fetchone()[0],
