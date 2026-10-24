@@ -2,7 +2,8 @@ name: Actualizar pronósticos
 
 on:
   schedule:
-    - cron: "30 7 * * *"     # cada día a las 07:30 UTC (9:30 en verano / 8:30 en invierno, hora de España)
+    - cron: "15 23 * * *"    # de noche, al acabar los partidos (00:15 en invierno / 01:15 en verano, hora de España)
+    - cron: "15 5 * * *"     # de madrugada, para recoger lo que las fuentes publican tarde (06:15 / 07:15)
   workflow_dispatch:          # botón "Run workflow" para lanzarlo a mano
 
 permissions:

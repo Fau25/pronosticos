@@ -103,10 +103,16 @@ def unir_fuentes(con=None):
                "remates_puerta_local_1t", "remates_puerta_visitante_1t",
                "remates_puerta_local_2t", "remates_puerta_visitante_2t",
                "xg_local_1t", "xg_visitante_1t", "xg_local_2t", "xg_visitante_2t"]
+    fd["_fila_fd"] = range(len(fd))
     m = fd.merge(us[us_cols].rename(columns={"fecha": "fecha_us"}),
                  on=["liga", "local", "visitante"], how="left")
     m = m[m.fecha_us.isna() | ((m.fecha - m.fecha_us).abs() <= pd.Timedelta(days=1))]
-    m = m.drop_duplicates(["liga", "fecha", "local", "visitante"])
+    # partidos que Understat aún no ha cerrado pero se cruzaron con un enfrentamiento anterior
+    # de los mismos equipos (y por eso se descartaron arriba): se conservan sin datos de Understat
+    faltan = fd[~fd._fila_fd.isin(m._fila_fd)]
+    if not faltan.empty:
+        m = pd.concat([m, faltan], ignore_index=True)
+    m = m.drop(columns="_fila_fd").drop_duplicates(["liga", "fecha", "local", "visitante"])
 
     # Tiros: los totales de football-data (son los que usan las casas);
     # por partes y remates: Understat

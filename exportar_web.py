@@ -231,6 +231,17 @@ def exportar(desde, hasta):
         px = pd.read_sql("SELECT liga, local, visitante, b365_mas25, b365_menos25 FROM proximos", con)
     except Exception:
         px = pd.DataFrame()
+    # partidos con resultado en football-data pero que Understat aún no ha cerrado:
+    # se les asigna el id del calendario de Understat para no esperar a que se ponga al día
+    cal = pd.read_sql("SELECT understat_id, liga, fecha, local, visitante FROM us_partidos", con)
+    cal["fecha"] = pd.to_datetime(cal["fecha"])
+    sin_id = df[df.understat_id.isna()]
+    if not sin_id.empty:
+        cruce = sin_id.reset_index().merge(cal, on=["liga", "local", "visitante"], suffixes=("", "_cal"))
+        cruce = cruce[(cruce.fecha - cruce.fecha_cal).abs() <= pd.Timedelta(days=1)]
+        df.loc[cruce["index"], "understat_id"] = cruce["understat_id_cal"].values
+        if len(cruce):
+            print(f"  {len(cruce)} partidos con resultado solo en football-data (Understat aún sin cerrar)")
     reales_df = df.dropna(subset=["understat_id"]).copy()
     reales_df["understat_id"] = reales_df.understat_id.astype(int)
     reales_df = reales_df.drop_duplicates("understat_id").set_index("understat_id")
@@ -249,6 +260,8 @@ def exportar(desde, hasta):
                 dia += timedelta(days=1)
                 continue
         todos = S.puntuar(con, S.partidos_del_dia(con, dia))
+        if not todos.empty:  # jugado si lo dice Understat o si football-data ya tiene el resultado
+            todos["jugado"] = todos.jugado.astype(bool) | todos.understat_id.astype(int).isin(reales_df.index)
         ucl = S.puntuar_ucl(con, S.partidos_ucl_del_dia(con, dia))
         if todos.empty and ucl.empty:
             dia += timedelta(days=1)
