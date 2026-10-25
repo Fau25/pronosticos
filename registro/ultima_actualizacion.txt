@@ -1,4 +1,4 @@
-Actualización 2026-10-25 18:50  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-25 19:41  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 89 partidos
@@ -10,32 +10,32 @@ Actualización 2026-10-25 18:50  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (96 jugados)
+  [understat] laliga 2026: 380 partidos (97 jugados)
   [understat] premier 2026: 380 partidos (80 jugados)
   [understat] bundesliga 2026: 306 partidos (63 jugados)
   [understat] ligue1 2026: 306 partidos (71 jugados)
-  [understat] seriea 2026: 380 partidos (78 jugados)
+  [understat] seriea 2026: 380 partidos (79 jugados)
 
-  [understat] Descargando tiros de 7 partidos (~0 min).
+  [understat] Descargando tiros de 2 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/7  ligue1  2026-10-24  Toulouse - Troyes  (15 tiros)
-    7/7  bundesliga  2026-10-25  Freiburg - Bayern Munich  (34 tiros)
+    1/2  laliga  2026-10-25  Real Sociedad - Levante  (23 tiros)
+    2/2  seriea  2026-10-25  Lecce - Juventus  (24 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3850 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      98888 filas
+  us_tiros      98935 filas
   understat bundesliga 675/675 partidos con tiros
-  understat laliga     856/856 partidos con tiros
+  understat laliga     857/857 partidos con tiros
   understat ligue1     683/683 partidos con tiros
   understat premier    840/840 partidos con tiros
-  understat seriea     838/838 partidos con tiros
+  understat seriea     839/839 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-10-25 Athletic Club 4-0 Getafe | xG 0.70-0.35 | tiros 1T 6-2, 2T 5-5
    2026-10-25 Celta Vigo 0-0 Real Betis | xG 0.80-1.07 | tiros 1T 9-6, 2T 3-9
-   2026-10-24 Atletico Madrid 1-0 Deportivo La Coruna | xG 2.22-2.24 | tiros 1T 7-7, 2T 13-8
+   2026-10-25 Real Sociedad 2-1 Levante | xG 2.92-0.75 | tiros 1T 11-4, 2T 6-2
 
 Terminado.

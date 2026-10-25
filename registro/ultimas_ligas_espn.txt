@@ -1,11 +1,11 @@
   [espn] 52 partidos leídos (0 errores)
   [espn] bundesliga: 9 en la base, 9 jugados, 9 con córners
-  [espn] laliga: 11 en la base, 8 jugados, 8 con córners
+  [espn] laliga: 11 en la base, 9 jugados, 9 con córners
   [espn] ligue1: 9 en la base, 8 jugados, 8 con córners
   [espn] premier: 10 en la base, 10 jugados, 10 con córners
-  [espn] seriea: 13 en la base, 8 jugados, 8 con córners
+  [espn] seriea: 13 en la base, 9 jugados, 9 con córners
+   2026-10-25T17:30 Real Sociedad 2-1 Levante · córners 5 · amarillas 4 · tiros 23
+   2026-10-25T17:00 Lecce 0-2 Juventus · córners 8 · amarillas 1 · tiros 24
    2026-10-25T16:30 Sunderland 0-0 Leeds · córners 9 · amarillas 3 · tiros 26
    2026-10-25T16:30 Freiburg 1-3 Bayern Munich · córners 11 · amarillas 4 · tiros 33
    2026-10-25T16:15 Auxerre 1-1 Le Mans · córners 8 · amarillas 4 · tiros 24
-   2026-10-25T16:15 Angers 0-0 Lorient · córners 13 · amarillas 2 · tiros 18
-   2026-10-25T16:15 Marseille 4-3 Le Havre · córners 7 · amarillas 4 · tiros 32
