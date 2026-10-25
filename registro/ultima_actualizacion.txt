@@ -1,4 +1,4 @@
-Actualización 2026-10-25 16:47  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-25 17:43  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 89 partidos
@@ -10,32 +10,31 @@ Actualización 2026-10-25 16:47  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (95 jugados)
+  [understat] laliga 2026: 380 partidos (96 jugados)
   [understat] premier 2026: 380 partidos (79 jugados)
   [understat] bundesliga 2026: 306 partidos (62 jugados)
   [understat] ligue1 2026: 306 partidos (66 jugados)
   [understat] seriea 2026: 380 partidos (78 jugados)
 
-  [understat] Descargando tiros de 8 partidos (~0 min).
+  [understat] Descargando tiros de 1 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/8  premier  2026-10-25  Liverpool - Brighton  (31 tiros)
-    8/8  bundesliga  2026-10-25  Hoffenheim - Bayer Leverkusen  (29 tiros)
+    1/1  laliga  2026-10-25  Celta Vigo - Real Betis  (27 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3850 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      98685 filas
+  us_tiros      98712 filas
   understat bundesliga 674/674 partidos con tiros
-  understat laliga     855/855 partidos con tiros
+  understat laliga     856/856 partidos con tiros
   understat ligue1     678/678 partidos con tiros
   understat premier    839/839 partidos con tiros
   understat seriea     838/838 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-10-25 Athletic Club 4-0 Getafe | xG 0.70-0.35 | tiros 1T 6-2, 2T 5-5
+   2026-10-25 Celta Vigo 0-0 Real Betis | xG 0.80-1.07 | tiros 1T 9-6, 2T 3-9
    2026-10-24 Atletico Madrid 1-0 Deportivo La Coruna | xG 2.22-2.24 | tiros 1T 7-7, 2T 13-8
-   2026-10-24 Racing Santander 2-1 Espanyol | xG 2.83-0.58 | tiros 1T 5-7, 2T 18-4
 
 Terminado.
