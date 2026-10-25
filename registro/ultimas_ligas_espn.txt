@@ -1,0 +1,13 @@
+  [espn] 52 partidos leídos (0 errores)
+  [espn] bundesliga: 9 en la base, 7 jugados, 7 con córners
+  [espn] laliga: 11 en la base, 6 jugados, 6 con córners
+  [espn] ligue1: 9 en la base, 2 jugados, 2 con córners
+  [espn] premier: 10 en la base, 5 jugados, 5 con córners
+  [espn] seriea: 13 en la base, 5 jugados, 5 con córners
+   2026-10-24T19:00 Atletico Madrid 1-0 Deportivo La Coruna · córners 7 · amarillas 6 · tiros 35
+   2026-10-24T18:45 Lazio 2-1 Parma Calcio 1913 · córners 11 · amarillas 2 · tiros 31
+   2026-10-24T18:45 Lens 2-1 Paris FC · córners 7 · amarillas 7 · tiros 13
+   2026-10-24T16:30 Valencia 1-2 Villarreal · córners 15 · amarillas 7 · tiros 28
+   2026-10-24T16:30 Chelsea 0-2 Tottenham · córners 10 · amarillas 7 · tiros 22
+  [espn] equipos sin emparejar: Stade Rennais
+  AVISO: ESPN: equipos sin emparejar con Understat (Stade Rennais)
