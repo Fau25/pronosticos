@@ -33,7 +33,7 @@ ALIAS = {
     "newcastle united": "Newcastle United", "wolverhampton wanderers": "Wolverhampton Wanderers",
     "athletic club": "Athletic Club", "athletic bilbao": "Athletic Club",
     "borussia monchengladbach": "Borussia M.Gladbach", "koln": "FC Cologne", "mainz": "Mainz 05",
-    "stuttgart": "VfB Stuttgart", "hamburg": "Hamburger SV", "werder bremen": "Werder Bremen",
+    "stuttgart": "VfB Stuttgart", "rennais": "Rennes", "stade rennais": "Rennes", "hamburg": "Hamburger SV", "werder bremen": "Werder Bremen",
 }
 QUITAR = {"fc", "cf", "ac", "sc", "afc", "ssc", "as", "rc", "cd", "ud", "sv", "vfl", "club", "de", "the",
           "calcio", "1", "04", "05", "1899", "1846", "1909", "1913", "ogc", "losc", "stade", "olympique"}
