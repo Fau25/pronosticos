@@ -1,6 +1,6 @@
   [extra] por: 19 partidos (0 días con error)
   [extra] ned: 27 partidos (0 días con error)
-  [extra] bel: 17 partidos (0 días con error)
+  [extra] bel: 18 partidos (0 días con error)
   [extra] sco: 22 partidos (0 días con error)
   [extra] tur: 27 partidos (0 días con error)
   [extra] aut: 18 partidos (0 días con error)
