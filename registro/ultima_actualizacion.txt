@@ -1,4 +1,4 @@
-Actualización 2026-10-25 14:45  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-25 15:46  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 89 partidos
@@ -10,27 +10,31 @@ Actualización 2026-10-25 14:45  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (94 jugados)
+  [understat] laliga 2026: 380 partidos (95 jugados)
   [understat] premier 2026: 380 partidos (75 jugados)
   [understat] bundesliga 2026: 306 partidos (61 jugados)
   [understat] ligue1 2026: 306 partidos (65 jugados)
   [understat] seriea 2026: 380 partidos (76 jugados)
-  [understat] tiros: todo al día
+
+  [understat] Descargando tiros de 1 partidos (~0 min).
+  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
+
+    1/1  laliga  2026-10-25  Athletic Club - Getafe  (18 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3850 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      98431 filas
+  us_tiros      98449 filas
   understat bundesliga 673/673 partidos con tiros
-  understat laliga     854/854 partidos con tiros
+  understat laliga     855/855 partidos con tiros
   understat ligue1     677/677 partidos con tiros
   understat premier    835/835 partidos con tiros
   understat seriea     836/836 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
+   2026-10-25 Athletic Club 4-0 Getafe | xG 0.70-0.35 | tiros 1T 6-2, 2T 5-5
    2026-10-24 Atletico Madrid 1-0 Deportivo La Coruna | xG 2.22-2.24 | tiros 1T 7-7, 2T 13-8
    2026-10-24 Racing Santander 2-1 Espanyol | xG 2.83-0.58 | tiros 1T 5-7, 2T 18-4
-   2026-10-24 Rayo Vallecano 0-3 Elche | xG 1.23-2.40 | tiros 1T 7-7, 2T 11-9
 
 Terminado.
