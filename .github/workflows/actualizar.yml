@@ -11,6 +11,7 @@ on:
     - cron: "30 23 * * *"   # 00:30 en invierno (UTC+1)
     - cron: "30 5 * * *"    # 07:30 en verano
     - cron: "30 6 * * *"    # 07:30 en invierno
+    - cron: "20 * * * *"    # cada hora: solo trabaja si hay partidos en juego o recién terminados
   workflow_dispatch:          # botón "Run workflow" para lanzarlo a mano
 
 permissions:
@@ -30,6 +31,30 @@ jobs:
         run: |
           PROG="${{ github.event.schedule }}"
           if [ -z "$PROG" ]; then echo "toca=true" >> $GITHUB_OUTPUT; exit 0; fi
+          if [ "$PROG" = "20 * * * *" ]; then
+            # ¿algún partido de las 5 ligas o de la Champions empezado hace menos de 5,5 horas?
+            EN_JUEGO=$(python3 - <<'PY'
+          import json, urllib.request
+          from datetime import datetime, timedelta, timezone
+          ahora = datetime.now(timezone.utc)
+          for slug in ["esp.1", "eng.1", "ita.1", "ger.1", "fra.1", "uefa.champions"]:
+              for d in {ahora.date(), (ahora - timedelta(hours=6)).date()}:
+                  url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{slug}/scoreboard?dates={d:%Y%m%d}"
+                  try:
+                      evs = json.load(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20)).get("events", [])
+                  except Exception:
+                      continue
+                  for ev in evs:
+                      ini = datetime.fromisoformat(ev["date"].replace("Z", "+00:00"))
+                      if ini <= ahora <= ini + timedelta(hours=5.5):
+                          print("si"); raise SystemExit
+          print("no")
+          PY
+            )
+            echo "Partidos en juego o recién terminados: $EN_JUEGO"
+            [ "$EN_JUEGO" = "si" ] && echo "toca=true" >> $GITHUB_OUTPUT || echo "toca=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           if [ "$(TZ=Europe/Madrid date +%z)" = "+0200" ]; then VALIDAS="30 22 * * *|30 5 * * *"; else VALIDAS="30 23 * * *|30 6 * * *"; fi
           case "|$VALIDAS|" in *"|$PROG|"*) echo "toca=true" >> $GITHUB_OUTPUT;; *) echo "toca=false" >> $GITHUB_OUTPUT; echo "No toca con este horario ($PROG)";; esac
 
@@ -83,6 +108,12 @@ jobs:
         continue-on-error: true
         shell: bash
         run: python actualizar_datos.py rapido
+
+      - name: Resultados de las 5 ligas al momento (ESPN)
+        id: espn
+        continue-on-error: true
+        shell: bash
+        run: python ligas_espn.py 2>&1 | tee registro_espn.txt
 
       - name: Champions (ESPN)
         id: champions
@@ -141,7 +172,7 @@ jobs:
         run: |
           cat > estado.json <<EOF
           {"origen_bd": "${ORIGEN_BD:-desconocido}", "pasos": {"futdata": "${{ steps.futdata.outcome }}",
-           "champions": "${{ steps.champions.outcome }}", "europa": "${{ steps.europa.outcome }}",
+           "champions": "${{ steps.champions.outcome }}", "espn": "${{ steps.espn.outcome }}", "europa": "${{ steps.europa.outcome }}",
            "extra": "${{ steps.extra.outcome }}", "nivel": "${{ steps.nivel.outcome }}"}}
           EOF
           cat estado.json; cat avisos.txt 2>/dev/null || true
@@ -157,6 +188,7 @@ jobs:
           cp registro_champions.txt registro/ultima_champions.txt 2>/dev/null || true
           cp registro_ligas.txt registro/ultimo_nivel_ligas.txt 2>/dev/null || true
           cp registro_extra.txt registro/ultimas_ligas_extra.txt 2>/dev/null || true
+          cp registro_espn.txt registro/ultimas_ligas_espn.txt 2>/dev/null || true
           cp estado.json registro/estado.json 2>/dev/null || true
           cp resumen_aciertos.json registro/resumen_aciertos.json 2>/dev/null || true
           cp avisos.txt registro/avisos.txt 2>/dev/null || rm -f registro/avisos.txt

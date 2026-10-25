@@ -33,7 +33,8 @@ CACHE = Path(__file__).resolve().parent / "dias"
 def _completo(dia_json):
     """Un día pasado está cerrado cuando todos sus partidos tienen resultado completo (incl. córners)
     o están aplazados (sin resultado varios días después)."""
-    return all(p.get("aplazado") or (p.get("real") and "corners" in p["real"] and "tarjetas" in p["real"])
+    return all(p.get("aplazado") or (p.get("real") and "corners" in p["real"] and "tarjetas" in p["real"]
+                                     and not p.get("provisional"))
                for p in dia_json["partidos"])
 
 
@@ -50,6 +51,7 @@ def _clas(con, liga):
 
 
 AVISOS = []   # avisos de esta ejecución (se muestran discretos en la web)
+FD_IDS = set()  # partidos de liga con datos de football-data (los de ESPN/Understat solos son provisionales)
 
 
 # ------------------------------------------------------------------ el "porqué": últimos 5 partidos
@@ -93,7 +95,8 @@ def _partidos_liga(con, mod, todos, px, nombres, reales_df):
         uid = int(r.understat_id)
         p = dict(understat_id=uid, liga=r.liga, fecha=r.fecha, hora=r.hora,
                  local=r.local, visitante=r.visitante, motivo=r.motivo,
-                 relevancia=float(r.relevancia), destacado=uid in top, aplazado=bool(getattr(r, "aplazado", False)))
+                 relevancia=float(r.relevancia), destacado=uid in top, aplazado=bool(getattr(r, "aplazado", False)),
+                 provisional=bool(r.jugado) and uid not in FD_IDS)
         if mod.partidos[(r.liga, r.local)] < 3 or mod.partidos[(r.liga, r.visitante)] < 3:
             continue
         pron = mod.pronosticar(r.liga, r.local, r.visitante)
@@ -237,6 +240,52 @@ def escalera_dia(mod, partidos):
     return sorted(opciones, key=lambda c: (not c["recomendada"], c["hora"]))
 
 
+ESPN_COLS = {"goles_local": "goles_local", "goles_visitante": "goles_visitante",
+             "goles_local_1t": "goles_local_1t", "goles_visitante_1t": "goles_visitante_1t",
+             "tiros_local": "tiros_local", "tiros_visitante": "tiros_visitante",
+             "remates_local": "remates_local", "remates_visitante": "remates_visitante",
+             "corners_local": "corners_local", "corners_visitante": "corners_visitante"}
+
+
+def _completar_con_espn(con, cal, reales_df):
+    """Rellena con ESPN (misma noche) lo que football-data aún no ha publicado: córners, tarjetas,
+    tiros y remates totales y goles por parte. Nunca pisa un dato que ya exista."""
+    try:
+        e = pd.read_sql("SELECT * FROM espn_ligas WHERE completado = 1 AND local IS NOT NULL AND visitante IS NOT NULL", con)
+    except Exception:
+        return reales_df
+    if e.empty:
+        return reales_df
+    e["fecha"] = pd.to_datetime(e.fecha_utc.str[:10])
+    x = e.merge(cal, on=["liga", "local", "visitante"], suffixes=("", "_cal"))
+    x = x[(x.fecha - x.fecha_cal).abs() <= pd.Timedelta(days=1)]
+    nuevos, completados = [], 0
+    for r in x.itertuples():
+        uid = int(r.understat_id)
+        valores = {dst: getattr(r, src) for src, dst in ESPN_COLS.items()}
+        if pd.notna(r.amarillas_local):
+            valores["tarjetas_local"] = r.amarillas_local + (r.rojas_local or 0)
+            valores["tarjetas_visitante"] = r.amarillas_visitante + (r.rojas_visitante or 0)
+        if pd.notna(r.goles_local_1t) and pd.notna(r.goles_local):
+            valores["goles_local_2t"] = r.goles_local - r.goles_local_1t
+            valores["goles_visitante_2t"] = r.goles_visitante - r.goles_visitante_1t
+        if uid in reales_df.index:
+            fila = reales_df.loc[uid]
+            puso = False
+            for col, v in valores.items():
+                if (col not in reales_df.columns or pd.isna(fila.get(col))) and pd.notna(v):
+                    reales_df.loc[uid, col] = v
+                    puso = True
+            completados += puso
+        elif pd.notna(r.goles_local):
+            nuevos.append({"understat_id": uid, **valores})
+    if nuevos:
+        reales_df = pd.concat([reales_df, pd.DataFrame(nuevos).set_index("understat_id")])
+    if completados or nuevos:
+        print(f"  ESPN: {completados} partidos completados y {len(nuevos)} añadidos mientras llega football-data")
+    return reales_df
+
+
 def exportar(desde, hasta):
     CACHE.mkdir(exist_ok=True)
     df, nombres = M.unir_fuentes()
@@ -259,6 +308,7 @@ def exportar(desde, hasta):
         if len(cruce):
             print(f"  {len(cruce)} partidos con resultado solo en football-data (Understat aún sin cerrar)")
     reales_df = df.dropna(subset=["understat_id"]).copy()
+    FD_IDS.clear(); FD_IDS.update(int(x) for x in reales_df.understat_id)   # partidos que ya tiene football-data
     reales_df["understat_id"] = reales_df.understat_id.astype(int)
     reales_df = reales_df.drop_duplicates("understat_id").set_index("understat_id")
     # al revés: Understat ya tiene el resultado pero football-data aún no lo ha publicado.
@@ -275,6 +325,7 @@ def exportar(desde, hasta):
         us["understat_id"] = us.understat_id.astype(int)
         reales_df = pd.concat([reales_df, us.set_index("understat_id")[cols]])
         print(f"  {len(us)} partidos con resultado solo en Understat (football-data aún sin publicar)")
+    reales_df = _completar_con_espn(con, cal, reales_df)
 
     ahora = pd.Timestamp.now(tz="Europe/Madrid")
     salida = {"generado": ahora.strftime("%Y-%m-%d %H:%M"), "generado_ts": int(ahora.timestamp() * 1000),
@@ -413,7 +464,7 @@ def historico(d):
     return {"generado": d["generado"], "res": list(filas.values()), "escalera": escalera}
 
 
-NOMBRE_FUENTE = {"futdata": "resultados de las 5 ligas", "champions": "Champions", "europa": "competiciones europeas",
+NOMBRE_FUENTE = {"espn": "resultados al momento (ESPN)", "futdata": "resultados de las 5 ligas", "champions": "Champions", "europa": "competiciones europeas",
                  "extra": "ligas adicionales", "nivel": "nivel de las ligas"}
 
 
