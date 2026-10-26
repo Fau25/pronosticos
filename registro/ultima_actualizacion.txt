@@ -1,4 +1,4 @@
-Actualización 2026-10-26 20:51  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-26 21:47  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 89 partidos
@@ -13,18 +13,22 @@ Actualización 2026-10-26 20:51  ligas: laliga, premier, bundesliga, ligue1, ser
   [understat] laliga 2026: 380 partidos (98 jugados)
   [understat] premier 2026: 380 partidos (80 jugados)
   [understat] bundesliga 2026: 306 partidos (63 jugados)
-  [understat] ligue1 2026: 306 partidos (71 jugados)
+  [understat] ligue1 2026: 306 partidos (72 jugados)
   [understat] seriea 2026: 380 partidos (80 jugados)
-  [understat] tiros: todo al día
+
+  [understat] Descargando tiros de 1 partidos (~0 min).
+  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
+
+    1/1  ligue1  2026-10-25  Paris Saint Germain - Lyon  (25 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3850 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      98994 filas
+  us_tiros      99019 filas
   understat bundesliga 675/675 partidos con tiros
   understat laliga     858/858 partidos con tiros
-  understat ligue1     683/683 partidos con tiros
+  understat ligue1     684/684 partidos con tiros
   understat premier    840/840 partidos con tiros
   understat seriea     840/840 partidos con tiros
 
