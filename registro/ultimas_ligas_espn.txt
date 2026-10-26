@@ -1,9 +1,9 @@
-  [espn] 52 partidos leídos (0 errores)
+  [espn] 56 partidos leídos (0 errores)
   [espn] bundesliga: 9 en la base, 9 jugados, 9 con córners
   [espn] laliga: 11 en la base, 10 jugados, 10 con córners
   [espn] ligue1: 9 en la base, 8 jugados, 8 con córners
   [espn] premier: 10 en la base, 10 jugados, 10 con córners
-  [espn] seriea: 13 en la base, 10 jugados, 10 con córners
+  [espn] seriea: 18 en la base, 10 jugados, 10 con córners
    2026-10-25T20:00 Barcelona 1-2 Real Madrid · córners 12 · amarillas 6 · tiros 28
    2026-10-25T19:45 Udinese 0-2 AC Milan · córners 9 · amarillas 3 · tiros 31
    2026-10-25T17:30 Real Sociedad 2-1 Levante · córners 5 · amarillas 4 · tiros 23
