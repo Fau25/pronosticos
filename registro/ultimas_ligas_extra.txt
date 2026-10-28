@@ -8,4 +8,4 @@
   [extra] den: 19 partidos (0 días con error)
   [extra] nor: 23 partidos (0 días con error)
   [extra] swe: 33 partidos (0 días con error)
-  [extra] en la base: 6067 partidos (5943 jugados)
+  [extra] en la base: 6067 partidos (5947 jugados)

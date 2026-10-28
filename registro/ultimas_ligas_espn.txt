@@ -3,9 +3,9 @@
   [espn] laliga: 12 en la base, 11 jugados, 11 con córners
   [espn] ligue1: 12 en la base, 9 jugados, 9 con córners
   [espn] premier: 10 en la base, 10 jugados, 10 con córners
-  [espn] seriea: 20 en la base, 13 jugados, 13 con córners
+  [espn] seriea: 20 en la base, 16 jugados, 16 con córners
+   2026-10-28T17:30 AC Milan 2-4 Bologna · córners 5 · amarillas 2 · tiros 17
+   2026-10-28T17:30 Parma Calcio 1913 0-0 Udinese · córners 9 · amarillas 4 · tiros 28
+   2026-10-28T17:30 Venezia 0-2 Inter · córners 9 · amarillas 2 · tiros 28
    2026-10-27T19:45 Roma 4-2 Cagliari · córners 15 · amarillas 1 · tiros 39
    2026-10-27T19:45 Torino 1-3 Como · córners 11 · amarillas 1 · tiros 29
-   2026-10-27T17:30 Sassuolo 2-6 Lazio · córners 3 · amarillas 2 · tiros 25
-   2026-10-26T20:00 Sevilla 2-0 Osasuna · córners 11 · amarillas 3 · tiros 27
-   2026-10-26T19:30 Paris Saint Germain 2-0 Lyon · córners 11 · amarillas 3 · tiros 25
