@@ -1,12 +1,12 @@
-Actualización 2026-10-29 07:36  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-29 17:59  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
   [football-data] premier 2627: 80 partidos
   [football-data] bundesliga 2627: 63 partidos
   [football-data] ligue1 2627: 72 partidos
-  [football-data] seriea 2627: 80 partidos
-  -> tabla 'partidos': 394 filas (laliga, premier, bundesliga, ligue1, seriea)
+  [football-data] seriea 2627: 88 partidos
+  -> tabla 'partidos': 402 filas (laliga, premier, bundesliga, ligue1, seriea)
   -> tabla 'proximos': 10 partidos por jugar
 
 2) Understat
@@ -18,7 +18,7 @@ Actualización 2026-10-29 07:36  ligas: laliga, premier, bundesliga, ligue1, ser
   [understat] tiros: todo al día
 
 === RESUMEN DE LA BASE DE DATOS ===
-  partidos       3898 filas
+  partidos       3906 filas
   proximos         10 filas
   us_partidos    5256 filas
   us_tiros      99275 filas
