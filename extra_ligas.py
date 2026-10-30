@@ -25,6 +25,8 @@ EXTRA = {
     "tur": ("tur.1", "Süper Lig", "TUR"), "aut": ("aut.1", "Bundesliga (AUT)", "AUT"),
     "gre": ("gre.1", "Super League", "GRE"), "den": ("den.1", "Superliga", "DIN"),
     "nor": ("nor.1", "Eliteserien", "NOR"), "swe": ("swe.1", "Allsvenskan", "SUE"),
+    # para la quiniela (solo resultados y goles: no se muestran en la web como ligas)
+    "es2": ("esp.2", "Segunda División", "2ª"), "esf": ("esp.w.1", "Liga F", "LF"),
 }
 AÑO_NATURAL = {"nor", "swe"}       # ligas que van de primavera a otoño
 URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/{}/scoreboard?dates={}"
@@ -77,10 +79,10 @@ def _una_liga(liga, desde, hasta):
     return liga, filas, errores
 
 
-def descargar(desde, hasta, log=print):
+def descargar(desde, hasta, log=print, ligas=None):
     todas = []
     with ThreadPoolExecutor(max_workers=5) as ex:
-        for liga, filas, err in ex.map(lambda l: _una_liga(l, desde, hasta), EXTRA):
+        for liga, filas, err in ex.map(lambda l: _una_liga(l, desde, hasta), ligas or EXTRA):
             log(f"  [extra] {liga}: {len(filas)} partidos ({err} días con error)")
             if err >= 5:
                 from comun import avisar
@@ -92,8 +94,10 @@ def descargar(desde, hasta, log=print):
 def actualizar(log=print):
     with sqlite3.connect(BD) as con:
         tabla(con)
-        if con.execute("SELECT COUNT(*) FROM extra_partidos").fetchone()[0] == 0 and HISTORICO.exists():
-            guardar(con, json.loads(HISTORICO.read_text(encoding="utf-8")))
+        # histórico de las ligas que aún no están en la base (p. ej. recién añadidas)
+        hay = {r[0] for r in con.execute("SELECT DISTINCT liga FROM extra_partidos")}
+        if HISTORICO.exists() and set(EXTRA) - hay:
+            guardar(con, [f for f in json.loads(HISTORICO.read_text(encoding="utf-8")) if f["liga"] not in hay])
         hoy = date.today()
         guardar(con, descargar(hoy - timedelta(days=10), hoy + timedelta(days=10), log))
         con.commit()
@@ -103,8 +107,12 @@ def actualizar(log=print):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "historico":
-        filas = descargar(date.fromisoformat(sys.argv[2]), date.fromisoformat(sys.argv[3]))
-        HISTORICO.write_text(json.dumps(filas, ensure_ascii=False), encoding="utf-8")
-        print("guardado", len(filas))
+        # python extra_ligas.py historico DESDE HASTA [ligas...]  -> se añaden al histórico existente
+        ligas = sys.argv[4:] or None
+        filas = descargar(date.fromisoformat(sys.argv[2]), date.fromisoformat(sys.argv[3]), ligas=ligas)
+        previas = json.loads(HISTORICO.read_text(encoding="utf-8")) if HISTORICO.exists() and ligas else []
+        todas = list({f["espn_id"]: f for f in previas + filas}.values())
+        HISTORICO.write_text(json.dumps(todas, ensure_ascii=False), encoding="utf-8")
+        print("guardado", len(todas), "partidos (nuevos:", len(filas), ")")
     else:
         actualizar()
