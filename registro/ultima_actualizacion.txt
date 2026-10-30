@@ -1,4 +1,4 @@
-Actualización 2026-10-30 21:51  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-30 22:51  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -10,27 +10,32 @@ Actualización 2026-10-30 21:51  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (99 jugados)
+  [understat] laliga 2026: 380 partidos (100 jugados)
   [understat] premier 2026: 380 partidos (80 jugados)
-  [understat] bundesliga 2026: 306 partidos (63 jugados)
-  [understat] ligue1 2026: 306 partidos (73 jugados)
+  [understat] bundesliga 2026: 306 partidos (64 jugados)
+  [understat] ligue1 2026: 306 partidos (75 jugados)
   [understat] seriea 2026: 380 partidos (90 jugados)
-  [understat] tiros: todo al día
+
+  [understat] Descargando tiros de 4 partidos (~0 min).
+  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
+
+    1/4  laliga  2026-10-30  Villarreal - Espanyol  (19 tiros)
+    4/4  bundesliga  2026-10-30  Elversberg - Mainz 05  (23 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      99387 filas
-  understat bundesliga 675/675 partidos con tiros
-  understat laliga     859/859 partidos con tiros
-  understat ligue1     685/685 partidos con tiros
+  us_tiros      99479 filas
+  understat bundesliga 676/676 partidos con tiros
+  understat laliga     860/860 partidos con tiros
+  understat ligue1     687/687 partidos con tiros
   understat premier    840/840 partidos con tiros
   understat seriea     850/850 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
+   2026-10-30 Villarreal 0-1 Espanyol | xG 0.63-0.52 | tiros 1T 7-3, 2T 7-2
    2026-10-26 Sevilla 2-0 Osasuna | xG 0.87-0.76 | tiros 1T 8-4, 2T 9-6
    2026-10-25 Athletic Club 4-0 Getafe | xG 0.70-0.35 | tiros 1T 6-2, 2T 5-5
-   2026-10-25 Celta Vigo 0-0 Real Betis | xG 0.80-1.07 | tiros 1T 9-6, 2T 3-9
 
 Terminado.
