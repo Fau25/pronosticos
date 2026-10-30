@@ -1,11 +1,11 @@
   [espn] 55 partidos leídos (0 errores)
-  [espn] bundesliga: 18 en la base, 9 jugados, 9 con córners
+  [espn] bundesliga: 18 en la base, 10 jugados, 10 con córners
   [espn] laliga: 20 en la base, 11 jugados, 11 con córners
   [espn] ligue1: 17 en la base, 11 jugados, 11 con córners
   [espn] premier: 19 en la base, 10 jugados, 10 con córners
   [espn] seriea: 28 en la base, 20 jugados, 20 con córners
+   2026-10-30T19:30 Elversberg 4-1 Mainz 05 · córners 16 · amarillas 4 · tiros 23
    2026-10-30T18:00 Le Havre 1-5 Paris Saint Germain · córners 8 · amarillas 0 · tiros 29
    2026-10-30T18:00 Nice 5-2 Rennes · córners 11 · amarillas 7 · tiros 35
    2026-10-29T19:45 Fiorentina 2-2 Atalanta · córners 10 · amarillas 5 · tiros 36
    2026-10-29T17:30 Frosinone 5-1 Lecce · córners 13 · amarillas 3 · tiros 41
-   2026-10-28T19:45 Genoa 2-0 Juventus · córners 15 · amarillas 1 · tiros 31
