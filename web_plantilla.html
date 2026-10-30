@@ -388,6 +388,25 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pie { margin-top: 44px; color: var(--muted); font-size: .82rem; line-height: 1.7; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; }
 .hay-nuevo { position: fixed; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 40;
   border: 0; border-radius: 999px; padding: 10px 18px; font: 700 .9rem var(--font); background: var(--lime); color: var(--lime-ink); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.q-lista { display: flex; flex-direction: column; gap: 8px; }
+.q-fila { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; background: var(--card); border-radius: 18px; padding: 10px 12px; }
+.q-n { color: var(--muted); font-weight: 700; font-size: .85rem; text-align: center; }
+.q-eq { min-width: 0; display: flex; flex-direction: column; }
+.q-eq b { font-size: .92rem; line-height: 1.25; overflow-wrap: anywhere; }
+.q-eq small { color: var(--muted); font-size: .72rem; }
+.q-signos { display: flex; gap: 4px; }
+.q-s { width: 38px; display: flex; flex-direction: column; align-items: center; border-radius: 10px; padding: 3px 0; background: var(--card-2); border: 1.5px solid transparent; }
+.q-s b { font-size: .9rem; line-height: 1.2; }
+.q-s small { font-size: .7rem; color: var(--muted); }
+.q-s.rec { background: var(--lime); color: var(--lime-ink); }
+.q-s.rec small { color: var(--lime-ink); }
+.q-s.dob { border-color: var(--lime); }
+.q-s.real { box-shadow: 0 0 0 2px var(--ink) inset; }
+.q-ple { display: flex; flex-direction: column; align-items: flex-end; }
+.q-ple small { color: var(--muted); font-size: .72rem; }
+.q-pleno { border: 1px dashed var(--line); }
+.etq-prueba { font-size: .7rem; vertical-align: middle; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--lime); color: var(--lime); margin-left: 6px; }
+@media (max-width: 360px) { .q-s { width: 32px; } .q-fila { gap: 6px; padding: 9px 8px; grid-template-columns: 22px minmax(0, 1fr) auto auto; } }
 .aviso-legal { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; color: var(--muted); }
 .aviso-legal b { color: var(--ink); }
 .aviso-legal a, .modal a { color: var(--lime); }
@@ -458,6 +477,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   <main id="vista-partidos"></main>
   <main id="vista-combinada" hidden></main>
   <main id="vista-escalera" hidden></main>
+  <main id="vista-quiniela" hidden></main>
   <main id="vista-aciertos" hidden></main>
 
   <footer class="pie">
@@ -485,6 +505,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   <button id="v-partidos" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg>Partidos</button>
   <button id="v-combinada" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v4a2 2 0 000 4v4H4v-4a2 2 0 000-4z"/><path d="M10 7v12" stroke-dasharray="2 2"/></svg>Combinada</button>
   <button id="v-escalera" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 20h4v-4h4v-4h4V8h4V4"/></svg>Escalera</button>
+  <button id="v-quiniela" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h3M8 12h3M8 16h3M14 8h2M14 12h2M14 16h2"/></svg>Quiniela</button>
   <button id="v-aciertos" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>Aciertos</button>
 </nav>
 
@@ -551,6 +572,7 @@ const hoy = new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Madrid'}).format
 E.dia = (D.dias.find(d => d.dia >= hoy) || D.dias[0] || {}).dia;
 if (location.hash === '#combinada') E.vista = 'combinada';
 if (location.hash === '#aciertos') E.vista = 'aciertos';
+if (location.hash === '#quiniela') E.vista = 'quiniela';
 if (location.hash === '#escalera') E.vista = 'escalera';
 const hora = new Date().getHours();
 document.getElementById('saludo').textContent = hora < 13 ? 'Buenos días' : hora < 21 ? 'Buenas tardes' : 'Buenas noches';
@@ -631,13 +653,13 @@ function pintarBarra() {
     return `<button class="dia ${d.jugado ? 'pasado' : ''}" data-dia="${d.dia}" aria-pressed="${d.dia === E.dia}"><small>${DSEM[f.getDay()]}</small><b>${f.getDate()}</b><i>${d.jugado ? 'jugado' : n + ' part.'}</i></button>`;
   }).join('');
   document.getElementById('titular').innerHTML = {partidos: 'Elige tu<strong>partido del día</strong>',
-    combinada: 'Arma tu<strong>combinada</strong>', escalera: 'Sube la<strong>escalera</strong>', aciertos: 'Así va<strong>el modelo</strong>'}[E.vista];
-  for (const v of ['partidos', 'combinada', 'escalera', 'aciertos']) {
+    combinada: 'Arma tu<strong>combinada</strong>', escalera: 'Sube la<strong>escalera</strong>', quiniela: 'Tu<strong>quiniela</strong>', aciertos: 'Así va<strong>el modelo</strong>'}[E.vista];
+  for (const v of ['partidos', 'combinada', 'escalera', 'quiniela', 'aciertos']) {
     document.getElementById('v-' + v).setAttribute('aria-pressed', E.vista === v);
     document.getElementById('vista-' + v).hidden = E.vista !== v;
   }
-  document.getElementById('dias-caja').hidden = E.vista === 'aciertos' || E.vista === 'escalera';
-  document.getElementById('ligas').hidden = E.vista === 'escalera';
+  document.getElementById('dias-caja').hidden = ['aciertos', 'escalera', 'quiniela'].includes(E.vista);
+  document.getElementById('ligas').hidden = ['escalera', 'quiniela'].includes(E.vista);
   const sel = document.querySelector('.dia[aria-pressed="true"]');
   if (sel) { const c = document.getElementById('dias'); c.scrollLeft = sel.offsetLeft - c.clientWidth / 2 + sel.clientWidth / 2; }
 }
@@ -652,7 +674,7 @@ document.getElementById('ligas').addEventListener('click', e => {
   try { localStorage.setItem('pron-ligas-v2', JSON.stringify({sel: [...E.ligas], conocidas: ORDEN})); } catch (e) {}
   E.elegidos = null; render();
 });
-['partidos', 'combinada', 'escalera', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
+['partidos', 'combinada', 'escalera', 'quiniela', 'aciertos'].forEach(v => document.getElementById('v-' + v).addEventListener('click', () => {
   E.vista = v; try { history.replaceState(null, '', '#' + v); } catch (e) {} render(); window.scrollTo({top: 0});
 }));
 
@@ -1155,6 +1177,66 @@ function pintarEscalera() {
     <p class="nota" style="margin:16px 4px 0">Cada día sube un escalón con la apuesta recomendada (cuota estimada entre 1,15 y 1,20). Esa cuota corresponde a una probabilidad real de ~80 %: completar 20 seguidos sale aproximadamente 1 de cada 90 veces y de media la escalera cae hacia el escalón 4. La cuota es estimada; comprueba la de tu casa antes de apostar.${media != null ? ` En esta temporada, media de ${media.toFixed(1).replace('.', ',')} escalones por intento.` : ''}</p>`;
 }
 
-function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, aciertos: pintarAciertos})[E.vista](); }
+function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, quiniela: pintarQuiniela, aciertos: pintarAciertos})[E.vista](); }
+
+/* ---------- quiniela (sección de prueba) ---------- */
+let QUI = null, QUI_CARGANDO = null;
+function pintarQuiniela() {
+  const v = document.getElementById('vista-quiniela');
+  if (!QUI || QUI === 'error') {
+    if (!QUI_CARGANDO && QUI !== 'error') QUI_CARGANDO = fetch('web/quiniela.json', {cache: 'no-cache'})
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(j => { QUI = j; })
+      .catch(() => { QUI = 'error'; }).finally(() => { QUI_CARGANDO = null; render(); });
+    v.innerHTML = `<div class="vacio" style="margin-top:28px">${QUI === 'error' ? 'Todavía no hay quiniela disponible.' : 'Cargando quiniela…'}</div>`;
+    return;
+  }
+  const j = QUI.actual, F = QUI.fiabilidad, NL = QUI.nombre_liga || {};
+  if (!j) { v.innerHTML = '<div class="vacio" style="margin-top:28px">Todavía no hay quiniela disponible.</div>'; return; }
+  const cierre = new Date(j.cierre), cerrada = Date.now() >= cierre.getTime();
+  const fc = cierre.toLocaleString('es-ES', {weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid'});
+  const r = j.resumen;
+  const fila = p => {
+    const res = p.resultado;
+    if (p.n === 15) {
+      const pl = p.pleno;
+      const ok = res && pl ? (pl.local === res.cat[0] && pl.visitante === res.cat[1]) : null;
+      return `<div class="q-fila q-pleno"><span class="q-n">P15</span>
+        <span class="q-eq"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${esc(p.cuando)} · Pleno al 15${res ? ' · ' + res.goles.join('-') : ''}</small></span>
+        <span class="q-ple">${pl ? `<b>${pl.local} – ${pl.visitante}</b><small>${pct(pl.prob)}</small>` : '<small>sin datos</small>'}</span>${marca(ok)}</div>`;
+    }
+    const pr = p.prob;
+    const celdas = ['1', 'X', '2'].map((s, i) => {
+      const cls = !pr ? '' : s === p.signo ? 'rec' : (p.doble || '').includes(s) ? 'dob' : '';
+      const real = res && res.signo === s ? ' real' : '';
+      return `<span class="q-s ${cls}${real}"><b>${s}</b><small>${pr ? pct(pr[i]) : '–'}</small></span>`;
+    }).join('');
+    const ok = res && p.signo ? (p.doble || p.signo).includes(res.signo) : null;
+    return `<div class="q-fila"><span class="q-n">${p.n}</span>
+      <span class="q-eq"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${esc(p.cuando)}${p.liga ? ' · ' + (NL[p.liga] || '') : ''}${res ? ' · ' + res.goles.join('-') : ''}${p.doble ? ' · doble' : ''}</small></span>
+      <span class="q-signos">${celdas}</span>${marca(ok)}</div>`;
+  };
+  const resumen = r && r.jugados ? `<div class="kpis" style="margin-bottom:14px">
+      <div class="kpi lima"><small>Aciertos (sencilla)</small><b>${r.aciertos}<span style="font-size:1rem"> / ${r.pronosticados}</span></b><span>${r.jugados} de 15 jugados</span></div>
+      <div class="kpi"><small>Con ${QUI.actual.partidos.filter(p => p.doble).length} dobles</small><b>${r.con_dobles}<span style="font-size:1rem"> / ${r.pronosticados}</span></b><span>Pleno: ${r.pleno == null ? 'pendiente' : r.pleno ? 'acertado' : 'fallado'}</span></div></div>` : '';
+  const hist = (QUI.historial || []).slice().reverse();
+  v.innerHTML = `
+    <div class="sec"><h2>Jornada ${j.jornada} <span class="etq-prueba">Prueba</span></h2><span>${cerrada ? 'cerrada' : 'cierra ' + fc}</span></div>
+    ${resumen}
+    <div class="q-lista">${j.partidos.map(fila).join('')}</div>
+    <p class="nota" style="margin:10px 4px 0">En lima, el signo más probable; con borde, el segundo signo de los ${j.partidos.filter(p => p.doble).length} partidos más inciertos (dobles sugeridos). Pleno al 15: goles más probables de cada equipo (0, 1, 2 o M).</p>
+    ${F ? `<div class="sec"><h2>Fiabilidad</h2><span>prueba a ciegas desde ${F.desde.split('-').reverse().slice(1).join('/')}</span></div>
+    <div class="kpis">
+      <div class="kpi lima"><small>Acierta el signo</small><b>${pct(F.acierto)}</b><span>≈ ${String(F.de_14).replace('.', ',')} de 14 por jornada</span><div class="bar"><i style="width:${F.acierto * 100}%"></i></div></div>
+      <div class="kpi"><small>Con doble</small><b>${pct(F.con_doble)}</b><span>pleno al 15: ${pct(F.pleno)}</span><div class="bar"><i style="width:${F.con_doble * 100}%"></i></div></div>
+    </div>
+    <div class="tabla-ac" style="margin-top:12px">
+      <div class="fila-ac cab"><span>Competición</span><span>Signo</span><span>Partidos</span></div>
+      ${Object.entries(F.por_liga || {}).map(([l, x]) => `<div class="fila-ac"><span class="nom">${NL[l] || l}</span><span>${pct(x.acierto)}</span><span>${x.n}</span></div>`).join('')}
+    </div>` : ''}
+    ${hist.length ? `<div class="sec"><h2>Jornadas anteriores</h2><span>${hist.length}</span></div>
+    <div class="tabla-ac"><div class="fila-ac cab"><span>Jornada</span><span>Sencilla</span><span>Con dobles</span></div>
+      ${hist.map(h => `<div class="fila-ac"><span class="nom">J${h.jornada}${h.pleno ? ' · pleno ✓' : ''}</span><span>${h.aciertos}/${h.pronosticados}</span><span>${h.con_dobles}/${h.pronosticados}</span></div>`).join('')}</div>` : ''}
+    <p class="nota" style="margin:16px 4px 0">Sección de prueba. Lista de la jornada: quiniela15.com (no oficial). En una quiniela acertar el signo es difícil: el empate es poco previsible y un 50 % de acierto ya está por encima de elegir al azar (33 %). Pronósticos orientativos, sin garantía. +18.</p>`;
+}
 render();
 </script>

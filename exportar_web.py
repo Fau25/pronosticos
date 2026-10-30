@@ -374,6 +374,7 @@ def exportar(desde, hasta):
             salida["dias"].append(dj)
             print(dia, len(partidos), "cerrado" if dj["completo"] else ("jugado" if jugado_dia else ""))
         dia += timedelta(days=1)
+    salida["_mod"], salida["_df"] = mod_actual, df   # para la quiniela (no van a la web)
     return salida
 
 
@@ -505,6 +506,16 @@ if __name__ == "__main__":
         (carpeta / f"{x['dia']}.json").write_text(
             json.dumps({"dia": x["dia"], "partidos": x["partidos"]}, ensure_ascii=False, default=float,
                        separators=(",", ":")), encoding="utf-8")
+    # quiniela (sección de prueba): si falla, el resto de la web se publica igual
+    try:
+        import quiniela as Q
+        with sqlite3.connect(M.BD) as con_q:
+            q = Q.generar(d["_mod"], d["_df"], con_q)
+        (raiz / "docs" / "web" / "quiniela.json").write_text(
+            json.dumps(q, ensure_ascii=False, default=float, separators=(",", ":")), encoding="utf-8")
+    except Exception as e:
+        print("  [quiniela] error:", e)
+        AVISOS.append("Quiniela: no se pudo generar esta vez")
     h = historico(d)
     (raiz / "docs" / "web" / "historico.json").write_text(
         json.dumps(h, ensure_ascii=False, default=float, separators=(",", ":")), encoding="utf-8")

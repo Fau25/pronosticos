@@ -197,7 +197,7 @@ jobs:
             openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:BD_CLAVE -in datos/semilla.db -out datos/semilla.db.enc
             git rm -q datos/semilla.db
           fi
-          git add -A dias registro datos
+          git add -A dias registro datos quinielas
           git diff --cached --quiet || git commit -m "Actualización $(date -u +%Y-%m-%d)"
           # si alguien ha subido cambios mientras tanto, ponerse al día antes de subir
           for i in 1 2 3; do git push && break; git pull --rebase -X theirs || git rebase --abort; sleep 5; done
