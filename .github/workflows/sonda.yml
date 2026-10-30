@@ -12,12 +12,11 @@ jobs:
           mkdir -p registro; S=registro/sonda.txt; : > $S
           UA="Mozilla/5.0 (pronosticos personales)"
           prueba() { echo "=== $1" >> $S; curl -s -m 25 -A "$UA" -H "Accept: application/json" -w "\nHTTP %{http_code} %{size_download}B\n" "$1" | head -c 2500 >> $S; echo >> $S; }
-          prueba "https://www.loteriasyapuestas.es/servicios/proximosv3?game_id=LAQU&num=2"
-          prueba "https://www.loteriasyapuestas.es/servicios/buscadorSorteos?game_id=LAQU&celebrados=false&fechaInicioInclusiva=20261030&fechaFinInclusiva=20261110"
-          prueba "https://www.loteriasyapuestas.es/servicios/buscadorSorteos?game_id=LAQU&celebrados=true&fechaInicioInclusiva=20261015&fechaFinInclusiva=20261029"
-          for s in esp.2 esp.w.1 esp.3; do prueba "https://site.api.espn.com/apis/site/v2/sports/soccer/$s/scoreboard?dates=20261025"; done
-          prueba "https://www.football-data.co.uk/mmz4281/2627/SP2.csv"
+          curl -s -m 25 -A "$UA" https://www.quiniela15.com/robots.txt > registro/q15_robots.txt
+          curl -s -m 25 -A "$UA" https://www.quiniela15.com/ > registro/q15_inicio.html
+          curl -s -m 25 -A "$UA" https://www.quiniela15.com/resultados-quiniela > registro/q15_resultados.html
+          ls -la registro/q15_* >> $S
       - name: Guardar
         run: |
           git config user.name "pronosticos-bot"; git config user.email "pronosticos-bot@users.noreply.github.com"
-          git add registro/sonda.txt && git commit -m "Sonda de fuentes" && git push
+          git add registro/sonda.txt registro/q15_* && git commit -m "Sonda de fuentes" && git push
