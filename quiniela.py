@@ -33,7 +33,8 @@ FIAB = RAIZ / "datos" / "quiniela_fiabilidad.json"
 URL = "https://www.quiniela15.com/"
 MADRID = ZoneInfo("Europe/Madrid")
 LIGAS_Q = ("laliga", "es2", "esf")
-NOMBRE_LIGA = {"laliga": "Primera", "es2": "Segunda", "esf": "Liga F"}
+NOMBRE_LIGA = {"laliga": "Primera", "es2": "Segunda", "esf": "Liga F", "eu": "Europa"}
+LIGAS_ES = ("laliga", "es2")   # se buscan primero; si no aparece, en el resto de ligas (partidos europeos)
 DOBLES = 3          # dobles sugeridos (los partidos más inciertos)
 INICIO_FIAB = pd.Timestamp("2025-08-01")
 
@@ -75,7 +76,12 @@ def leer_lista(texto=None):
 _GENERICAS = {"cf", "fc", "cd", "ud", "sd", "rc", "rcd", "sad", "club", "de", "del", "la", "el", "futbol",
               "femenino", "femenina", "f", "c", "d", "u", "s", "balompie", "union", "deportiva", "y"}
 _SINONIMOS = {"at": "atletico", "atl": "atletico", "r": "real", "ath": "athletic", "dep": "deportivo",
-              "bilbao": "athletic", "vallecano": "rayo", "coruna": "deportivo"}
+              "bilbao": "athletic", "vallecano": "rayo", "coruna": "deportivo",
+              # nombres en español de equipos y ciudades europeas
+              "oporto": "porto", "napoles": "napoli", "munchen": "munich", "atenas": "athens", "praga": "prague",
+              "lisboa": "lisbon", "brujas": "brugge", "amberes": "antwerp", "colonia": "cologne", "estambul": "istanbul",
+              "turin": "torino", "londres": "london",
+              "man": "manchester", "rb": "rasenballsport"}
 
 
 def _tokens(s):
@@ -105,22 +111,34 @@ def _parecido(textos, cand):
 
 
 def candidatos(con):
-    """{liga: [nombres]} con los equipos de esta temporada en el modelo."""
+    """{liga: [nombres]} con los equipos de esta temporada en el modelo (todas las ligas)."""
     t = temporada()
-    out = {"laliga": [r[0] for r in con.execute(
-        "SELECT DISTINCT local FROM us_partidos WHERE liga='laliga' AND temporada=?", (t,))]}
+    out = {}
+    for liga, n in con.execute("SELECT DISTINCT liga, local FROM us_partidos WHERE temporada=?", (t,)):
+        out.setdefault(liga, []).append(n)
     ini = f"{t}-07-01"
-    for liga in ("es2", "esf"):
-        out[liga] = [r[0] for r in con.execute(
-            "SELECT DISTINCT local FROM extra_partidos WHERE liga=? AND fecha_utc >= ?", (liga, ini))]
+    try:
+        for liga, n in con.execute("SELECT DISTINCT liga, local FROM extra_partidos WHERE fecha_utc >= ?", (ini,)):
+            out.setdefault(liga, []).append(n)
+    except sqlite3.Error:
+        pass
     return out
 
 
 def emparejar(cands, corto, completo, femenino):
-    ligas = ["esf"] if femenino else ["laliga", "es2"]
+    if femenino:
+        return _emparejar(cands, corto, completo, ["esf"])
+    l, n = _emparejar(cands, corto, completo, LIGAS_ES)
+    if n:
+        return l, n
+    otras = [x for x in cands if x not in LIGAS_ES and x != "esf"]
+    return _emparejar(cands, corto, completo, otras, minimo=0.6)
+
+
+def _emparejar(cands, corto, completo, ligas, minimo=0.5):
     puntos = sorted(((_parecido([corto, completo], c), liga, c) for liga in ligas for c in cands.get(liga, [])),
                     reverse=True)
-    if not puntos or puntos[0][0] < 0.5:
+    if not puntos or puntos[0][0] < minimo:
         return None, None
     if len(puntos) > 1 and puntos[1][0] >= puntos[0][0] - 0.02 and puntos[1][2] != puntos[0][2]:
         return None, None     # empate: mejor no adivinar
@@ -231,13 +249,16 @@ def _pronosticar(mod, con, lista, k):
         l1, n1 = emparejar(cands, p["local"], p["local_completo"], fem)
         l2, n2 = emparejar(cands, p["visitante"], p["visitante_completo"], fem)
         p.update(liga=None, eq_local=n1, eq_visitante=n2, prob=None)
-        if not n1 or not n2 or l1 != l2:
+        if not n1 or not n2:
             sin += [x for x, y in ((p["local"], n1), (p["visitante"], n2)) if not y]
             continue
-        p["liga"] = l1
-        if mod.partidos[(l1, n1)] < 3 or mod.partidos[(l1, n2)] < 3:
+        # misma liga, o partido europeo entre ligas (como en Champions: media de ambas y nivel de cada liga)
+        p["liga"] = l1 if l1 == l2 else "eu"
+        if l1 != l2:
+            p.update(liga_local=l1, liga_visitante=l2)
+        if mod.partidos[(l1, n1)] < 3 or mod.partidos[(l2, n2)] < 3:
             continue
-        e = mod.esperado(l1, n1, n2, "goles")
+        e = mod.esperado(l1, n1, n2, "goles", liga_v=l2)
         if not e:
             continue
         lh, la = e
@@ -261,10 +282,28 @@ def _pronosticar(mod, con, lista, k):
     return lista
 
 
+def _resultado_europa(con, p, desde, hasta):
+    """Goles de un partido europeo (Champions, Europa League o Conference) desde ESPN."""
+    import champions as UCL
+    quiero = ((p.get("liga_local"), p["eq_local"]), (p.get("liga_visitante"), p["eq_visitante"]))
+    for tabla in ("europa_partidos", "ucl_partidos"):
+        try:
+            filas = con.execute(f"SELECT local, visitante, goles_local, goles_visitante FROM {tabla} "
+                                "WHERE completado=1 AND substr(fecha_utc, 1, 10) BETWEEN ? AND ?", (desde, hasta)).fetchall()
+        except sqlite3.Error:
+            continue
+        for loc, vis, gl, gv in filas:
+            if gl is not None and (UCL.emparejar(con, loc, True), UCL.emparejar(con, vis, True)) == quiero:
+                return int(gl), int(gv)
+    return None
+
+
 def _resultado(con, p, desde, hasta):
     """Goles del partido (local, visitante) desde ESPN/Understat, o None."""
     if not p.get("liga"):
         return None
+    if p["liga"] == "eu":
+        return _resultado_europa(con, p, desde, hasta)
     if p["liga"] == "laliga":
         consultas = [("SELECT goles_local, goles_visitante FROM espn_ligas WHERE completado=1 AND liga='laliga' "
                       "AND local=? AND visitante=? AND fecha_utc BETWEEN ? AND ?"),

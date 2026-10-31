@@ -1235,9 +1235,11 @@ function pintarQuiniela() {
       const real = res && res.signo === s ? ' real' : '';
       return `<span class="q-s ${cls}${real}"><b>${s}</b><small>${pr ? pct(pr[i]) : '–'}</small></span>`;
     }).join('');
-    const ok = res && p.signo ? (p.doble || p.signo).includes(res.signo) : null;
+    // ✓/✗ del signo principal (igual que el marcador); si el doble lo salva, se indica aparte
+    const ok = res && p.signo ? p.signo === res.signo : null;
+    const salva = ok === false && p.doble && p.doble.includes(res.signo);
     return `<div class="q-fila"><span class="q-n">${p.n}</span>
-      <span class="q-eq"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${esc(p.cuando)}${p.liga ? ' · ' + (NL[p.liga] || '') : ''}${res ? ' · ' + res.goles.join('-') : ''}${p.doble ? ' · doble' : ''}</small></span>
+      <span class="q-eq"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${esc(p.cuando)}${p.liga ? ' · ' + (NL[p.liga] || '') : ''}${res ? ' · ' + res.goles.join('-') : ''}${p.doble ? ' · doble' : ''}${salva ? ' · <b style="color:var(--win)">✓ con doble</b>' : ''}</small></span>
       <span class="q-signos">${celdas}</span>${marca(ok)}</div>`;
   };
   // Marcador de aciertos y fallos (en cuanto la jornada cierra)
