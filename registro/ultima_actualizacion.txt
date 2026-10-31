@@ -1,4 +1,4 @@
-Actualización 2026-10-31 15:48  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-31 16:51  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -12,26 +12,26 @@ Actualización 2026-10-31 15:48  ligas: laliga, premier, bundesliga, ligue1, ser
 2) Understat
   [understat] laliga 2026: 380 partidos (101 jugados)
   [understat] premier 2026: 380 partidos (81 jugados)
-  [understat] bundesliga 2026: 306 partidos (64 jugados)
+  [understat] bundesliga 2026: 306 partidos (69 jugados)
   [understat] ligue1 2026: 306 partidos (75 jugados)
-  [understat] seriea 2026: 380 partidos (90 jugados)
+  [understat] seriea 2026: 380 partidos (91 jugados)
 
-  [understat] Descargando tiros de 2 partidos (~0 min).
+  [understat] Descargando tiros de 6 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/2  laliga  2026-10-31  Levante - Atletico Madrid  (31 tiros)
-    2/2  premier  2026-10-31  Chelsea - Manchester United  (30 tiros)
+    1/6  seriea  2026-10-31  Bologna - Monza  (16 tiros)
+    6/6  bundesliga  2026-10-31  Bayer Leverkusen - VfB Stuttgart  (39 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      99540 filas
-  understat bundesliga 676/676 partidos con tiros
+  us_tiros      99702 filas
+  understat bundesliga 681/681 partidos con tiros
   understat laliga     861/861 partidos con tiros
   understat ligue1     687/687 partidos con tiros
   understat premier    841/841 partidos con tiros
-  understat seriea     850/850 partidos con tiros
+  understat seriea     851/851 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-10-31 Levante 0-2 Atletico Madrid | xG 1.44-1.02 | tiros 1T 6-5, 2T 14-6

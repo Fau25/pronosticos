@@ -1,13 +1,13 @@
   [espn] 58 partidos leídos (0 errores)
-  [espn] bundesliga: 18 en la base, 10 jugados, 10 con córners
+  [espn] bundesliga: 18 en la base, 15 jugados, 15 con córners
   [espn] laliga: 21 en la base, 13 jugados, 13 con córners
   [espn] ligue1: 18 en la base, 12 jugados, 12 con córners
   [espn] premier: 20 en la base, 11 jugados, 11 con córners
-  [espn] seriea: 30 en la base, 20 jugados, 20 con córners
-   2026-10-31T13:00 Levante 0-2 Atletico Madrid · córners 8 · amarillas 1 · tiros 31
-   2026-10-31T12:30 Chelsea 2-0 Manchester United · córners 15 · amarillas 6 · tiros 30
-   2026-10-30T20:05 Lille 1-0 Lens · córners 12 · amarillas 2 · tiros 21
-   2026-10-30T20:00 Villarreal 0-1 Espanyol · córners 10 · amarillas 6 · tiros 19
-   2026-10-30T19:30 Elversberg 4-1 Mainz 05 · córners 16 · amarillas 4 · tiros 23
+  [espn] seriea: 30 en la base, 21 jugados, 21 con córners
+   2026-10-31T14:30 Bayer Leverkusen 2-4 VfB Stuttgart · córners 15 · amarillas 9 · tiros 39
+   2026-10-31T14:30 Borussia M.Gladbach 0-0 Paderborn · córners 11 · amarillas 5 · tiros 25
+   2026-10-31T14:30 Augsburg 1-2 Freiburg · córners 3 · amarillas 3 · tiros 25
+   2026-10-31T14:30 Schalke 04 0-2 RasenBallsport Leipzig · córners 10 · amarillas 2 · tiros 24
+   2026-10-31T14:30 Werder Bremen 2-0 Hoffenheim · córners 12 · amarillas 3 · tiros 34
   [espn] equipos sin emparejar: Deportivo
   AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)
