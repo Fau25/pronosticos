@@ -405,6 +405,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .q-ple { display: flex; flex-direction: column; align-items: flex-end; }
 .q-ple small { color: var(--muted); font-size: .72rem; }
 .q-pleno { border: 1px dashed var(--line); }
+.q-jornadas { display: flex; gap: 8px; margin: 2px 0 14px; }
+.q-jornadas button { flex: 1; border: 1.5px solid var(--line); background: var(--card); color: inherit; border-radius: 999px; padding: 9px 10px; font: inherit; font-weight: 700; font-size: .88rem; }
+.q-jornadas button[aria-pressed="true"] { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); }
+.q-marcador { background: var(--card); border-radius: 22px; padding: 16px 16px 14px; margin-bottom: 14px; }
+.q-cuentas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: center; }
+.q-cuentas div { border-radius: 16px; padding: 10px 4px; background: var(--card-2); }
+.q-cuentas b { display: block; font-size: 2rem; font-weight: 800; line-height: 1.05; }
+.q-cuentas small { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: .8; }
+.q-cuentas .ac b { color: var(--win); } .q-cuentas .fa b { color: var(--loss); }
+.q-pista { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 3px; margin: 14px 0 8px; }
+.q-pista i { aspect-ratio: 1; border-radius: 5px; background: var(--card-3); font-style: normal; font-size: .62rem; font-weight: 800; display: grid; place-items: center; color: var(--muted); }
+.q-pista i.ok { background: var(--win); color: #0f1a0a; } .q-pista i.ko { background: var(--loss); color: #2a0b07; }
+.q-marcador p { margin: 0; font-size: .82rem; color: var(--muted); line-height: 1.45; }
 .etq-prueba { font-size: .7rem; vertical-align: middle; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--lime); color: var(--lime); margin-left: 6px; }
 @media (max-width: 360px) { .q-s { width: 32px; } .q-fila { gap: 6px; padding: 9px 8px; grid-template-columns: 22px minmax(0, 1fr) auto auto; } }
 .aviso-legal { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; color: var(--muted); }
@@ -1180,7 +1193,10 @@ function pintarEscalera() {
 function render() { pintarBarra(); ({partidos: pintarPartidos, combinada: pintarCombinada, escalera: pintarEscalera, quiniela: pintarQuiniela, aciertos: pintarAciertos})[E.vista](); }
 
 /* ---------- quiniela (sección de prueba) ---------- */
-let QUI = null, QUI_CARGANDO = null;
+document.getElementById('vista-quiniela').addEventListener('click', e => {
+  const b = e.target.closest('[data-qj]'); if (b) { QSEL = b.dataset.qj; render(); }
+});
+let QUI = null, QUI_CARGANDO = null, QSEL = null;
 function pintarQuiniela() {
   const v = document.getElementById('vista-quiniela');
   if (!QUI || QUI === 'error') {
@@ -1190,7 +1206,16 @@ function pintarQuiniela() {
     v.innerHTML = `<div class="vacio" style="margin-top:28px">${QUI === 'error' ? 'Todavía no hay quiniela disponible.' : 'Cargando quiniela…'}</div>`;
     return;
   }
-  const j = QUI.actual, F = QUI.fiabilidad, NL = QUI.nombre_liga || {};
+  const F = QUI.fiabilidad, NL = QUI.nombre_liga || {};
+  // Jornadas a elegir: la próxima y la última ya cerrada (en juego o recién terminada)
+  const prox = QUI.actual && new Date(QUI.actual.cierre) > Date.now() ? QUI.actual : null;
+  const ultCerrada = (QUI.anteriores || [])[0] || (!prox ? QUI.actual : null);
+  const opciones = [ultCerrada, prox].filter(Boolean);
+  if (!QSEL || !opciones.some(o => o.clave === QSEL)) {
+    const reciente = ultCerrada && Date.now() - new Date(ultCerrada.cierre) < 5 * 864e5;
+    QSEL = (reciente || !prox ? ultCerrada : prox)?.clave;
+  }
+  const j = opciones.find(o => o.clave === QSEL) || QUI.actual;
   if (!j) { v.innerHTML = '<div class="vacio" style="margin-top:28px">Todavía no hay quiniela disponible.</div>'; return; }
   const cierre = new Date(j.cierre), cerrada = Date.now() >= cierre.getTime();
   const fc = cierre.toLocaleString('es-ES', {weekday: 'short', day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid'});
@@ -1215,13 +1240,26 @@ function pintarQuiniela() {
       <span class="q-eq"><b>${esc(p.local)} – ${esc(p.visitante)}</b><small>${esc(p.cuando)}${p.liga ? ' · ' + (NL[p.liga] || '') : ''}${res ? ' · ' + res.goles.join('-') : ''}${p.doble ? ' · doble' : ''}</small></span>
       <span class="q-signos">${celdas}</span>${marca(ok)}</div>`;
   };
-  const resumen = r && r.jugados ? `<div class="kpis" style="margin-bottom:14px">
-      <div class="kpi lima"><small>Aciertos (sencilla)</small><b>${r.aciertos}<span style="font-size:1rem"> / ${r.pronosticados}</span></b><span>${r.jugados} de 15 jugados</span></div>
-      <div class="kpi"><small>Con ${QUI.actual.partidos.filter(p => p.doble).length} dobles</small><b>${r.con_dobles}<span style="font-size:1rem"> / ${r.pronosticados}</span></b><span>Pleno: ${r.pleno == null ? 'pendiente' : r.pleno ? 'acertado' : 'fallado'}</span></div></div>` : '';
+  // Marcador de aciertos y fallos (en cuanto la jornada cierra)
+  let resumen = '';
+  if (cerrada) {
+    const ps = j.partidos.filter(p => p.n <= 14);
+    const est = ps.map(p => !p.signo ? 'sin' : !p.resultado ? 'pend' : p.signo === p.resultado.signo ? 'ok' : 'ko');
+    const n = e => est.filter(x => x === e).length;
+    const ndob = j.partidos.filter(p => p.doble).length, pl = r ? r.pleno : null;
+    resumen = `<div class="q-marcador" role="group" aria-label="Aciertos y fallos de la jornada">
+      <div class="q-cuentas"><div class="ac"><b>${n('ok')}</b><small>Aciertos</small></div><div class="fa"><b>${n('ko')}</b><small>Fallos</small></div><div><b>${n('pend')}</b><small>Pendientes</small></div></div>
+      <div class="q-pista" aria-hidden="true">${est.map((e, i) => `<i class="${e}">${i + 1}</i>`).join('')}</div>
+      <p>${r && r.jugados ? `Con los ${ndob} dobles: <b>${r.con_dobles}</b> de ${r.pronosticados} · ` : ''}Pleno al 15: ${pl == null ? 'pendiente' : pl ? '<b style="color:var(--win)">acertado</b>' : '<b style="color:var(--loss)">fallado</b>'}${n('sin') ? ` · ${n('sin')} sin pronóstico` : ''}</p></div>`;
+  }
+  const selector = opciones.length > 1 ? `<div class="q-jornadas" role="group" aria-label="Elegir jornada">${opciones.map(o => {
+    const c = new Date(o.cierre) <= Date.now();
+    return `<button data-qj="${esc(o.clave)}" aria-pressed="${o.clave === j.clave}">J${o.jornada} · ${c ? (o.resumen && o.resumen.jugados >= 15 ? 'resultado' : 'en juego') : 'próxima'}</button>`;
+  }).join('')}</div>` : '';
   const hist = (QUI.historial || []).slice().reverse();
   v.innerHTML = `
     <div class="sec"><h2>Jornada ${j.jornada} <span class="etq-prueba">Prueba</span></h2><span>${cerrada ? 'cerrada' : 'cierra ' + fc}</span></div>
-    ${resumen}
+    ${selector}${resumen}
     <div class="q-lista">${j.partidos.map(fila).join('')}</div>
     <p class="nota" style="margin:10px 4px 0">En lima, el signo más probable; con borde, el segundo signo de los ${j.partidos.filter(p => p.doble).length} partidos más inciertos (dobles sugeridos). Pleno al 15: goles más probables de cada equipo (0, 1, 2 o M).</p>
     ${F ? `<div class="sec"><h2>Fiabilidad</h2><span>prueba a ciegas desde ${F.desde.split('-').reverse().slice(1).join('/')}</span></div>
@@ -1234,8 +1272,8 @@ function pintarQuiniela() {
       ${Object.entries(F.por_liga || {}).map(([l, x]) => `<div class="fila-ac"><span class="nom">${NL[l] || l}</span><span>${pct(x.acierto)}</span><span>${x.n}</span></div>`).join('')}
     </div>` : ''}
     ${hist.length ? `<div class="sec"><h2>Jornadas anteriores</h2><span>${hist.length}</span></div>
-    <div class="tabla-ac"><div class="fila-ac cab"><span>Jornada</span><span>Sencilla</span><span>Con dobles</span></div>
-      ${hist.map(h => `<div class="fila-ac"><span class="nom">J${h.jornada}${h.pleno ? ' · pleno ✓' : ''}</span><span>${h.aciertos}/${h.pronosticados}</span><span>${h.con_dobles}/${h.pronosticados}</span></div>`).join('')}</div>` : ''}
+    <div class="tabla-ac"><div class="fila-ac cab"><span>Jornada</span><span>Aciertos · fallos</span><span>Con dobles</span></div>
+      ${hist.map(h => `<div class="fila-ac"><span class="nom">J${h.jornada}${h.pleno ? ' · pleno ✓' : ''}</span><span><b style="color:var(--win)">✓ ${h.aciertos}</b> · <b style="color:var(--loss)">✗ ${h.pronosticados - h.aciertos}</b></span><span>${h.con_dobles}/${h.pronosticados}</span></div>`).join('')}</div>` : ''}
     <p class="nota" style="margin:16px 4px 0">Sección de prueba. Lista de la jornada: quiniela15.com (no oficial). En una quiniela acertar el signo es difícil: el empate es poco previsible y un 50 % de acierto ya está por encima de elegir al azar (33 %). Pronósticos orientativos, sin garantía. +18.</p>`;
 }
 render();
