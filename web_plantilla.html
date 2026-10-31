@@ -1263,7 +1263,7 @@ function pintarQuiniela() {
     <div class="sec"><h2>Jornada ${j.jornada} <span class="etq-prueba">Prueba</span></h2><span>${cerrada ? 'cerrada' : 'cierra ' + fc}</span></div>
     ${selector}${resumen}
     <div class="q-lista">${j.partidos.map(fila).join('')}</div>
-    <p class="nota" style="margin:10px 4px 0">En lima, el signo más probable; con borde, el segundo signo de los ${j.partidos.filter(p => p.doble).length} partidos más inciertos (dobles sugeridos). Pleno al 15: goles más probables de cada equipo (0, 1, 2 o M).</p>
+    <p class="nota" style="margin:10px 4px 0">En lima, el signo más probable; con borde, el segundo signo de los ${j.partidos.filter(p => p.doble).length} partidos más inciertos (dobles sugeridos). Pleno al 15: goles más probables de cada equipo (0, 1, 2 o M).${j.partidos.some(p => p.liga === 'eu') ? ' Partidos europeos (equipos de ligas distintas): se comparan con el nivel de cada liga, como en Champions; son menos fiables que los de liga.' : ''}</p>
     ${F ? `<div class="sec"><h2>Fiabilidad</h2><span>prueba a ciegas desde ${F.desde.split('-').reverse().slice(1).join('/')}</span></div>
     <div class="kpis">
       <div class="kpi lima"><small>Acierta el signo</small><b>${pct(F.acierto)}</b><span>≈ ${String(F.de_14).replace('.', ',')} de 14 por jornada</span><div class="bar"><i style="width:${F.acierto * 100}%"></i></div></div>
