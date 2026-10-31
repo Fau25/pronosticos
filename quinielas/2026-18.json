@@ -353,5 +353,12 @@
  "clave": "2026-18",
  "temporada": 2026,
  "generado": "2026-10-31 08:31",
- "congelada": false
+ "congelada": true,
+ "resumen": {
+  "jugados": 0,
+  "aciertos": 0,
+  "con_dobles": 0,
+  "pronosticados": 0,
+  "pleno": null
+ }
 }
