@@ -121,7 +121,18 @@
     0.96
    ],
    "signo": "1",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     6,
+     1
+    ],
+    "signo": "1",
+    "cat": [
+     "M",
+     "1"
+    ]
+   }
   },
   {
    "n": 5,
@@ -410,10 +421,10 @@
  "generado": "2026-10-31 08:31",
  "congelada": true,
  "resumen": {
-  "jugados": 5,
-  "aciertos": 3,
-  "con_dobles": 3,
-  "pronosticados": 5,
+  "jugados": 6,
+  "aciertos": 4,
+  "con_dobles": 4,
+  "pronosticados": 6,
   "pleno": null
  }
 }
