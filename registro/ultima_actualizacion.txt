@@ -1,4 +1,4 @@
-Actualización 2026-10-31 22:49  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-31 23:47  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -15,12 +15,7 @@ Actualización 2026-10-31 22:49  ligas: laliga, premier, bundesliga, ligue1, ser
   [understat] bundesliga 2026: 306 partidos (70 jugados)
   [understat] ligue1 2026: 306 partidos (76 jugados)
   [understat] seriea 2026: 380 partidos (93 jugados)
-
-  [understat] Descargando tiros de 4 partidos (~0 min).
-  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
-
-    1/4  laliga  2026-10-31  Barcelona - Alaves  (20 tiros)
-    4/4  ligue1  2026-10-31  Troyes - Le Mans  (17 tiros)
+  [understat] tiros: todo al día
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
