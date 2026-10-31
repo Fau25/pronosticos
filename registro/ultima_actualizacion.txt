@@ -1,4 +1,4 @@
-Actualización 2026-10-31 16:51  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-10-31 17:46  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -10,8 +10,8 @@ Actualización 2026-10-31 16:51  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (101 jugados)
-  [understat] premier 2026: 380 partidos (81 jugados)
+  [understat] laliga 2026: 380 partidos (102 jugados)
+  [understat] premier 2026: 380 partidos (86 jugados)
   [understat] bundesliga 2026: 306 partidos (69 jugados)
   [understat] ligue1 2026: 306 partidos (75 jugados)
   [understat] seriea 2026: 380 partidos (91 jugados)
@@ -19,23 +19,23 @@ Actualización 2026-10-31 16:51  ligas: laliga, premier, bundesliga, ligue1, ser
   [understat] Descargando tiros de 6 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/6  seriea  2026-10-31  Bologna - Monza  (16 tiros)
-    6/6  bundesliga  2026-10-31  Bayer Leverkusen - VfB Stuttgart  (39 tiros)
+    1/6  laliga  2026-10-31  Rayo Vallecano - Celta Vigo  (25 tiros)
+    6/6  premier  2026-10-31  Brentford - Nottingham Forest  (23 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros      99702 filas
+  us_tiros      99852 filas
   understat bundesliga 681/681 partidos con tiros
-  understat laliga     861/861 partidos con tiros
+  understat laliga     862/862 partidos con tiros
   understat ligue1     687/687 partidos con tiros
-  understat premier    841/841 partidos con tiros
+  understat premier    846/846 partidos con tiros
   understat seriea     851/851 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-10-31 Levante 0-2 Atletico Madrid | xG 1.44-1.02 | tiros 1T 6-5, 2T 14-6
+   2026-10-31 Rayo Vallecano 3-0 Celta Vigo | xG 1.40-1.16 | tiros 1T 5-4, 2T 9-7
    2026-10-30 Villarreal 0-1 Espanyol | xG 0.63-0.52 | tiros 1T 7-3, 2T 7-2
-   2026-10-26 Sevilla 2-0 Osasuna | xG 0.87-0.76 | tiros 1T 8-4, 2T 9-6
 
 Terminado.
