@@ -9,10 +9,21 @@
    "cuando": "M 21:00",
    "local_completo": "Fútbol Club Barcelona",
    "visitante_completo": "Aston Villa FC",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Barcelona",
-   "eq_visitante": null,
-   "prob": null,
+   "eq_visitante": "Aston Villa",
+   "prob": [
+    0.717,
+    0.146,
+    0.137
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    2.86,
+    1.22
+   ],
+   "signo": "1",
    "doble": null
   },
   {
@@ -22,10 +33,21 @@
    "cuando": "M 21:00",
    "local_completo": "Bodo / Glimt",
    "visitante_completo": "LOSC Lille Métropole",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
+   "liga": "eu",
+   "eq_local": "Bodo/Glimt",
+   "eq_visitante": "Lille",
+   "prob": [
+    0.3051,
+    0.2574,
+    0.4375
+   ],
+   "liga_local": "nor",
+   "liga_visitante": "ligue1",
+   "goles_esp": [
+    1.11,
+    1.38
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -35,10 +57,21 @@
    "cuando": "M 21:00",
    "local_completo": "Manchester United FC",
    "visitante_completo": "Roma",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
+   "liga": "eu",
+   "eq_local": "Manchester United",
+   "eq_visitante": "Roma",
+   "prob": [
+    0.3305,
+    0.2224,
+    0.4472
+   ],
+   "liga_local": "premier",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    1.47,
+    1.74
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -48,10 +81,21 @@
    "cuando": "M 21:00",
    "local_completo": "Villarreal C.F.",
    "visitante_completo": "Paris Saint-Germain FC",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Villarreal",
-   "eq_visitante": null,
-   "prob": null,
+   "eq_visitante": "Paris Saint Germain",
+   "prob": [
+    0.3286,
+    0.2276,
+    0.4438
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "ligue1",
+   "goles_esp": [
+    1.41,
+    1.68
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -61,11 +105,22 @@
    "cuando": "X 18:45",
    "local_completo": "AEK Athens FC",
    "visitante_completo": "Real Madrid C.F.",
-   "liga": null,
-   "eq_local": null,
+   "liga": "eu",
+   "eq_local": "AEK Athens",
    "eq_visitante": "Real Madrid",
-   "prob": null,
-   "doble": null
+   "prob": [
+    0.3989,
+    0.2495,
+    0.3516
+   ],
+   "liga_local": "gre",
+   "liga_visitante": "laliga",
+   "goles_esp": [
+    1.39,
+    1.29
+   ],
+   "signo": "1",
+   "doble": "12"
   },
   {
    "n": 6,
@@ -74,11 +129,22 @@
    "cuando": "X 18:45",
    "local_completo": "Fenerbahçe SK",
    "visitante_completo": "Liverpool FC",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
-   "doble": null
+   "liga": "eu",
+   "eq_local": "Fenerbahce",
+   "eq_visitante": "Liverpool",
+   "prob": [
+    0.3544,
+    0.2278,
+    0.4178
+   ],
+   "liga_local": "tur",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    1.49,
+    1.63
+   ],
+   "signo": "2",
+   "doble": "12"
   },
   {
    "n": 7,
@@ -87,10 +153,21 @@
    "cuando": "X 21:00",
    "local_completo": "BV Borussia Dortmund",
    "visitante_completo": "Real Betis Balompié",
-   "liga": null,
-   "eq_local": null,
+   "liga": "eu",
+   "eq_local": "Borussia Dortmund",
    "eq_visitante": "Real Betis",
-   "prob": null,
+   "prob": [
+    0.6565,
+    0.1901,
+    0.1534
+   ],
+   "liga_local": "bundesliga",
+   "liga_visitante": "laliga",
+   "goles_esp": [
+    2.11,
+    0.91
+   ],
+   "signo": "1",
    "doble": null
   },
   {
@@ -100,10 +177,21 @@
    "cuando": "X 21:00",
    "local_completo": "FC Porto",
    "visitante_completo": "Napoli",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
+   "liga": "eu",
+   "eq_local": "FC Porto",
+   "eq_visitante": "Napoli",
+   "prob": [
+    0.4402,
+    0.2457,
+    0.3141
+   ],
+   "liga_local": "por",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    1.49,
+    1.22
+   ],
+   "signo": "1",
    "doble": null
   },
   {
@@ -113,10 +201,21 @@
    "cuando": "X 21:00",
    "local_completo": "Lens",
    "visitante_completo": "Como 1907",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
+   "liga": "eu",
+   "eq_local": "Lens",
+   "eq_visitante": "Como",
+   "prob": [
+    0.3346,
+    0.228,
+    0.4374
+   ],
+   "liga_local": "ligue1",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    1.43,
+    1.66
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -126,10 +225,21 @@
    "cuando": "X 21:00",
    "local_completo": "RB Leipzig",
    "visitante_completo": "Manchester City FC",
-   "liga": null,
-   "eq_local": null,
-   "eq_visitante": null,
-   "prob": null,
+   "liga": "eu",
+   "eq_local": "RasenBallsport Leipzig",
+   "eq_visitante": "Manchester City",
+   "prob": [
+    0.3066,
+    0.2047,
+    0.4887
+   ],
+   "liga_local": "bundesliga",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    1.59,
+    2.04
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -141,7 +251,7 @@
    "visitante_completo": "Arsenal FC",
    "liga": null,
    "eq_local": null,
-   "eq_visitante": null,
+   "eq_visitante": "Arsenal",
    "prob": null,
    "doble": null
   },
@@ -152,10 +262,21 @@
    "cuando": "J 18:45",
    "local_completo": "Real Sociedad",
    "visitante_completo": "Olympique Lyonnais",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Real Sociedad",
-   "eq_visitante": null,
-   "prob": null,
+   "eq_visitante": "Lyon",
+   "prob": [
+    0.4545,
+    0.2105,
+    0.335
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "ligue1",
+   "goles_esp": [
+    1.92,
+    1.63
+   ],
+   "signo": "1",
    "doble": null
   },
   {
@@ -165,11 +286,22 @@
    "cuando": "J 21:00",
    "local_completo": "R.C. Celta de Vigo",
    "visitante_completo": "Union St. Gilloise",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Celta Vigo",
-   "eq_visitante": null,
-   "prob": null,
-   "doble": null
+   "eq_visitante": "Union St.-Gilloise",
+   "prob": [
+    0.3303,
+    0.2582,
+    0.4115
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "bel",
+   "goles_esp": [
+    1.17,
+    1.34
+   ],
+   "signo": "2",
+   "doble": "12"
   },
   {
    "n": 14,
@@ -178,10 +310,21 @@
    "cuando": "J 21:00",
    "local_completo": "Getafe C.F.",
    "visitante_completo": "Brighton & Hove Albion Football Club",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Getafe",
-   "eq_visitante": null,
-   "prob": null,
+   "eq_visitante": "Brighton",
+   "prob": [
+    0.1264,
+    0.2179,
+    0.6557
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    0.61,
+    1.74
+   ],
+   "signo": "2",
    "doble": null
   },
   {
@@ -191,15 +334,43 @@
    "cuando": "M 21:00",
    "local_completo": "Club Atlético de Madrid",
    "visitante_completo": "FC Bayern München",
-   "liga": null,
+   "liga": "eu",
    "eq_local": "Atletico Madrid",
-   "eq_visitante": null,
-   "prob": null,
+   "eq_visitante": "Bayern Munich",
+   "prob": [
+    0.3212,
+    0.2063,
+    0.4725
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "bundesliga",
+   "goles_esp": [
+    1.63,
+    2.0
+   ],
+   "signo": "2",
+   "pleno": {
+    "local": "1",
+    "visitante": "M",
+    "prob": 0.1035,
+    "cat_local": [
+     0.196,
+     0.319,
+     0.26,
+     0.224
+    ],
+    "cat_visitante": [
+     0.135,
+     0.27,
+     0.271,
+     0.324
+    ]
+   },
    "doble": null
   }
  ],
  "clave": "2026-19",
  "temporada": 2026,
- "generado": "2026-10-31 14:07",
+ "generado": "2026-10-31 15:19",
  "congelada": false
 }
