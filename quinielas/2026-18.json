@@ -154,7 +154,18 @@
     1.13
    ],
    "signo": "2",
-   "doble": "12"
+   "doble": "12",
+   "resultado": {
+    "goles": [
+     3,
+     1
+    ],
+    "signo": "1",
+    "cat": [
+     "M",
+     "1"
+    ]
+   }
   },
   {
    "n": 6,
@@ -253,7 +264,18 @@
     1.47
    ],
    "signo": "1",
-   "doble": "12"
+   "doble": "12",
+   "resultado": {
+    "goles": [
+     0,
+     2
+    ],
+    "signo": "2",
+    "cat": [
+     "0",
+     "2"
+    ]
+   }
   },
   {
    "n": 10,
@@ -432,10 +454,10 @@
  "generado": "2026-10-31 08:31",
  "congelada": true,
  "resumen": {
-  "jugados": 7,
+  "jugados": 9,
   "aciertos": 4,
-  "con_dobles": 4,
-  "pronosticados": 7,
+  "con_dobles": 6,
+  "pronosticados": 9,
   "pleno": null
  }
 }
