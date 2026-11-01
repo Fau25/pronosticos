@@ -1,4 +1,4 @@
-Actualización 2026-11-01 15:48  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-01 16:51  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -12,25 +12,26 @@ Actualización 2026-11-01 15:48  ligas: laliga, premier, bundesliga, ligue1, ser
 2) Understat
   [understat] laliga 2026: 380 partidos (105 jugados)
   [understat] premier 2026: 380 partidos (88 jugados)
-  [understat] bundesliga 2026: 306 partidos (70 jugados)
-  [understat] ligue1 2026: 306 partidos (76 jugados)
-  [understat] seriea 2026: 380 partidos (94 jugados)
+  [understat] bundesliga 2026: 306 partidos (71 jugados)
+  [understat] ligue1 2026: 306 partidos (77 jugados)
+  [understat] seriea 2026: 380 partidos (96 jugados)
 
-  [understat] Descargando tiros de 1 partidos (~0 min).
+  [understat] Descargando tiros de 4 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/1  laliga  2026-11-01  Getafe - Sevilla  (23 tiros)
+    1/4  seriea  2026-11-01  Frosinone - Torino  (32 tiros)
+    4/4  bundesliga  2026-11-01  Union Berlin - FC Cologne  (19 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros     100128 filas
-  understat bundesliga 682/682 partidos con tiros
+  us_tiros     100224 filas
+  understat bundesliga 683/683 partidos con tiros
   understat laliga     865/865 partidos con tiros
-  understat ligue1     688/688 partidos con tiros
+  understat ligue1     689/689 partidos con tiros
   understat premier    848/848 partidos con tiros
-  understat seriea     854/854 partidos con tiros
+  understat seriea     856/856 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-11-01 Getafe 3-1 Sevilla | xG 1.58-0.74 | tiros 1T 1-5, 2T 10-7
