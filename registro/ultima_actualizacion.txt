@@ -1,4 +1,4 @@
-Actualización 2026-11-01 13:06  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-01 13:57  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -14,19 +14,23 @@ Actualización 2026-11-01 13:06  ligas: laliga, premier, bundesliga, ligue1, ser
   [understat] premier 2026: 380 partidos (88 jugados)
   [understat] bundesliga 2026: 306 partidos (70 jugados)
   [understat] ligue1 2026: 306 partidos (76 jugados)
-  [understat] seriea 2026: 380 partidos (93 jugados)
-  [understat] tiros: todo al día
+  [understat] seriea 2026: 380 partidos (94 jugados)
+
+  [understat] Descargando tiros de 1 partidos (~0 min).
+  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
+
+    1/1  seriea  2026-11-01  Como - Venezia  (26 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros     100079 filas
+  us_tiros     100105 filas
   understat bundesliga 682/682 partidos con tiros
   understat laliga     864/864 partidos con tiros
   understat ligue1     688/688 partidos con tiros
   understat premier    848/848 partidos con tiros
-  understat seriea     853/853 partidos con tiros
+  understat seriea     854/854 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-10-31 Real Betis 2-1 Malaga | xG 2.12-1.18 | tiros 1T 14-4, 2T 9-6
