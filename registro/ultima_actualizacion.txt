@@ -1,4 +1,4 @@
-Actualización 2026-11-01 16:51  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-01 17:46  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -10,32 +10,31 @@ Actualización 2026-11-01 16:51  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (105 jugados)
+  [understat] laliga 2026: 380 partidos (106 jugados)
   [understat] premier 2026: 380 partidos (88 jugados)
   [understat] bundesliga 2026: 306 partidos (71 jugados)
   [understat] ligue1 2026: 306 partidos (77 jugados)
   [understat] seriea 2026: 380 partidos (96 jugados)
 
-  [understat] Descargando tiros de 4 partidos (~0 min).
+  [understat] Descargando tiros de 1 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/4  seriea  2026-11-01  Frosinone - Torino  (32 tiros)
-    4/4  bundesliga  2026-11-01  Union Berlin - FC Cologne  (19 tiros)
+    1/1  laliga  2026-11-01  Racing Santander - Real Madrid  (32 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros     100224 filas
+  us_tiros     100256 filas
   understat bundesliga 683/683 partidos con tiros
-  understat laliga     865/865 partidos con tiros
+  understat laliga     866/866 partidos con tiros
   understat ligue1     689/689 partidos con tiros
   understat premier    848/848 partidos con tiros
   understat seriea     856/856 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
    2026-11-01 Getafe 3-1 Sevilla | xG 1.58-0.74 | tiros 1T 1-5, 2T 10-7
+   2026-11-01 Racing Santander 0-3 Real Madrid | xG 0.69-3.22 | tiros 1T 3-12, 2T 7-10
    2026-10-31 Real Betis 2-1 Malaga | xG 2.12-1.18 | tiros 1T 14-4, 2T 9-6
-   2026-10-31 Barcelona 6-1 Alaves | xG 4.08-1.13 | tiros 1T 8-5, 2T 5-2
 
 Terminado.
