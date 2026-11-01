@@ -37,15 +37,15 @@
    "eq_local": "Bodo/Glimt",
    "eq_visitante": "Lille",
    "prob": [
-    0.3051,
-    0.2574,
-    0.4375
+    0.3032,
+    0.2565,
+    0.4403
    ],
    "liga_local": "nor",
    "liga_visitante": "ligue1",
    "goles_esp": [
     1.11,
-    1.38
+    1.39
    ],
    "signo": "2",
    "doble": null
@@ -110,8 +110,8 @@
    "eq_visitante": "Real Madrid",
    "prob": [
     0.3989,
-    0.2495,
-    0.3516
+    0.2493,
+    0.3518
    ],
    "liga_local": "gre",
    "liga_visitante": "laliga",
@@ -133,18 +133,18 @@
    "eq_local": "Fenerbahce",
    "eq_visitante": "Liverpool",
    "prob": [
-    0.3544,
-    0.2278,
-    0.4178
+    0.3189,
+    0.2237,
+    0.4575
    ],
    "liga_local": "tur",
    "liga_visitante": "premier",
    "goles_esp": [
-    1.49,
-    1.63
+    1.42,
+    1.74
    ],
    "signo": "2",
-   "doble": "12"
+   "doble": null
   },
   {
    "n": 7,
@@ -181,15 +181,15 @@
    "eq_local": "FC Porto",
    "eq_visitante": "Napoli",
    "prob": [
-    0.4402,
-    0.2457,
-    0.3141
+    0.4731,
+    0.2413,
+    0.2855
    ],
    "liga_local": "por",
    "liga_visitante": "seriea",
    "goles_esp": [
-    1.49,
-    1.22
+    1.56,
+    1.16
    ],
    "signo": "1",
    "doble": null
@@ -216,7 +216,7 @@
     1.66
    ],
    "signo": "2",
-   "doble": null
+   "doble": "12"
   },
   {
    "n": 10,
@@ -290,15 +290,15 @@
    "eq_local": "Celta Vigo",
    "eq_visitante": "Union St.-Gilloise",
    "prob": [
-    0.3303,
-    0.2582,
-    0.4115
+    0.3345,
+    0.2589,
+    0.4066
    ],
    "liga_local": "laliga",
    "liga_visitante": "bel",
    "goles_esp": [
-    1.17,
-    1.34
+    1.18,
+    1.33
    ],
    "signo": "2",
    "doble": "12"
@@ -371,6 +371,6 @@
  ],
  "clave": "2026-19",
  "temporada": 2026,
- "generado": "2026-10-31 15:19",
+ "generado": "2026-11-01 08:35",
  "congelada": false
 }
