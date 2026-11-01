@@ -1,4 +1,4 @@
-Actualización 2026-11-01 18:58  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-01 19:51  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -10,32 +10,32 @@ Actualización 2026-11-01 18:58  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (106 jugados)
+  [understat] laliga 2026: 380 partidos (107 jugados)
   [understat] premier 2026: 380 partidos (89 jugados)
   [understat] bundesliga 2026: 306 partidos (72 jugados)
   [understat] ligue1 2026: 306 partidos (79 jugados)
-  [understat] seriea 2026: 380 partidos (96 jugados)
+  [understat] seriea 2026: 380 partidos (97 jugados)
 
-  [understat] Descargando tiros de 4 partidos (~0 min).
+  [understat] Descargando tiros de 2 partidos (~0 min).
   Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
 
-    1/4  premier  2026-11-01  Liverpool - Arsenal  (27 tiros)
-    4/4  bundesliga  2026-11-01  Eintracht Frankfurt - Hamburger SV  (29 tiros)
+    1/2  laliga  2026-11-01  Elche - Valencia  (21 tiros)
+    2/2  seriea  2026-11-01  Lecce - Genoa  (31 tiros)
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
   proximos         48 filas
   us_partidos    5256 filas
-  us_tiros     100369 filas
+  us_tiros     100421 filas
   understat bundesliga 684/684 partidos con tiros
-  understat laliga     866/866 partidos con tiros
+  understat laliga     867/867 partidos con tiros
   understat ligue1     691/691 partidos con tiros
   understat premier    849/849 partidos con tiros
-  understat seriea     856/856 partidos con tiros
+  understat seriea     857/857 partidos con tiros
 
   Ejemplo (últimos de LaLiga) - tiros por parte:
+   2026-11-01 Elche 0-1 Valencia | xG 1.27-1.18 | tiros 1T 5-1, 2T 11-4
    2026-11-01 Getafe 3-1 Sevilla | xG 1.58-0.74 | tiros 1T 1-5, 2T 10-7
    2026-11-01 Racing Santander 0-3 Real Madrid | xG 0.69-3.22 | tiros 1T 3-12, 2T 7-10
-   2026-10-31 Real Betis 2-1 Malaga | xG 2.12-1.18 | tiros 1T 14-4, 2T 9-6
 
 Terminado.
