@@ -1,4 +1,4 @@
-  [espn] 55 partidos leídos (0 errores)
+  [espn] 50 partidos leídos (0 errores)
   [espn] bundesliga: 18 en la base, 18 jugados, 18 con córners
   [espn] laliga: 21 en la base, 20 jugados, 20 con córners
   [espn] ligue1: 18 en la base, 17 jugados, 17 con córners

@@ -1,4 +1,4 @@
-Actualización 2026-11-01 22:50  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-01 23:47  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 99 partidos
@@ -10,16 +10,12 @@ Actualización 2026-11-01 22:50  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: 380 partidos (108 jugados)
-  [understat] premier 2026: 380 partidos (89 jugados)
-  [understat] bundesliga 2026: 306 partidos (72 jugados)
-  [understat] ligue1 2026: 306 partidos (80 jugados)
-  [understat] seriea 2026: 380 partidos (98 jugados)
-
-  [understat] Descargando tiros de 1 partidos (~0 min).
-  Puedes cerrar la ventana cuando quieras: la próxima vez sigue donde lo dejó.
-
-    1/1  laliga  2026-11-01  Athletic Club - Real Sociedad  (27 tiros)
+  [understat] laliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] premier 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] bundesliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] ligue1 2026: ERROR calendario -> Failed to perform, curl: (6) Could not resolve host: understat.com (DNS server returned general failure). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] seriea 2026: ERROR calendario -> Failed to perform, curl: (6) Could not resolve host: understat.com (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] tiros: todo al día
 
 === RESUMEN DE LA BASE DE DATOS ===
   partidos       3908 filas
