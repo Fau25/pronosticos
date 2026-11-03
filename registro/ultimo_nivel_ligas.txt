@@ -1,4 +1,4 @@
-cruces entre ligas: 628 partidos
+cruces entre ligas: 634 partidos
 {
  "fuerza": {
   "aut": 0.8491,
@@ -18,32 +18,32 @@ cruces entre ligas: 628 partidos
   "tur": 0.9349
  },
  "partidos_ajuste": 563,
- "partidos_validacion": 65,
+ "partidos_validacion": 71,
  "validacion_desviacion": {
-  "sin_ajuste": 107.11,
-  "a_ojo": 87.47,
-  "medido": 89.15
+  "sin_ajuste": 119.88,
+  "a_ojo": 98.85,
+  "medido": 100.37
  },
  "validacion_cruzada": {
-  "sin_ajuste": 1127.25,
-  "a_ojo": 982.05,
-  "medido": 992.36
+  "sin_ajuste": 1140.36,
+  "a_ojo": 993.78,
+  "medido": 1003.64
  },
  "fuerza_final": {
-  "aut": 0.8329,
-  "bel": 1.0173,
-  "bundesliga": 1.2245,
-  "den": 0.9385,
-  "gre": 0.8628,
-  "laliga": 1.2019,
-  "ligue1": 1.2066,
-  "ned": 0.9361,
-  "nor": 0.8212,
-  "por": 0.951,
-  "premier": 1.3968,
-  "sco": 0.8103,
-  "seriea": 1.1812,
-  "swe": 0.8882,
-  "tur": 0.9457
+  "aut": 0.8331,
+  "bel": 1.017,
+  "bundesliga": 1.2264,
+  "den": 0.9378,
+  "gre": 0.8622,
+  "laliga": 1.1945,
+  "ligue1": 1.2137,
+  "ned": 0.9352,
+  "nor": 0.8222,
+  "por": 0.9508,
+  "premier": 1.3972,
+  "sco": 0.8105,
+  "seriea": 1.1807,
+  "swe": 0.8881,
+  "tur": 0.9458
  }
 }
