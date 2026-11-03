@@ -1,4 +1,4 @@
-Actualización 2026-11-03 00:10  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-03 01:21  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 108 partidos
@@ -10,11 +10,11 @@ Actualización 2026-11-03 00:10  ligas: laliga, premier, bundesliga, ligue1, ser
   -> tabla 'proximos': 48 partidos por jugar
 
 2) Understat
-  [understat] laliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-  [understat] premier 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-  [understat] bundesliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-  [understat] ligue1 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timeout after 29999 ms. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-  [understat] seriea 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] laliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] premier 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] bundesliga 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] ligue1 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+  [understat] seriea 2026: ERROR calendario -> Failed to perform, curl: (28) Connection timed out after 30001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
   [understat] tiros: todo al día
 
 === RESUMEN DE LA BASE DE DATOS ===
