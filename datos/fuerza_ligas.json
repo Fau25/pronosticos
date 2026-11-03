@@ -17,32 +17,32 @@
   "tur": 0.9349
  },
  "partidos_ajuste": 563,
- "partidos_validacion": 64,
+ "partidos_validacion": 65,
  "validacion_desviacion": {
-  "sin_ajuste": 105.47,
-  "a_ojo": 86.04,
-  "medido": 87.68
+  "sin_ajuste": 107.11,
+  "a_ojo": 87.48,
+  "medido": 89.15
  },
  "validacion_cruzada": {
-  "sin_ajuste": 1125.49,
-  "a_ojo": 980.47,
-  "medido": 990.85
+  "sin_ajuste": 1127.25,
+  "a_ojo": 982.06,
+  "medido": 992.36
  },
  "fuerza_final": {
-  "aut": 0.833,
+  "aut": 0.8329,
   "bel": 1.0173,
-  "bundesliga": 1.2253,
+  "bundesliga": 1.2245,
   "den": 0.9385,
   "gre": 0.8628,
-  "laliga": 1.202,
-  "ligue1": 1.2067,
+  "laliga": 1.2019,
+  "ligue1": 1.2066,
   "ned": 0.9361,
   "nor": 0.8212,
-  "por": 0.9511,
+  "por": 0.951,
   "premier": 1.3968,
-  "sco": 0.8104,
-  "seriea": 1.1813,
-  "swe": 0.8881,
-  "tur": 0.9444
+  "sco": 0.8103,
+  "seriea": 1.1812,
+  "swe": 0.8882,
+  "tur": 0.9457
  }
 }

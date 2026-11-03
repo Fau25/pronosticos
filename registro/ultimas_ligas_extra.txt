@@ -10,4 +10,4 @@
   [extra] swe: 30 partidos (0 días con error)
   [extra] es2: 33 partidos (0 días con error)
   [extra] esf: 23 partidos (0 días con error)
-  [extra] en la base: 7750 partidos (7649 jugados)
+  [extra] en la base: 7750 partidos (7650 jugados)
