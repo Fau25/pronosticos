@@ -13,8 +13,8 @@
    "eq_local": "Barcelona",
    "eq_visitante": "Aston Villa",
    "prob": [
-    0.7344,
-    0.1395,
+    0.7345,
+    0.1394,
     0.1261
    ],
    "liga_local": "laliga",
@@ -37,9 +37,9 @@
    "eq_local": "Bodo/Glimt",
    "eq_visitante": "Lille",
    "prob": [
-    0.2965,
-    0.2601,
-    0.4434
+    0.2966,
+    0.2607,
+    0.4427
    ],
    "liga_local": "nor",
    "liga_visitante": "ligue1",
@@ -61,15 +61,15 @@
    "eq_local": "Manchester United",
    "eq_visitante": "Roma",
    "prob": [
-    0.3023,
-    0.2136,
-    0.4841
+    0.3014,
+    0.2131,
+    0.4855
    ],
    "liga_local": "premier",
    "liga_visitante": "seriea",
    "goles_esp": [
     1.47,
-    1.9
+    1.91
    ],
    "signo": "2",
    "doble": null
@@ -85,15 +85,15 @@
    "eq_local": "Villarreal",
    "eq_visitante": "Paris Saint Germain",
    "prob": [
-    0.2825,
-    0.2182,
-    0.4992
+    0.2834,
+    0.2188,
+    0.4978
    ],
    "liga_local": "laliga",
    "liga_visitante": "ligue1",
    "goles_esp": [
     1.34,
-    1.85
+    1.84
    ],
    "signo": "2",
    "doble": null
@@ -109,18 +109,18 @@
    "eq_local": "AEK Athens",
    "eq_visitante": "Real Madrid",
    "prob": [
-    0.3223,
-    0.2466,
-    0.4311
+    0.323,
+    0.2465,
+    0.4305
    ],
    "liga_local": "gre",
    "liga_visitante": "laliga",
    "goles_esp": [
-    1.23,
+    1.24,
     1.47
    ],
    "signo": "2",
-   "doble": null
+   "doble": "12"
   },
   {
    "n": 6,
@@ -133,14 +133,14 @@
    "eq_local": "Fenerbahce",
    "eq_visitante": "Liverpool",
    "prob": [
-    0.3449,
-    0.2303,
-    0.4248
+    0.3441,
+    0.2302,
+    0.4257
    ],
    "liga_local": "tur",
    "liga_visitante": "premier",
    "goles_esp": [
-    1.44,
+    1.43,
     1.62
    ],
    "signo": "2",
@@ -157,14 +157,14 @@
    "eq_local": "Borussia Dortmund",
    "eq_visitante": "Real Betis",
    "prob": [
-    0.6479,
-    0.1902,
-    0.1619
+    0.6487,
+    0.1898,
+    0.1615
    ],
    "liga_local": "bundesliga",
    "liga_visitante": "laliga",
    "goles_esp": [
-    2.13,
+    2.14,
     0.97
    ],
    "signo": "1",
@@ -181,9 +181,9 @@
    "eq_local": "FC Porto",
    "eq_visitante": "Napoli",
    "prob": [
-    0.5114,
-    0.2364,
-    0.2522
+    0.5119,
+    0.2362,
+    0.2519
    ],
    "liga_local": "por",
    "liga_visitante": "seriea",
@@ -205,15 +205,15 @@
    "eq_local": "Lens",
    "eq_visitante": "Como",
    "prob": [
-    0.3169,
-    0.2372,
-    0.4459
+    0.317,
+    0.2373,
+    0.4457
    ],
    "liga_local": "ligue1",
    "liga_visitante": "seriea",
    "goles_esp": [
     1.29,
-    1.58
+    1.57
    ],
    "signo": "2",
    "doble": null
@@ -229,9 +229,9 @@
    "eq_local": "RasenBallsport Leipzig",
    "eq_visitante": "Manchester City",
    "prob": [
-    0.3529,
-    0.2167,
-    0.4304
+    0.3522,
+    0.2166,
+    0.4312
    ],
    "liga_local": "bundesliga",
    "liga_visitante": "premier",
@@ -240,7 +240,7 @@
     1.79
    ],
    "signo": "2",
-   "doble": "12"
+   "doble": null
   },
   {
    "n": 11,
@@ -266,9 +266,9 @@
    "eq_local": "Real Sociedad",
    "eq_visitante": "Lyon",
    "prob": [
-    0.4207,
-    0.2163,
-    0.363
+    0.4216,
+    0.2165,
+    0.3618
    ],
    "liga_local": "laliga",
    "liga_visitante": "ligue1",
@@ -290,14 +290,14 @@
    "eq_local": "Celta Vigo",
    "eq_visitante": "Union St.-Gilloise",
    "prob": [
-    0.2969,
-    0.253,
-    0.45
+    0.2976,
+    0.2529,
+    0.4495
    ],
    "liga_local": "laliga",
    "liga_visitante": "bel",
    "goles_esp": [
-    1.11,
+    1.12,
     1.44
    ],
    "signo": "2",
@@ -314,9 +314,9 @@
    "eq_local": "Getafe",
    "eq_visitante": "Brighton",
    "prob": [
-    0.1449,
-    0.2278,
-    0.6273
+    0.1448,
+    0.2275,
+    0.6276
    ],
    "liga_local": "laliga",
    "liga_visitante": "premier",
@@ -338,26 +338,26 @@
    "eq_local": "Atletico Madrid",
    "eq_visitante": "Bayern Munich",
    "prob": [
-    0.3821,
-    0.2104,
-    0.4075
+    0.3828,
+    0.2103,
+    0.4068
    ],
    "liga_local": "laliga",
    "liga_visitante": "bundesliga",
    "goles_esp": [
-    1.77,
+    1.78,
     1.83
    ],
    "signo": "2",
    "pleno": {
     "local": "1",
     "visitante": "1",
-    "prob": 0.0883,
+    "prob": 0.0881,
     "cat_local": [
-     0.17,
+     0.169,
      0.301,
      0.267,
-     0.262
+     0.263
     ],
     "cat_visitante": [
      0.16,
@@ -371,6 +371,6 @@
  ],
  "clave": "2026-19",
  "temporada": 2026,
- "generado": "2026-11-02 21:19",
+ "generado": "2026-11-03 19:18",
  "congelada": false
 }
