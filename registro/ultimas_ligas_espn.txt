@@ -1,9 +1,9 @@
   [espn] 48 partidos leídos (0 errores)
-  [espn] bundesliga: 18 en la base, 18 jugados, 18 con córners
-  [espn] laliga: 21 en la base, 21 jugados, 21 con córners
-  [espn] ligue1: 18 en la base, 18 jugados, 18 con córners
-  [espn] premier: 20 en la base, 20 jugados, 20 con córners
-  [espn] seriea: 30 en la base, 30 jugados, 30 con córners
+  [espn] bundesliga: 19 en la base, 18 jugados, 18 con córners
+  [espn] laliga: 22 en la base, 21 jugados, 21 con córners
+  [espn] ligue1: 19 en la base, 18 jugados, 18 con córners
+  [espn] premier: 21 en la base, 20 jugados, 20 con córners
+  [espn] seriea: 31 en la base, 30 jugados, 30 con córners
    2026-11-02T20:00 None 2-1 Osasuna · córners 10 · amarillas 4 · tiros 29
    2026-11-02T20:00 Newcastle United 0-1 Everton · córners 9 · amarillas 6 · tiros 33
    2026-11-02T19:45 Atalanta 0-3 Parma Calcio 1913 · córners 13 · amarillas 0 · tiros 26
