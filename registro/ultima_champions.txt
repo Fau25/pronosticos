@@ -1,1 +1,2 @@
+  [champions] 2026-11-08: error (<urlopen error [Errno 104] Connection reset by peer>)
   [champions] 18 partidos leídos · en la base: 72 (72 jugados)
