@@ -55,7 +55,18 @@
     1.4
    ],
    "signo": "2",
-   "doble": "12"
+   "doble": "12",
+   "resultado": {
+    "goles": [
+     1,
+     1
+    ],
+    "signo": "X",
+    "cat": [
+     "1",
+     "1"
+    ]
+   }
   },
   {
    "n": 3,
@@ -390,10 +401,10 @@
  "generado": "2026-11-06 21:02",
  "congelada": true,
  "resumen": {
-  "jugados": 4,
+  "jugados": 5,
   "aciertos": 2,
   "con_dobles": 2,
-  "pronosticados": 4,
+  "pronosticados": 5,
   "pleno": null
  }
 }
