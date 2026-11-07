@@ -1,4 +1,4 @@
-  [extra] por: 19 partidos (0 días con error)
+  [extra] por: 18 partidos (0 días con error)
   [extra] ned: 18 partidos (0 días con error)
   [extra] bel: 19 partidos (0 días con error)
   [extra] sco: 16 partidos (0 días con error)
