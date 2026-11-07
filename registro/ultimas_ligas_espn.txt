@@ -3,11 +3,11 @@
   [espn] laliga: 31 en la base, 25 jugados, 25 con córners
   [espn] ligue1: 27 en la base, 20 jugados, 20 con córners
   [espn] premier: 30 en la base, 25 jugados, 25 con córners
-  [espn] seriea: 40 en la base, 34 jugados, 34 con córners
+  [espn] seriea: 40 en la base, 35 jugados, 35 con córners
+   2026-11-07T19:45 Roma 3-0 Sassuolo · córners 13 · amarillas 0 · tiros 34
    2026-11-07T18:00 Auxerre 0-1 Paris FC · córners 6 · amarillas 5 · tiros 17
    2026-11-07T17:30 Osasuna 1-1 Athletic Club · córners 10 · amarillas 4 · tiros 33
    2026-11-07T17:30 Nottingham Forest 3-1 Manchester City · córners 10 · amarillas 4 · tiros 23
    2026-11-07T17:30 VfB Stuttgart 1-0 Werder Bremen · córners 8 · amarillas 3 · tiros 37
-   2026-11-07T17:00 Parma Calcio 1913 1-2 Bologna · córners 16 · amarillas 5 · tiros 44
   [espn] equipos sin emparejar: Deportivo
   AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)
