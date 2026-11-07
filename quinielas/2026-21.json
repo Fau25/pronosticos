@@ -1,0 +1,324 @@
+{
+ "jornada": 21,
+ "cierre": "2026-11-14T14:00:00+01:00",
+ "partidos": [
+  {
+   "n": 1,
+   "local": "Valladolid",
+   "visitante": "Castellón",
+   "cuando": "S 14:00",
+   "local_completo": "R. Valladolid D.",
+   "visitante_completo": "C.D. Castellón",
+   "liga": "es2",
+   "eq_local": "Real Valladolid",
+   "eq_visitante": "Castellón",
+   "prob": [
+    0.239,
+    0.2156,
+    0.5454
+   ],
+   "goles_esp": [
+    1.18,
+    1.89
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 2,
+   "local": "R. Sociedad B",
+   "visitante": "Sporting Gijón",
+   "cuando": "S 16:15",
+   "local_completo": "Real Sociedad B",
+   "visitante_completo": "Real Sporting de Gijón",
+   "liga": "eu",
+   "eq_local": "Real Sociedad",
+   "eq_visitante": "Sporting Gijón",
+   "prob": [
+    0.6229,
+    0.1817,
+    0.1954
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "es2",
+   "goles_esp": [
+    2.36,
+    1.27
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 3,
+   "local": "Almería",
+   "visitante": "Andorra",
+   "cuando": "S 18:30",
+   "local_completo": "U.D. Almería",
+   "visitante_completo": "FC Andorra",
+   "liga": "es2",
+   "eq_local": "Almería",
+   "eq_visitante": "FC Andorra",
+   "prob": [
+    0.6389,
+    0.1805,
+    0.1806
+   ],
+   "goles_esp": [
+    2.34,
+    1.18
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 4,
+   "local": "Mallorca",
+   "visitante": "Córdoba",
+   "cuando": "S 18:30",
+   "local_completo": "R.C.D. Mallorca",
+   "visitante_completo": "Córdoba C.F.",
+   "liga": "es2",
+   "eq_local": "Mallorca",
+   "eq_visitante": "Córdoba",
+   "prob": [
+    0.5658,
+    0.232,
+    0.2022
+   ],
+   "goles_esp": [
+    1.68,
+    0.9
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 5,
+   "local": "Real Oviedo",
+   "visitante": "Girona",
+   "cuando": "S 21:00",
+   "local_completo": "Real Oviedo C.F.",
+   "visitante_completo": "Girona F.C.",
+   "liga": "es2",
+   "eq_local": "Real Oviedo",
+   "eq_visitante": "Girona",
+   "prob": [
+    0.3676,
+    0.2482,
+    0.3842
+   ],
+   "goles_esp": [
+    1.33,
+    1.37
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 6,
+   "local": "Tenerife",
+   "visitante": "Ceuta",
+   "cuando": "D 14:00",
+   "local_completo": "C.D. Tenerife",
+   "visitante_completo": "AD Ceuta FC",
+   "liga": "es2",
+   "eq_local": "Tenerife",
+   "eq_visitante": "Ceuta",
+   "prob": [
+    0.5683,
+    0.2223,
+    0.2094
+   ],
+   "goles_esp": [
+    1.79,
+    0.99
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 7,
+   "local": "Granada",
+   "visitante": "Las Palmas",
+   "cuando": "D 16:15",
+   "local_completo": "Granada C.F.",
+   "visitante_completo": "U.D. Las Palmas",
+   "liga": "es2",
+   "eq_local": "Granada",
+   "eq_visitante": "Las Palmas",
+   "prob": [
+    0.5469,
+    0.209,
+    0.244
+   ],
+   "goles_esp": [
+    1.98,
+    1.26
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 8,
+   "local": "Eibar",
+   "visitante": "Cádiz",
+   "cuando": "D 18:30",
+   "local_completo": "S.D. Eibar",
+   "visitante_completo": "Cádiz C.F.",
+   "liga": "es2",
+   "eq_local": "Eibar",
+   "eq_visitante": "Cádiz",
+   "prob": [
+    0.6066,
+    0.2073,
+    0.1861
+   ],
+   "goles_esp": [
+    1.95,
+    0.98
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 9,
+   "local": "Eldense",
+   "visitante": "Sabadell",
+   "cuando": "D 18:30",
+   "local_completo": "Eldense",
+   "visitante_completo": "C.D. Sabadell",
+   "liga": "es2",
+   "eq_local": "Eldense",
+   "eq_visitante": "CD Sabadell",
+   "prob": [
+    0.3607,
+    0.2728,
+    0.3665
+   ],
+   "goles_esp": [
+    1.15,
+    1.16
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 10,
+   "local": "Bélgica",
+   "visitante": "Italia",
+   "cuando": "D 20:45",
+   "local_completo": "Bélgica",
+   "visitante_completo": "Italia",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 11,
+   "local": "Alavés Femenino",
+   "visitante": "Eibar (F)",
+   "cuando": "S 18:00",
+   "local_completo": "Deportivo Alavés Femenino",
+   "visitante_completo": "Eibar Femenino",
+   "liga": "esf",
+   "eq_local": "Alavés",
+   "eq_visitante": "Eibar",
+   "prob": [
+    0.3443,
+    0.302,
+    0.3537
+   ],
+   "goles_esp": [
+    0.97,
+    0.99
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 12,
+   "local": "R. Sociedad (F)",
+   "visitante": "Athletic Club (F)",
+   "cuando": "D 12:00",
+   "local_completo": "Real Sociedad Femenino",
+   "visitante_completo": "Athletic Bilbao Femenino",
+   "liga": "esf",
+   "eq_local": "Real Sociedad",
+   "eq_visitante": "Athletic Club",
+   "prob": [
+    0.4584,
+    0.2535,
+    0.2881
+   ],
+   "goles_esp": [
+    1.44,
+    1.08
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 13,
+   "local": "Sevilla (F)",
+   "visitante": "At. Madrid (F)",
+   "cuando": "D 16:00",
+   "local_completo": "Sevilla Femenino",
+   "visitante_completo": "Atlético de Madrid Femenino",
+   "liga": "esf",
+   "eq_local": "Sevilla",
+   "eq_visitante": "Atlético Madrid",
+   "prob": [
+    0.1907,
+    0.2103,
+    0.599
+   ],
+   "goles_esp": [
+    0.98,
+    1.92
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 14,
+   "local": "Valencia (F)",
+   "visitante": "Granada (F)",
+   "cuando": "D 18:15",
+   "local_completo": "Valencia Femenino",
+   "visitante_completo": "Granada CF Femenino",
+   "liga": "esf",
+   "eq_local": "Valencia",
+   "eq_visitante": "Granada",
+   "prob": [
+    0.3275,
+    0.2665,
+    0.406
+   ],
+   "goles_esp": [
+    1.11,
+    1.27
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 15,
+   "local": "España",
+   "visitante": "Inglaterra",
+   "cuando": "D 20:45",
+   "local_completo": "España",
+   "visitante_completo": "Inglaterra",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  }
+ ],
+ "clave": "2026-21",
+ "temporada": 2026,
+ "generado": "2026-11-07 14:11",
+ "congelada": false
+}
