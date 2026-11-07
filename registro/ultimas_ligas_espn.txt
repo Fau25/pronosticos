@@ -1,5 +1,4 @@
-  [espn] laliga 2026-11-03: error (<urlopen error [Errno 104] Connection reset by peer>)
-  [espn] 53 partidos leídos (1 errores)
+  [espn] 53 partidos leídos (0 errores)
   [espn] bundesliga: 27 en la base, 19 jugados, 19 con córners
   [espn] laliga: 31 en la base, 22 jugados, 22 con córners
   [espn] ligue1: 27 en la base, 19 jugados, 19 con córners
