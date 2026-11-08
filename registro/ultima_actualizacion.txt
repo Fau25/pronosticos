@@ -1,4 +1,4 @@
-Actualización 2026-11-08 22:50  ligas: laliga, premier, bundesliga, ligue1, seriea
+Actualización 2026-11-08 23:49  ligas: laliga, premier, bundesliga, ligue1, seriea
 
 1) football-data.co.uk
   [football-data] laliga 2627: 109 partidos
