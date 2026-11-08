@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title>Understat.com</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,maximum-scale=1.0,initial-scale=1.0">
+        <link href="/css/errors.css" rel="stylesheet" media="screen">
+    </head>
+    <body class="theme-dark">
+      <div id="image-container" class="player-container">
+          <div class="player">
+          <?xml version="1.0" encoding="UTF-8"?>
+            <svg style="background-color: #343436;" id="master-artboard" viewBox="0 0 1400 1400" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="gradient-0" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-1" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-2" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-3" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-4" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-5" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-6" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-7" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" style="stop-color: #ffee99"/>
+                            <stop offset="1" style="stop-color: #ffdd33"/>
+                          </radialGradient><radialGradient id="gradient-8" gradientUnits="objectBoundingBox" cx="0.5" cy="0.5" r="0.5">
+                       

@@ -1,0 +1,20 @@
+total 100
+drwxr-xr-x 2 runner runner  4096 Nov  8 12:00 .
+drwxr-xr-x 3 runner runner  4096 Nov  8 12:00 ..
+-rw-r--r-- 1 runner runner 26719 Nov  8 12:00 api.txt
+-rw-r--r-- 1 runner runner   250 Nov  8 12:00 cab_api.txt
+-rw-r--r-- 1 runner runner   250 Nov  8 12:00 cab_liga.txt
+-rw-r--r-- 1 runner runner 26719 Nov  8 12:00 liga.html
+-rw-r--r-- 1 runner runner     0 Nov  8 12:00 lista.txt
+-rw-r--r-- 1 runner runner 26719 Nov  8 12:00 partido.html
+total 80
+drwxr-xr-x 2 runner runner  4096 Nov  8 12:00 .
+drwxr-xr-x 3 runner runner  4096 Nov  8 12:00 ..
+-rw-r--r-- 1 runner runner  3000 Nov  8 12:00 api_inicio.txt
+-rw-r--r-- 1 runner runner   250 Nov  8 12:00 cab_api.txt
+-rw-r--r-- 1 runner runner   250 Nov  8 12:00 cab_liga.txt
+-rw-r--r-- 1 runner runner 26719 Nov  8 12:00 liga.html
+-rw-r--r-- 1 runner runner   449 Nov  8 12:00 lista.txt
+-rw-r--r-- 1 runner runner 26719 Nov  8 12:00 partido.html
+-rw-r--r-- 1 runner runner     0 Nov  8 12:00 scripts.txt
+-rw-r--r-- 1 runner runner     0 Nov  8 12:00 variables.txt
