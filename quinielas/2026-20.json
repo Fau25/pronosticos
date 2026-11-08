@@ -481,7 +481,18 @@
      0.298
     ]
    },
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     1,
+     2
+    ],
+    "signo": "2",
+    "cat": [
+     "1",
+     "2"
+    ]
+   }
   }
  ],
  "clave": "2026-20",
@@ -489,10 +500,10 @@
  "generado": "2026-11-06 21:02",
  "congelada": true,
  "resumen": {
-  "jugados": 13,
+  "jugados": 14,
   "aciertos": 5,
   "con_dobles": 5,
   "pronosticados": 13,
-  "pleno": null
+  "pleno": false
  }
 }
