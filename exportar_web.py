@@ -12,6 +12,7 @@ import sqlite3
 from datetime import date, timedelta
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 import backtest as B
@@ -36,6 +37,33 @@ def _completo(dia_json):
     return all(p.get("aplazado") or (p.get("real") and "corners" in p["real"] and "tarjetas" in p["real"]
                                      and not p.get("provisional"))
                for p in dia_json["partidos"])
+
+
+# "Apuesta del día": en cada partido, la apuesta más probable con cuota estimada 1,20–1,30, solo en mercados y
+# líneas que ofrecen las casas. Prueba a ciegas (ago-2025 a oct-2026, 5.005 partidos, 238 días): acertaron
+# alrededor del 75 % (la mejor de cada día, 80,7 %). A esa cuota la casa ya descuenta ~75-80 %: el modelo
+# está bien calibrado, pero no adivina mejor que el mercado.
+CUOTA_DIA = (1.20, 1.30)
+MARGEN_CASA = 1.06
+FIABLE_LINEAS = {"goles": (0.5, 4.5), "goles_1t": (0.5, 2.5), "corners": (5.5, 12.5), "tarjetas": (1.5, 6.5)}
+
+
+def _fiable(mod, pron):
+    """La apuesta más probable con cuota estimada dentro de CUOTA_DIA entre los mercados habituales."""
+    pmin, pmax = 1 / (CUOTA_DIA[1] * MARGEN_CASA), 1 / (CUOTA_DIA[0] * MARGEN_CASA)
+    mejor = None
+    for f in pron:
+        met = f["metrica"]
+        if met not in FIABLE_LINEAS or f.get("esperado_total") is None:
+            continue
+        lo, hi = FIABLE_LINEAS[met]
+        for l in np.arange(lo, hi + 0.01, 1.0):
+            pm = mod.prob_mas(met, f["esperado_total"], l)
+            for prob, lado in ((pm, "más"), (1 - pm, "menos")):
+                if pmin <= prob <= pmax and (mejor is None or prob > mejor["prob"]):
+                    mejor = dict(metrica=met, nombre=M.NOMBRES[met], lado=lado, linea=float(l), prob=round(float(prob), 4),
+                                 cuota=round(1 / (prob * MARGEN_CASA), 2))
+    return mejor
 
 
 DIAS_APLAZADO = 3     # sin resultado tantos días después -> aplazado (no cuenta en aciertos)
@@ -132,7 +160,7 @@ def _partidos_liga(con, mod, todos, px, nombres, reales_df):
         p["ultimos"] = {"local": ultimos(r.liga, r.local, r.fecha), "visitante": ultimos(r.liga, r.visitante, r.fecha)}
         p.update(
             pocos_datos=[eq for eq in (r.local, r.visitante) if mod.partidos[(r.liga, eq)] < 5],
-            contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real,
+            contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real, fiable=_fiable(mod, pron),
             selecciones=[dict(familia=slot[1], metrica=c["metrica"], texto=c["texto"],
                               linea=float(c["texto"].split(" de ")[1].split()[0]),
                               lado="más" if c["texto"].startswith("Más") else "menos",
@@ -186,7 +214,7 @@ def _partidos_ucl(con, mod, ucl):
         p["ultimos"] = {"local": ultimos(r.liga_local, r.local, r.fecha),
                         "visitante": ultimos(r.liga_visitante, r.visitante, r.fecha)}
         p.update(
-            pocos_datos=[], contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real,
+            pocos_datos=[], contexto=ctx, pronosticos=pron, lectura=L.generar(p, pron, ctx), real=real, fiable=_fiable(mod, pron),
             selecciones=[dict(familia=slot[1], metrica=c["metrica"], texto=c["texto"],
                               linea=float(c["texto"].split(" de ")[1].split()[0]),
                               lado="más" if c["texto"].startswith("Más") else "menos",
@@ -413,7 +441,9 @@ def _resumen_dia(x):
         if not p.get("real") or p.get("aplazado"):
             continue
         normal, segura = _destacados(p)
+        fi = p.get("fiable")
         res.append({"l": p["liga"], "d": bool(p["destacado"]),
+                    "f": _ok(p, fi["metrica"], fi["lado"], fi["linea"]) if fi else None,
                     "n": _ok(p, normal["metrica"], normal["eleccion"], normal["linea"]) if normal else None,
                     "s": _ok(p, segura["metrica"], segura["segura_lado"], segura["segura_linea"]) if segura else None,
                     "m": {f["metrica"]: [_ok(p, f["metrica"], f["eleccion"], f["linea"]) if (f.get("prob") or 0) >= 0.55 else None,
@@ -443,16 +473,24 @@ def historico(d):
     res: [día, liga, destacado, [aciertos, total] más probable, [aciertos, total] segura,
           {métrica: [aciertos, total más probable, aciertos, total segura]}, nº de partidos]  (agrupado por día, liga y destacado)
     escalera: escalones recomendados de cada día."""
-    filas, escalera = {}, []
+    filas, escalera, apuesta = {}, [], []
     for x in d["dias"]:
         if not x["jugado"]:
             continue
+        # apuesta del día: las 3 más probables (la 1ª es la recomendada)
+        cand = sorted((p for p in x["partidos"] if p.get("fiable") and not p.get("aplazado")),
+                      key=lambda p: -p["fiable"]["prob"])[:3]
+        for i, p in enumerate(cand):
+            fi = p["fiable"]
+            apuesta.append({"dia": x["dia"], "puesto": i + 1, "l": p["liga"], "ok": _ok(p, fi["metrica"], fi["lado"], fi["linea"])})
         _, esc, res = _resumen_dia(x)
         escalera += [{**e, "dia": x["dia"]} for e in esc if e.get("recomendada") is not False]
         for r in res:
             k = (x["dia"], r["l"], r["d"])
-            f = filas.setdefault(k, [x["dia"], r["l"], r["d"], [0, 0], [0, 0], {}, 0])
+            f = filas.setdefault(k, [x["dia"], r["l"], r["d"], [0, 0], [0, 0], {}, 0, [0, 0]])
             f[6] += 1
+            if r.get("f") is not None:
+                f[7][1] += 1; f[7][0] += int(r["f"])
             for i, ok in ((3, r["n"]), (4, r["s"])):
                 if ok is not None:
                     f[i][1] += 1; f[i][0] += int(ok)
@@ -462,7 +500,7 @@ def historico(d):
                     m[1] += 1; m[0] += int(okn)
                 if oks is not None:
                     m[3] += 1; m[2] += int(oks)
-    return {"generado": d["generado"], "res": list(filas.values()), "escalera": escalera}
+    return {"generado": d["generado"], "res": list(filas.values()), "escalera": escalera, "apuesta_dia": apuesta}
 
 
 NOMBRE_FUENTE = {"espn": "resultados al momento (ESPN)", "futdata": "resultados de las 5 ligas", "champions": "Champions", "europa": "competiciones europeas",
@@ -526,6 +564,9 @@ if __name__ == "__main__":
         tot[amb] = {k: [sum(r[i][0] for r in filas), sum(r[i][1] for r in filas)] for k, i in (("mas_probable", 3), ("segura", 4))}
     esc = [e["ok"] for e in h["escalera"] if e.get("ok") is not None]
     tot["escalera"] = [sum(esc), len(esc)]
+    ap = [a["ok"] for a in h.get("apuesta_dia", []) if a["puesto"] == 1 and a["ok"] is not None]
+    ap3 = [a["ok"] for a in h.get("apuesta_dia", []) if a["ok"] is not None]
+    tot["apuesta_dia"] = {"recomendada": [sum(ap), len(ap)], "las_3": [sum(ap3), len(ap3)]}
     (raiz / "resumen_aciertos.json").write_text(json.dumps({"generado": d["generado"], **tot}, ensure_ascii=False, indent=1), encoding="utf-8")
     datos = json.dumps(indice(d), ensure_ascii=False, default=float, separators=(",", ":")).replace("</", "<\\/")
     plantilla = (raiz / "web_plantilla.html").read_text(encoding="utf-8")

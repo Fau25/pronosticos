@@ -388,6 +388,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .pie { margin-top: 44px; color: var(--muted); font-size: .82rem; line-height: 1.7; display: flex; flex-direction: column; gap: 10px; padding: 0 4px; }
 .hay-nuevo { position: fixed; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 40;
   border: 0; border-radius: 999px; padding: 10px 18px; font: 700 .9rem var(--font); background: var(--lime); color: var(--lime-ink); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.fiables { display: flex; flex-direction: column; gap: 8px; }
+.fiable { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: center; background: var(--card); border: 1px solid var(--lime); border-radius: 18px; padding: 12px 14px; }
+.fi-txt { min-width: 0; display: flex; flex-direction: column; }
+.fi-txt b { font-size: .98rem; line-height: 1.25; }
+.fi-txt small, .fi-num small { color: var(--muted); font-size: .74rem; }
+.fi-num { display: flex; flex-direction: column; align-items: flex-end; }
+.fi-num b { color: var(--lime); font-size: 1.1rem; }
+.kpi-ancho { width: 100%; }
+.fi-alt { border-color: var(--line); }
+.fi-rec { font-style: normal; font-size: .7rem; font-weight: 700; color: var(--lime-ink); background: var(--lime); border-radius: 999px; padding: 2px 8px; align-self: flex-start; margin-bottom: 4px; }
 .q-lista { display: flex; flex-direction: column; gap: 8px; }
 .q-fila { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; background: var(--card); border-radius: 18px; padding: 10px 12px; }
 .q-n { color: var(--muted); font-weight: 700; font-size: .85rem; text-align: center; }
@@ -821,7 +831,14 @@ function pintarPartidos() {
   const orden = [...ps].sort((a, b) => b.relevancia - a.relevancia);
   const top = orden[0], dest = orden.filter(p => p.destacado && p !== top);
   const resto = orden.filter(p => !p.destacado && p !== top).sort((a, b) => a.hora.localeCompare(b.hora));
+  const fiables = ps.filter(p => p.fiable && !p.aplazado).sort((a, b) => b.fiable.prob - a.fiable.prob).slice(0, 3);
   v.innerHTML = `
+    ${fiables.length ? `<div class="sec"><h2>Apuesta del día</h2><span>cuota 1,20–1,30</span></div>
+    <div class="fiables">${fiables.map((p, i) => { const f = p.fiable;
+      return `<div class="fiable ${i ? 'fi-alt' : ''}"><div class="fi-txt">${i ? '' : '<em class="fi-rec">Recomendada</em>'}<b>${f.lado === 'más' ? 'Más' : 'Menos'} de ${String(f.linea).replace('.', ',')} ${f.nombre.toLowerCase()}</b>
+        <small>${esc(p.local)} – ${esc(p.visitante)} · ${p.hora}</small></div>
+        <div class="fi-num"><b>${pct(f.prob)}</b><small>cuota ≈ ${q2(f.cuota)}</small></div>${marcaP(p, acierto(p, f.metrica, f.lado, f.linea))}</div>`; }).join('')}</div>
+    <p class="nota" style="margin:8px 4px 0">La más probable de cada partido con cuota 1,20–1,30 (goles, córners y tarjetas). En la prueba a ciegas acertaron unas 3 de cada 4 (75–80 %); ninguna es segura. Compara siempre la cuota real de tu casa: si paga menos de 1,20, no compensa.</p>` : ''}
     <div class="sec"><h2>Partido estrella</h2><span>${ps.length} partidos este día</span></div>
     <div class="rejilla">${estrella(top)}</div>
     ${dest.length ? `<div class="sec"><h2>Destacados</h2><span>los 2 mejores de cada liga</span></div><div class="rejilla">${dest.map(ficha).join('')}</div>` : ''}
@@ -1039,7 +1056,7 @@ function salirGraf() {
 function pintarAciertos() {
   const v = document.getElementById('vista-aciertos');
   if (esperandoHist(v)) return;
-  const tot = {n: cuenta(), s: cuenta()}, porDia = [], porMet = {}, dias = {};
+  const tot = {n: cuenta(), s: cuenta(), f: cuenta()}, porDia = [], porMet = {}, dias = {};
   const add = (c, [a, n]) => { c.a += a; c.n += n; };
   let partidos = 0;
   // filas del histórico: [día, liga, destacado, [a,n] más probable, [a,n] segura, {met: [a,n,a,n]}, nº partidos]
@@ -1054,6 +1071,8 @@ function pintarAciertos() {
     });
   });
   Object.keys(dias).sort().forEach(k => { if (dias[k].n.n || dias[k].s.n) porDia.push(dias[k]); });
+  const ad = (HIST.apuesta_dia || []).filter(a => a.ok != null), ad1 = ad.filter(a => a.puesto === 1);
+  tot.f = {a: ad1.filter(a => a.ok).length, n: ad1.length}; const t3 = {a: ad.filter(a => a.ok).length, n: ad.length};
   if (!partidos) { v.innerHTML = '<div class="vacio" style="margin-top:28px">Todavía no hay partidos jugados con estas ligas.</div>'; return; }
   const rn = ratio(tot.n), rs = ratio(tot.s);
   v.innerHTML = `
@@ -1066,6 +1085,7 @@ function pintarAciertos() {
       <div class="kpi lima"><small>Más probable</small><b>${rn == null ? '–' : pct(rn)}</b><span>${tot.n.a} de ${tot.n.n} acertados</span><div class="bar"><i style="width:${(rn || 0) * 100}%"></i></div></div>
       <div class="kpi"><small>Línea segura</small><b>${rs == null ? '–' : pct(rs)}</b><span>${tot.s.a} de ${tot.s.n} acertados</span><div class="bar"><i style="width:${(rs || 0) * 100}%"></i></div></div>
     </div>
+    ${tot.f.n ? `<div class="kpi kpi-ancho" style="margin-top:12px"><small>Apuesta del día (1,20–1,30)</small><b>${pct(ratio(tot.f))}</b><span>${tot.f.a} de ${tot.f.n} recomendadas acertadas · las 3 del día: ${t3.a} de ${t3.n} · esperado 75–80 de cada 100</span><div class="bar"><i style="width:${ratio(tot.f) * 100}%"></i></div></div>` : ''}
     ${porDia.length >= 2 ? `<div class="sec"><h2>Evolución</h2><span>% de aciertos por fecha</span></div>${grafica(porDia)}` : ''}
     <div class="sec"><h2>Por día</h2><span>pronósticos destacados de cada ficha</span></div>
     <div class="tabla-ac">
