@@ -1,27 +1,37 @@
 {
- "generado": "2026-11-08 12:55",
+ "generado": "2026-11-08 13:39",
  "destacados": {
   "mas_probable": [
-   108,
-   148
+   105,
+   147
   ],
   "segura": [
-   118,
-   148
+   121,
+   147
   ]
  },
  "todos": {
   "mas_probable": [
-   197,
+   196,
    268
   ],
   "segura": [
-   226,
+   228,
    268
   ]
  },
  "escalera": [
-  22,
+  21,
   27
- ]
+ ],
+ "apuesta_dia": {
+  "recomendada": [
+   20,
+   27
+  ],
+  "las_3": [
+   56,
+   78
+  ]
+ }
 }
