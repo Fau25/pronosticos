@@ -226,13 +226,13 @@
    "eq_local": "Alavés",
    "eq_visitante": "Eibar",
    "prob": [
-    0.357,
-    0.3001,
-    0.3429
+    0.3573,
+    0.2993,
+    0.3435
    ],
    "goles_esp": [
     1.0,
-    0.97
+    0.98
    ],
    "signo": "1",
    "doble": "12"
@@ -248,12 +248,12 @@
    "eq_local": "Real Sociedad",
    "eq_visitante": "Athletic Club",
    "prob": [
-    0.4747,
-    0.2529,
-    0.2724
+    0.4752,
+    0.2522,
+    0.2726
    ],
    "goles_esp": [
-    1.46,
+    1.47,
     1.04
    ],
    "signo": "1",
@@ -270,13 +270,13 @@
    "eq_local": "Sevilla",
    "eq_visitante": "Atlético Madrid",
    "prob": [
-    0.1953,
-    0.2133,
-    0.5914
+    0.2056,
+    0.2112,
+    0.5832
    ],
    "goles_esp": [
-    0.98,
-    1.89
+    1.05,
+    1.92
    ],
    "signo": "2",
    "doble": null
@@ -292,13 +292,13 @@
    "eq_local": "Valencia",
    "eq_visitante": "Granada",
    "prob": [
-    0.3325,
-    0.2681,
-    0.3994
+    0.3326,
+    0.2674,
+    0.4
    ],
    "goles_esp": [
-    1.11,
-    1.25
+    1.12,
+    1.26
    ],
    "signo": "2",
    "doble": null
@@ -319,6 +319,6 @@
  ],
  "clave": "2026-21",
  "temporada": 2026,
- "generado": "2026-11-08 02:28",
+ "generado": "2026-11-08 15:04",
  "congelada": false
 }
