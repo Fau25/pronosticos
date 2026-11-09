@@ -13,13 +13,13 @@
    "eq_local": "Real Valladolid",
    "eq_visitante": "Castellón",
    "prob": [
-    0.2415,
-    0.216,
-    0.5425
+    0.2575,
+    0.2209,
+    0.5216
    ],
    "goles_esp": [
-    1.19,
-    1.88
+    1.21,
+    1.82
    ],
    "signo": "2",
    "doble": null
@@ -35,15 +35,15 @@
    "eq_local": "Real Sociedad",
    "eq_visitante": "Sporting Gijón",
    "prob": [
-    0.6246,
-    0.1812,
-    0.1942
+    0.6513,
+    0.1725,
+    0.1762
    ],
    "liga_local": "laliga",
    "liga_visitante": "es2",
    "goles_esp": [
-    2.37,
-    1.27
+    2.48,
+    1.24
    ],
    "signo": "1",
    "doble": null
@@ -59,13 +59,13 @@
    "eq_local": "Almería",
    "eq_visitante": "FC Andorra",
    "prob": [
-    0.6424,
-    0.1793,
-    0.1784
+    0.6448,
+    0.1825,
+    0.1728
    ],
    "goles_esp": [
-    2.36,
-    1.18
+    2.29,
+    1.1
    ],
    "signo": "1",
    "doble": null
@@ -81,12 +81,12 @@
    "eq_local": "Mallorca",
    "eq_visitante": "Córdoba",
    "prob": [
-    0.5334,
-    0.2421,
-    0.2244
+    0.5324,
+    0.2428,
+    0.2248
    ],
    "goles_esp": [
-    1.59,
+    1.58,
     0.93
    ],
    "signo": "1",
@@ -103,16 +103,16 @@
    "eq_local": "Real Oviedo",
    "eq_visitante": "Girona",
    "prob": [
-    0.3845,
-    0.2475,
-    0.368
+    0.4136,
+    0.2522,
+    0.3342
    ],
    "goles_esp": [
-    1.38,
-    1.34
+    1.39,
+    1.22
    ],
    "signo": "1",
-   "doble": "12"
+   "doble": null
   },
   {
    "n": 6,
@@ -125,12 +125,12 @@
    "eq_local": "Tenerife",
    "eq_visitante": "Ceuta",
    "prob": [
-    0.5943,
-    0.2165,
-    0.1892
+    0.5932,
+    0.2172,
+    0.1896
    ],
    "goles_esp": [
-    1.84,
+    1.83,
     0.93
    ],
    "signo": "1",
@@ -147,13 +147,13 @@
    "eq_local": "Granada",
    "eq_visitante": "Las Palmas",
    "prob": [
-    0.5504,
-    0.2081,
-    0.2415
+    0.5494,
+    0.2087,
+    0.2419
    ],
    "goles_esp": [
-    1.99,
-    1.26
+    1.98,
+    1.25
    ],
    "signo": "1",
    "doble": null
@@ -169,12 +169,12 @@
    "eq_local": "Eibar",
    "eq_visitante": "Cádiz",
    "prob": [
-    0.6256,
-    0.2005,
-    0.1739
+    0.6244,
+    0.2012,
+    0.1744
    ],
    "goles_esp": [
-    2.02,
+    2.01,
     0.96
    ],
    "signo": "1",
@@ -191,13 +191,13 @@
    "eq_local": "Eldense",
    "eq_visitante": "CD Sabadell",
    "prob": [
-    0.3635,
-    0.2725,
-    0.364
+    0.3628,
+    0.2731,
+    0.3641
    ],
    "goles_esp": [
-    1.16,
-    1.16
+    1.15,
+    1.15
    ],
    "signo": "2",
    "doble": "12"
@@ -226,12 +226,12 @@
    "eq_local": "Alavés",
    "eq_visitante": "Eibar",
    "prob": [
-    0.3573,
-    0.2993,
-    0.3435
+    0.3574,
+    0.2989,
+    0.3437
    ],
    "goles_esp": [
-    1.0,
+    1.01,
     0.98
    ],
    "signo": "1",
@@ -248,13 +248,13 @@
    "eq_local": "Real Sociedad",
    "eq_visitante": "Athletic Club",
    "prob": [
-    0.4752,
-    0.2522,
-    0.2726
+    0.4754,
+    0.2519,
+    0.2727
    ],
    "goles_esp": [
     1.47,
-    1.04
+    1.05
    ],
    "signo": "1",
    "doble": null
@@ -270,13 +270,13 @@
    "eq_local": "Sevilla",
    "eq_visitante": "Atlético Madrid",
    "prob": [
-    0.2056,
-    0.2112,
-    0.5832
+    0.2055,
+    0.2108,
+    0.5836
    ],
    "goles_esp": [
     1.05,
-    1.92
+    1.93
    ],
    "signo": "2",
    "doble": null
@@ -292,16 +292,16 @@
    "eq_local": "Valencia",
    "eq_visitante": "Granada",
    "prob": [
-    0.3326,
-    0.2674,
-    0.4
+    0.3327,
+    0.267,
+    0.4003
    ],
    "goles_esp": [
     1.12,
     1.26
    ],
    "signo": "2",
-   "doble": null
+   "doble": "12"
   },
   {
    "n": 15,
@@ -319,6 +319,6 @@
  ],
  "clave": "2026-21",
  "temporada": 2026,
- "generado": "2026-11-08 15:04",
+ "generado": "2026-11-09 08:58",
  "congelada": false
 }
