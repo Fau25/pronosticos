@@ -1,0 +1,47 @@
+name: Sonda (comprobar la web publicada)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  sonda:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Abrir la web con un navegador
+        run: |
+          mkdir -p registro/sonda && cd registro/sonda
+          npm init -y >/dev/null && npm i -s playwright@1.48.2 >/dev/null && npx playwright install --with-deps chromium >/dev/null 2>&1
+          cat > prueba.js <<'JS'
+          const { chromium, devices } = require('playwright');
+          (async () => {
+            const b = await chromium.launch();
+            const ctx = await b.newContext({...devices['iPhone 13']});
+            const pg = await ctx.newPage(); const log = [];
+            pg.on('pageerror', e => log.push('ERROR JS: ' + e.message));
+            pg.on('console', m => { if (m.type() === 'error') log.push('consola: ' + m.text()); });
+            pg.on('requestfailed', r => log.push('fallo red: ' + r.url()));
+            pg.on('response', r => { if (r.status() >= 400) log.push('HTTP ' + r.status() + ' ' + r.url()); });
+            await pg.goto('https://fau25.github.io/pronosticos/?sonda=' + Date.now(), {waitUntil: 'networkidle'});
+            await pg.waitForTimeout(3000);
+            const ok = await pg.$('#aviso-18-ok'); if (ok && await ok.isVisible()) await ok.click();
+            await pg.screenshot({path: 'inicio.png'});
+            log.push('generado: ' + await pg.evaluate(() => { try { return D.generado + ' · días ' + D.dias.map(d => d.dia + (d.jugado ? '*' : '')).join(' '); } catch (e) { return 'sin D: ' + e.message; } }));
+            log.push('texto partidos: ' + (await pg.evaluate(() => (document.getElementById('vista-partidos') || {}).innerText || 'SIN VISTA')).slice(0, 400).replace(/\n/g, ' | '));
+            for (const v of ['combinada', 'escalera', 'quiniela', 'aciertos']) {
+              try { await pg.click('#v-' + v, {timeout: 5000}); await pg.waitForTimeout(2500); await pg.screenshot({path: v + '.png'});
+                log.push(v + ': ' + (await pg.evaluate(id => (document.getElementById(id) || {}).innerText || 'vacío', 'vista-' + v)).slice(0, 250).replace(/\n/g, ' | '));
+              } catch (e) { log.push(v + ' NO SE PUDO: ' + e.message.split('\n')[0]); }
+            }
+            require('fs').writeFileSync('informe.txt', log.join('\n'));
+            await b.close();
+          })();
+          JS
+          node prueba.js; cat informe.txt
+          rm -rf node_modules package*.json prueba.js
+      - name: Guardar
+        run: |
+          git config user.name "pronosticos-bot"; git config user.email "pronosticos-bot@users.noreply.github.com"
+          git add registro/sonda && git commit -m "Sonda web" && git pull --rebase -q && git push
