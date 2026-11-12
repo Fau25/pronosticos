@@ -1,4 +1,4 @@
-  [espn] 43 partidos leídos (0 errores)
+  [espn] 24 partidos leídos (0 errores)
   [espn] bundesliga: 27 en la base, 27 jugados, 27 con córners
   [espn] laliga: 31 en la base, 31 jugados, 31 con córners
   [espn] ligue1: 27 en la base, 27 jugados, 27 con córners
@@ -9,5 +9,3 @@
    2026-11-08T19:45 Lens 1-2 Marseille · córners 10 · amarillas 3 · tiros 29
    2026-11-08T18:30 Hoffenheim 2-1 Schalke 04 · córners 10 · amarillas 2 · tiros 38
    2026-11-08T17:30 Celta Vigo 0-0 Levante · córners 7 · amarillas 3 · tiros 29
-  [espn] equipos sin emparejar: Deportivo
-  AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)
