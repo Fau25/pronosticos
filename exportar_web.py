@@ -523,7 +523,12 @@ def estado_fuentes():
 def _avisos():
     """Avisos de los scripts de descarga (avisos.txt) y de esta ejecución."""
     import comun
-    return (comun.leer() + AVISOS)[:8]
+    av = comun.leer() + AVISOS
+    us = [x for x in av if x.startswith("Understat: sin calendario")]
+    if us:   # Understat caído: un solo aviso en vez de uno por liga
+        av = [x for x in av if x not in us] + [
+            "Understat (xG y tiros por partes) no responde: la app sigue con ESPN y football-data"]
+    return av[:8]
 
 
 if __name__ == "__main__":
