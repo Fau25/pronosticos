@@ -13,9 +13,9 @@
    "eq_local": "Real Valladolid",
    "eq_visitante": "Castellón",
    "prob": [
-    0.2612,
-    0.2224,
-    0.5164
+    0.263,
+    0.2223,
+    0.5146
    ],
    "goles_esp": [
     1.22,
@@ -35,14 +35,14 @@
    "eq_local": "Real Sociedad",
    "eq_visitante": "Sporting Gijón",
    "prob": [
-    0.6484,
-    0.1783,
-    0.1733
+    0.6497,
+    0.1778,
+    0.1725
    ],
    "liga_local": "laliga",
    "liga_visitante": "es2",
    "goles_esp": [
-    2.36,
+    2.37,
     1.15
    ],
    "signo": "1",
@@ -59,12 +59,12 @@
    "eq_local": "Almería",
    "eq_visitante": "FC Andorra",
    "prob": [
-    0.6484,
-    0.1817,
-    0.1699
+    0.6512,
+    0.1805,
+    0.1683
    ],
    "goles_esp": [
-    2.29,
+    2.3,
     1.09
    ],
    "signo": "1",
@@ -81,12 +81,12 @@
    "eq_local": "Mallorca",
    "eq_visitante": "Córdoba",
    "prob": [
-    0.5358,
-    0.2425,
-    0.2217
+    0.5383,
+    0.2415,
+    0.2202
    ],
    "goles_esp": [
-    1.58,
+    1.59,
     0.92
    ],
    "signo": "1",
@@ -103,12 +103,12 @@
    "eq_local": "Real Oviedo",
    "eq_visitante": "Girona",
    "prob": [
-    0.4173,
-    0.2526,
-    0.3301
+    0.4197,
+    0.252,
+    0.3283
    ],
    "goles_esp": [
-    1.39,
+    1.4,
     1.21
    ],
    "signo": "1",
@@ -125,12 +125,12 @@
    "eq_local": "Tenerife",
    "eq_visitante": "Ceuta",
    "prob": [
-    0.5966,
-    0.2166,
-    0.1868
+    0.5992,
+    0.2155,
+    0.1853
    ],
    "goles_esp": [
-    1.84,
+    1.85,
     0.92
    ],
    "signo": "1",
@@ -147,12 +147,12 @@
    "eq_local": "Granada",
    "eq_visitante": "Las Palmas",
    "prob": [
-    0.5226,
-    0.2176,
-    0.2598
+    0.5253,
+    0.2167,
+    0.258
    ],
    "goles_esp": [
-    1.86,
+    1.87,
     1.25
    ],
    "signo": "1",
@@ -169,12 +169,12 @@
    "eq_local": "Eibar",
    "eq_visitante": "Cádiz",
    "prob": [
-    0.6279,
-    0.2005,
-    0.1717
+    0.6305,
+    0.1993,
+    0.1702
    ],
    "goles_esp": [
-    2.01,
+    2.03,
     0.95
    ],
    "signo": "1",
@@ -191,12 +191,12 @@
    "eq_local": "Eldense",
    "eq_visitante": "CD Sabadell",
    "prob": [
-    0.3393,
-    0.292,
-    0.3687
+    0.3413,
+    0.2915,
+    0.3673
    ],
    "goles_esp": [
-    1.0,
+    1.01,
     1.06
    ],
    "signo": "2",
@@ -319,6 +319,6 @@
  ],
  "clave": "2026-21",
  "temporada": 2026,
- "generado": "2026-11-13 15:52",
+ "generado": "2026-11-14 04:28",
  "congelada": false
 }
