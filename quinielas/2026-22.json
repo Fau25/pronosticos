@@ -1,0 +1,238 @@
+{
+ "jornada": 22,
+ "cierre": "2026-11-17T20:45:00+01:00",
+ "partidos": [
+  {
+   "n": 1,
+   "local": "Bosnia",
+   "visitante": "Rumanía",
+   "cuando": "M 20:45",
+   "local_completo": "Bosnia Herzegovina",
+   "visitante_completo": "Rumanía",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 2,
+   "local": "Ucrania",
+   "visitante": "Georgia",
+   "cuando": "M 20:45",
+   "local_completo": "Ucrania",
+   "visitante_completo": "Georgia",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 3,
+   "local": "Gales",
+   "visitante": "Portugal",
+   "cuando": "M 20:45",
+   "local_completo": "Gales",
+   "visitante_completo": "Portugal",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 4,
+   "local": "Hungría",
+   "visitante": "Irlanda Norte",
+   "cuando": "M 20:45",
+   "local_completo": "Hungría",
+   "visitante_completo": "Irlanda del Norte",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 5,
+   "local": "Polonia",
+   "visitante": "Suecia",
+   "cuando": "M 20:45",
+   "local_completo": "Polonia",
+   "visitante_completo": "Suecia",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 6,
+   "local": "Eire",
+   "visitante": "Kosovo",
+   "cuando": "M 20:45",
+   "local_completo": "Eire",
+   "visitante_completo": "Kosovo",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 7,
+   "local": "Real Madrid (F)",
+   "visitante": "Inter Milano W",
+   "cuando": "X 18:45",
+   "local_completo": "Real Madrid Femenino",
+   "visitante_completo": "Inter Milano W",
+   "liga": null,
+   "eq_local": "Real Madrid",
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 8,
+   "local": "Häcken W",
+   "visitante": "Manchester City W",
+   "cuando": "X 18:45",
+   "local_completo": "Häcken W",
+   "visitante_completo": "Manchester City W",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Manchester City",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 9,
+   "local": "Chelsea W",
+   "visitante": "Paris Saint Germain W",
+   "cuando": "X 21:00",
+   "local_completo": "Chelsea W",
+   "visitante_completo": "Paris Saint Germain W",
+   "liga": null,
+   "eq_local": "Chelsea",
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 10,
+   "local": "Juventus W",
+   "visitante": "OH Leuven W",
+   "cuando": "X 21:00",
+   "local_completo": "Juventus W",
+   "visitante_completo": "OH Leuven W",
+   "liga": "eu",
+   "eq_local": "Juventus",
+   "eq_visitante": "OH Leuven",
+   "prob": [
+    0.6486,
+    0.1987,
+    0.1527
+   ],
+   "liga_local": "seriea",
+   "liga_visitante": "bel",
+   "goles_esp": [
+    2.0,
+    0.85
+   ],
+   "signo": "1",
+   "doble": "1X"
+  },
+  {
+   "n": 11,
+   "local": "Austria Wien W",
+   "visitante": "Bayern Munich W",
+   "cuando": "J 18:45",
+   "local_completo": "Austria Wien W",
+   "visitante_completo": "Bayern Munich W",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Bayern Munich",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 12,
+   "local": "Arsenal W",
+   "visitante": "Lyon W",
+   "cuando": "J 21:00",
+   "local_completo": "Arsenal W",
+   "visitante_completo": "Lyon W",
+   "liga": "eu",
+   "eq_local": "Arsenal",
+   "eq_visitante": "Lyon",
+   "prob": [
+    0.6443,
+    0.2256,
+    0.1301
+   ],
+   "liga_local": "premier",
+   "liga_visitante": "ligue1",
+   "goles_esp": [
+    1.68,
+    0.6
+   ],
+   "signo": "1",
+   "doble": "1X"
+  },
+  {
+   "n": 13,
+   "local": "Barcelona (F)",
+   "visitante": "Servette Chênois W",
+   "cuando": "J 21:00",
+   "local_completo": "FC Barcelona Femenino",
+   "visitante_completo": "Servette Chênois W",
+   "liga": null,
+   "eq_local": "Barcelona",
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 14,
+   "local": "Benfica W",
+   "visitante": "Roma W",
+   "cuando": "J 21:00",
+   "local_completo": "Benfica W",
+   "visitante_completo": "Roma W",
+   "liga": "eu",
+   "eq_local": "Benfica",
+   "eq_visitante": "Roma",
+   "prob": [
+    0.3042,
+    0.2052,
+    0.4906
+   ],
+   "liga_local": "por",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    1.57,
+    2.03
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 15,
+   "local": "Dinamarca",
+   "visitante": "Noruega",
+   "cuando": "M 20:45",
+   "local_completo": "Dinamarca",
+   "visitante_completo": "Noruega",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": null,
+   "prob": null,
+   "doble": null
+  }
+ ],
+ "clave": "2026-22",
+ "temporada": 2026,
+ "generado": "2026-11-14 14:47",
+ "congelada": false
+}
