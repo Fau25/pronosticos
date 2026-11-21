@@ -1,0 +1,332 @@
+{
+ "jornada": 24,
+ "cierre": "2026-11-24T21:00:00+01:00",
+ "partidos": [
+  {
+   "n": 1,
+   "local": "Arsenal",
+   "visitante": "B. Dortmund",
+   "cuando": "M 21:00",
+   "local_completo": "Arsenal FC",
+   "visitante_completo": "BV Borussia Dortmund",
+   "liga": "eu",
+   "eq_local": "Arsenal",
+   "eq_visitante": "Borussia Dortmund",
+   "prob": [
+    0.55,
+    0.2605,
+    0.1894
+   ],
+   "liga_local": "premier",
+   "liga_visitante": "bundesliga",
+   "goles_esp": [
+    1.43,
+    0.72
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 2,
+   "local": "Feyenoord",
+   "visitante": "Oporto",
+   "cuando": "M 21:00",
+   "local_completo": "Feyenoord",
+   "visitante_completo": "FC Porto",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "FC Porto",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 3,
+   "local": "Man. City",
+   "visitante": "Nápoles",
+   "cuando": "M 21:00",
+   "local_completo": "Manchester City FC",
+   "visitante_completo": "Napoli",
+   "liga": "eu",
+   "eq_local": "Manchester City",
+   "eq_visitante": "Napoli",
+   "prob": [
+    0.5908,
+    0.1998,
+    0.2095
+   ],
+   "liga_local": "premier",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    2.09,
+    1.17
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 4,
+   "local": "Real Madrid",
+   "visitante": "PSV",
+   "cuando": "M 21:00",
+   "local_completo": "Real Madrid C.F.",
+   "visitante_completo": "PSV Eindhoven",
+   "liga": "eu",
+   "eq_local": "Real Madrid",
+   "eq_visitante": "PSV Eindhoven",
+   "prob": [
+    0.6936,
+    0.1502,
+    0.1562
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "ned",
+   "goles_esp": [
+    2.88,
+    1.36
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 5,
+   "local": "Slovan Bratislava",
+   "visitante": "Betis",
+   "cuando": "M 21:00",
+   "local_completo": "ŠK Slovan Bratislava",
+   "visitante_completo": "Real Betis Balompié",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Real Betis",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 6,
+   "local": "Sabah FA",
+   "visitante": "Barcelona",
+   "cuando": "X 18:45",
+   "local_completo": "Sabah FA",
+   "visitante_completo": "Fútbol Club Barcelona",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Barcelona",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 7,
+   "local": "Slavia Praga",
+   "visitante": "Villarreal",
+   "cuando": "X 18:45",
+   "local_completo": "SK Slavia Praha",
+   "visitante_completo": "Villarreal C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Villarreal",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 8,
+   "local": "Brujas",
+   "visitante": "Liverpool",
+   "cuando": "X 21:00",
+   "local_completo": "Club Brugge KV",
+   "visitante_completo": "Liverpool FC",
+   "liga": "eu",
+   "eq_local": "Club Brugge",
+   "eq_visitante": "Liverpool",
+   "prob": [
+    0.4255,
+    0.2239,
+    0.3507
+   ],
+   "liga_local": "bel",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    1.69,
+    1.52
+   ],
+   "signo": "1",
+   "doble": "12"
+  },
+  {
+   "n": 9,
+   "local": "Inter Milan",
+   "visitante": "Stuttgart",
+   "cuando": "X 21:00",
+   "local_completo": "Inter Milán",
+   "visitante_completo": "VfB Stuttgart",
+   "liga": "eu",
+   "eq_local": "Inter",
+   "eq_visitante": "VfB Stuttgart",
+   "prob": [
+    0.6149,
+    0.1731,
+    0.2119
+   ],
+   "liga_local": "seriea",
+   "liga_visitante": "bundesliga",
+   "goles_esp": [
+    2.58,
+    1.49
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 10,
+   "local": "PSG",
+   "visitante": "Roma",
+   "cuando": "X 21:00",
+   "local_completo": "Paris Saint-Germain FC",
+   "visitante_completo": "Roma",
+   "liga": "eu",
+   "eq_local": "Paris Saint Germain",
+   "eq_visitante": "Roma",
+   "prob": [
+    0.4366,
+    0.2189,
+    0.3445
+   ],
+   "liga_local": "ligue1",
+   "liga_visitante": "seriea",
+   "goles_esp": [
+    1.77,
+    1.56
+   ],
+   "signo": "1",
+   "doble": "12"
+  },
+  {
+   "n": 11,
+   "local": "Shakhtar Donetsk",
+   "visitante": "Fenerbahçe SK",
+   "cuando": "X 21:00",
+   "local_completo": "FC Shakhtar Donetsk",
+   "visitante_completo": "Fenerbahçe SK",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Fenerbahce",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 12,
+   "local": "Sporting Lisboa",
+   "visitante": "Man. United",
+   "cuando": "X 21:00",
+   "local_completo": "Sporting Clube de Portugal",
+   "visitante_completo": "Manchester United FC",
+   "liga": "eu",
+   "eq_local": "Sporting Gijón",
+   "eq_visitante": "Manchester United",
+   "prob": [
+    0.2797,
+    0.218,
+    0.5024
+   ],
+   "liga_local": "es2",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    1.33,
+    1.85
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 13,
+   "local": "Celta",
+   "visitante": "Bournemouth",
+   "cuando": "J 18:45",
+   "local_completo": "R.C. Celta de Vigo",
+   "visitante_completo": "Bournemouth",
+   "liga": "eu",
+   "eq_local": "Celta Vigo",
+   "eq_visitante": "Bournemouth",
+   "prob": [
+    0.2699,
+    0.269,
+    0.4611
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "premier",
+   "goles_esp": [
+    0.94,
+    1.33
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 14,
+   "local": "Crystal Palace",
+   "visitante": "R. Sociedad",
+   "cuando": "J 21:00",
+   "local_completo": "Crystal Palace",
+   "visitante_completo": "Real Sociedad",
+   "liga": "eu",
+   "eq_local": "Crystal Palace",
+   "eq_visitante": "Real Sociedad",
+   "prob": [
+    0.355,
+    0.2148,
+    0.4302
+   ],
+   "liga_local": "premier",
+   "liga_visitante": "laliga",
+   "goles_esp": [
+    1.64,
+    1.82
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 15,
+   "local": "At. Madrid",
+   "visitante": "Viking FK",
+   "cuando": "X 21:00",
+   "local_completo": "Club Atlético de Madrid",
+   "visitante_completo": "Viking FK",
+   "liga": "eu",
+   "eq_local": "Atletico Madrid",
+   "eq_visitante": "Viking FK",
+   "prob": [
+    0.6774,
+    0.1678,
+    0.1548
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "nor",
+   "goles_esp": [
+    2.48,
+    1.12
+   ],
+   "signo": "1",
+   "pleno": {
+    "local": "M",
+    "visitante": "1",
+    "prob": 0.1651,
+    "cat_local": [
+     0.083,
+     0.207,
+     0.257,
+     0.452
+    ],
+    "cat_visitante": [
+     0.326,
+     0.365,
+     0.205,
+     0.104
+    ]
+   },
+   "doble": null
+  }
+ ],
+ "clave": "2026-24",
+ "temporada": 2026,
+ "generado": "2026-11-21 15:55",
+ "congelada": false
+}
