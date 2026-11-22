@@ -308,7 +308,18 @@
     1.94
    ],
    "signo": "2",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     1,
+     5
+    ],
+    "signo": "2",
+    "cat": [
+     "1",
+     "M"
+    ]
+   }
   },
   {
    "n": 13,
@@ -330,7 +341,18 @@
     1.12
    ],
    "signo": "1",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     1,
+     0
+    ],
+    "signo": "1",
+    "cat": [
+     "1",
+     "0"
+    ]
+   }
   },
   {
    "n": 14,
@@ -401,10 +423,10 @@
  "generado": "2026-11-20 21:29",
  "congelada": true,
  "resumen": {
-  "jugados": 5,
-  "aciertos": 2,
-  "con_dobles": 2,
-  "pronosticados": 4,
+  "jugados": 7,
+  "aciertos": 4,
+  "con_dobles": 4,
+  "pronosticados": 6,
   "pleno": true
  }
 }
