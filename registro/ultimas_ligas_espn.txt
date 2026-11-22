@@ -1,13 +1,13 @@
   [espn] 48 partidos leídos (0 errores)
-  [espn] bundesliga: 36 en la base, 34 jugados, 34 con córners
-  [espn] laliga: 41 en la base, 37 jugados, 37 con córners
-  [espn] ligue1: 36 en la base, 33 jugados, 33 con córners
-  [espn] premier: 40 en la base, 37 jugados, 37 con córners
-  [espn] seriea: 50 en la base, 45 jugados, 45 con córners
-   2026-11-22T13:00 Barcelona 3-2 Villarreal · córners 10 · amarillas 8 · tiros 34
-   2026-11-22T11:30 Juventus 4-0 Venezia · córners 7 · amarillas 0 · tiros 25
-   2026-11-21T20:00 Real Madrid 2-1 Celta Vigo · córners 11 · amarillas 3 · tiros 32
-   2026-11-21T19:45 Napoli 1-0 Torino · córners 13 · amarillas 3 · tiros 34
-   2026-11-21T19:45 Monaco 1-1 Auxerre · córners 3 · amarillas 2 · tiros 21
+  [espn] bundesliga: 36 en la base, 36 jugados, 36 con córners
+  [espn] laliga: 41 en la base, 39 jugados, 39 con córners
+  [espn] ligue1: 36 en la base, 36 jugados, 36 con córners
+  [espn] premier: 40 en la base, 39 jugados, 39 con córners
+  [espn] seriea: 50 en la base, 49 jugados, 49 con córners
+   2026-11-22T19:45 Atalanta 4-4 Inter · córners 11 · amarillas 3 · tiros 31
+   2026-11-22T19:45 Marseille 2-3 Le Mans · córners 7 · amarillas 7 · tiros 29
+   2026-11-22T17:30 Osasuna 1-0 Malaga · córners 5 · amarillas 3 · tiros 16
+   2026-11-22T17:00 AC Milan 5-1 Frosinone · córners 11 · amarillas 5 · tiros 27
+   2026-11-22T16:30 Liverpool 4-0 Manchester United · córners 20 · amarillas 1 · tiros 38
   [espn] equipos sin emparejar: Deportivo
   AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)
