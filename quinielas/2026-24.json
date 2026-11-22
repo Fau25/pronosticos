@@ -74,15 +74,15 @@
    "eq_local": "Real Madrid",
    "eq_visitante": "PSV Eindhoven",
    "prob": [
-    0.6753,
-    0.1555,
+    0.6755,
+    0.1553,
     0.1692
    ],
    "liga_local": "laliga",
    "liga_visitante": "ned",
    "goles_esp": [
-    2.82,
-    1.4
+    2.83,
+    1.41
    ],
    "signo": "1",
    "doble": null
@@ -137,15 +137,15 @@
    "eq_local": "Club Brugge",
    "eq_visitante": "Liverpool",
    "prob": [
-    0.4515,
-    0.2176,
-    0.3309
+    0.4523,
+    0.2177,
+    0.33
    ],
    "liga_local": "bel",
    "liga_visitante": "premier",
    "goles_esp": [
     1.81,
-    1.53
+    1.52
    ],
    "signo": "1",
    "doble": "12"
@@ -222,15 +222,15 @@
    "eq_local": "Sporting Gijón",
    "eq_visitante": "Manchester United",
    "prob": [
-    0.2791,
-    0.2183,
-    0.5025
+    0.281,
+    0.2187,
+    0.5004
    ],
    "liga_local": "es2",
    "liga_visitante": "premier",
    "goles_esp": [
     1.33,
-    1.85
+    1.84
    ],
    "signo": "2",
    "doble": null
@@ -327,6 +327,6 @@
  ],
  "clave": "2026-24",
  "temporada": 2026,
- "generado": "2026-11-22 04:22",
+ "generado": "2026-11-22 16:29",
  "congelada": false
 }
