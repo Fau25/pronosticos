@@ -13,15 +13,15 @@
    "eq_local": "Arsenal",
    "eq_visitante": "Borussia Dortmund",
    "prob": [
-    0.55,
-    0.2605,
-    0.1894
+    0.5291,
+    0.2644,
+    0.2065
    ],
    "liga_local": "premier",
    "liga_visitante": "bundesliga",
    "goles_esp": [
-    1.43,
-    0.72
+    1.4,
+    0.76
    ],
    "signo": "1",
    "doble": null
@@ -50,15 +50,15 @@
    "eq_local": "Manchester City",
    "eq_visitante": "Napoli",
    "prob": [
-    0.5908,
-    0.1998,
-    0.2095
+    0.564,
+    0.2124,
+    0.2236
    ],
    "liga_local": "premier",
    "liga_visitante": "seriea",
    "goles_esp": [
-    2.09,
-    1.17
+    1.92,
+    1.13
    ],
    "signo": "1",
    "doble": null
@@ -74,15 +74,15 @@
    "eq_local": "Real Madrid",
    "eq_visitante": "PSV Eindhoven",
    "prob": [
-    0.6743,
-    0.1557,
-    0.1701
+    0.6564,
+    0.1611,
+    0.1825
    ],
    "liga_local": "laliga",
    "liga_visitante": "ned",
    "goles_esp": [
-    2.82,
-    1.41
+    2.75,
+    1.44
    ],
    "signo": "1",
    "doble": null
@@ -137,15 +137,15 @@
    "eq_local": "Club Brugge",
    "eq_visitante": "Liverpool",
    "prob": [
-    0.4532,
-    0.2176,
-    0.3292
+    0.4073,
+    0.2189,
+    0.3737
    ],
    "liga_local": "bel",
    "liga_visitante": "premier",
    "goles_esp": [
-    1.81,
-    1.52
+    1.72,
+    1.64
    ],
    "signo": "1",
    "doble": "12"
@@ -161,15 +161,15 @@
    "eq_local": "Inter",
    "eq_visitante": "VfB Stuttgart",
    "prob": [
-    0.6149,
-    0.1731,
-    0.2119
+    0.5898,
+    0.1775,
+    0.2327
    ],
    "liga_local": "seriea",
    "liga_visitante": "bundesliga",
    "goles_esp": [
-    2.58,
-    1.49
+    2.53,
+    1.58
    ],
    "signo": "1",
    "doble": null
@@ -185,15 +185,15 @@
    "eq_local": "Paris Saint Germain",
    "eq_visitante": "Roma",
    "prob": [
-    0.4366,
-    0.2189,
-    0.3445
+    0.4092,
+    0.2099,
+    0.3809
    ],
    "liga_local": "ligue1",
    "liga_visitante": "seriea",
    "goles_esp": [
-    1.77,
-    1.56
+    1.84,
+    1.77
    ],
    "signo": "1",
    "doble": "12"
@@ -222,15 +222,15 @@
    "eq_local": "Sporting Gijón",
    "eq_visitante": "Manchester United",
    "prob": [
-    0.249,
-    0.2136,
-    0.5374
+    0.2921,
+    0.222,
+    0.4859
    ],
    "liga_local": "es2",
    "liga_visitante": "premier",
    "goles_esp": [
-    1.24,
-    1.92
+    1.34,
+    1.79
    ],
    "signo": "2",
    "doble": null
@@ -246,15 +246,15 @@
    "eq_local": "Celta Vigo",
    "eq_visitante": "Bournemouth",
    "prob": [
-    0.2699,
-    0.269,
-    0.4611
+    0.248,
+    0.2652,
+    0.4868
    ],
    "liga_local": "laliga",
    "liga_visitante": "premier",
    "goles_esp": [
-    0.94,
-    1.33
+    0.9,
+    1.38
    ],
    "signo": "2",
    "doble": null
@@ -270,15 +270,15 @@
    "eq_local": "Crystal Palace",
    "eq_visitante": "Real Sociedad",
    "prob": [
-    0.355,
-    0.2148,
-    0.4302
+    0.3824,
+    0.2076,
+    0.41
    ],
    "liga_local": "premier",
    "liga_visitante": "laliga",
    "goles_esp": [
-    1.64,
-    1.82
+    1.81,
+    1.88
    ],
    "signo": "2",
    "doble": "12"
@@ -294,32 +294,32 @@
    "eq_local": "Atletico Madrid",
    "eq_visitante": "Viking FK",
    "prob": [
-    0.7066,
-    0.1555,
-    0.1379
+    0.7419,
+    0.1421,
+    0.116
    ],
    "liga_local": "laliga",
    "liga_visitante": "nor",
    "goles_esp": [
-    2.65,
-    1.11
+    2.79,
+    1.05
    ],
    "signo": "1",
    "pleno": {
     "local": "M",
     "visitante": "1",
-    "prob": 0.1803,
+    "prob": 0.1942,
     "cat_local": [
-     0.071,
-     0.188,
-     0.248,
-     0.493
+     0.061,
+     0.171,
+     0.239,
+     0.528
     ],
     "cat_visitante": [
-     0.329,
-     0.366,
-     0.203,
-     0.102
+     0.351,
+     0.367,
+     0.192,
+     0.089
     ]
    },
    "doble": null
@@ -327,6 +327,6 @@
  ],
  "clave": "2026-24",
  "temporada": 2026,
- "generado": "2026-11-23 04:58",
+ "generado": "2026-11-23 19:42",
  "congelada": false
 }
