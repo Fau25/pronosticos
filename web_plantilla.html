@@ -498,6 +498,21 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* partido estrella: degradado pastel con texto oscuro */
 .estrella { background: linear-gradient(150deg, #D3C6FF 0%, #C7DDF3 50%, #B5E9D8 100%); color: #2A2433; }
 .estrella .abrir, .estrella .etq { background: #2A2433; color: #fff; }
+/* Champions («noche europea»): siempre oscuro, también cuando es el partido estrella, porque su texto es claro.
+   Antes el degradado pastel del partido estrella se ponía debajo del texto blanco y no se leía. */
+.ucl, .estrella.ucl {
+  color: #F6F0EC;
+  background:
+    radial-gradient(60% 55% at 12% 0%, rgba(190, 172, 255, .45) 0%, rgba(190, 172, 255, 0) 70%),
+    radial-gradient(45% 40% at 95% 20%, rgba(160, 226, 205, .30) 0%, rgba(160, 226, 205, 0) 70%),
+    radial-gradient(70% 60% at 70% 110%, rgba(255, 186, 164, .28) 0%, rgba(255, 186, 164, 0) 70%),
+    linear-gradient(160deg, #3A3150 0%, #221F2E 70%);
+}
+.ucl::before { background: repeating-radial-gradient(circle at 120% -30%, rgba(255, 255, 255, 0) 0 46px, rgba(211, 198, 255, .08) 47px 48px); }
+.ucl .centro small, .ucl .duelo-g .eq small, .ucl .ficha .top b, .ucl .pick-e small, .ucl .pie-ficha .txt small,
+.ucl .lectura, .ucl .nota, .ucl .met-cab span, .ucl .leyenda-eq, .ucl .porque, .ucl .abrir-f, .ucl .tramos button { color: #D9D2E6; }
+.estrella.ucl .abrir, .estrella.ucl .etq { background: rgba(255, 255, 255, .12); color: #fff; border: 1px solid rgba(255, 255, 255, .22); }
+.estrella.ucl .detalle { background: rgba(20, 17, 30, .55); }
 </style>
 
 <div class="wrap">
