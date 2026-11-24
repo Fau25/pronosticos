@@ -1,0 +1,357 @@
+{
+ "jornada": 25,
+ "cierre": "2026-11-28T14:00:00+01:00",
+ "partidos": [
+  {
+   "n": 1,
+   "local": "Betis",
+   "visitante": "Rayo",
+   "cuando": "S 14:00",
+   "local_completo": "Real Betis Balompié",
+   "visitante_completo": "Rayo Vallecano",
+   "liga": "laliga",
+   "eq_local": "Real Betis",
+   "eq_visitante": "Rayo Vallecano",
+   "prob": [
+    0.5868,
+    0.2131,
+    0.2002
+   ],
+   "goles_esp": [
+    1.89,
+    1.01
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 2,
+   "local": "Málaga",
+   "visitante": "Athletic",
+   "cuando": "S 16:15",
+   "local_completo": "Málaga C.F.",
+   "visitante_completo": "Athletic Club Bilbao",
+   "liga": "laliga",
+   "eq_local": "Malaga",
+   "eq_visitante": "Athletic Club",
+   "prob": [
+    0.279,
+    0.264,
+    0.457
+   ],
+   "goles_esp": [
+    1.0,
+    1.36
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 3,
+   "local": "Elche",
+   "visitante": "At. Madrid",
+   "cuando": "S 18:30",
+   "local_completo": "Elche C.F.",
+   "visitante_completo": "Club Atlético de Madrid",
+   "liga": "laliga",
+   "eq_local": "Elche",
+   "eq_visitante": "Atletico Madrid",
+   "prob": [
+    0.2708,
+    0.2344,
+    0.4949
+   ],
+   "goles_esp": [
+    1.16,
+    1.65
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 4,
+   "local": "Real Madrid",
+   "visitante": "Alavés",
+   "cuando": "S 21:00",
+   "local_completo": "Real Madrid C.F.",
+   "visitante_completo": "Deportivo Alavés",
+   "liga": "laliga",
+   "eq_local": "Real Madrid",
+   "eq_visitante": "Alaves",
+   "prob": [
+    0.7725,
+    0.1376,
+    0.09
+   ],
+   "goles_esp": [
+    2.67,
+    0.81
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 5,
+   "local": "Valencia",
+   "visitante": "Osasuna",
+   "cuando": "D 14:00",
+   "local_completo": "Valencia C.F.",
+   "visitante_completo": "C.At. de Osasuna",
+   "liga": "laliga",
+   "eq_local": "Valencia",
+   "eq_visitante": "Osasuna",
+   "prob": [
+    0.4631,
+    0.2526,
+    0.2843
+   ],
+   "goles_esp": [
+    1.45,
+    1.08
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 6,
+   "local": "Deportivo",
+   "visitante": "Barcelona",
+   "cuando": "D 16:15",
+   "local_completo": "Real Club Deportivo de la Coruña",
+   "visitante_completo": "Fútbol Club Barcelona",
+   "liga": "laliga",
+   "eq_local": "Deportivo La Coruna",
+   "eq_visitante": "Barcelona",
+   "prob": [
+    0.2068,
+    0.1866,
+    0.6065
+   ],
+   "goles_esp": [
+    1.29,
+    2.3
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 7,
+   "local": "Celta",
+   "visitante": "Villarreal",
+   "cuando": "D 18:30",
+   "local_completo": "R.C. Celta de Vigo",
+   "visitante_completo": "Villarreal C.F.",
+   "liga": "laliga",
+   "eq_local": "Celta Vigo",
+   "eq_visitante": "Villarreal",
+   "prob": [
+    0.3894,
+    0.2642,
+    0.3464
+   ],
+   "goles_esp": [
+    1.26,
+    1.17
+   ],
+   "signo": "1",
+   "doble": "12"
+  },
+  {
+   "n": 8,
+   "local": "R. Sociedad",
+   "visitante": "Sevilla",
+   "cuando": "D 21:00",
+   "local_completo": "Real Sociedad",
+   "visitante_completo": "Sevilla F.C.",
+   "liga": "laliga",
+   "eq_local": "Real Sociedad",
+   "eq_visitante": "Sevilla",
+   "prob": [
+    0.5758,
+    0.1945,
+    0.2297
+   ],
+   "goles_esp": [
+    2.2,
+    1.34
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 9,
+   "local": "Las Palmas",
+   "visitante": "Andorra",
+   "cuando": "D 17:00",
+   "local_completo": "U.D. Las Palmas",
+   "visitante_completo": "FC Andorra",
+   "liga": "es2",
+   "eq_local": "Las Palmas",
+   "eq_visitante": "FC Andorra",
+   "prob": [
+    0.571,
+    0.2056,
+    0.2234
+   ],
+   "goles_esp": [
+    2.02,
+    1.19
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 10,
+   "local": "Albacete",
+   "visitante": "Tenerife",
+   "cuando": "D 17:00",
+   "local_completo": "Albacete Balomp.",
+   "visitante_completo": "C.D. Tenerife",
+   "liga": "es2",
+   "eq_local": "Albacete",
+   "eq_visitante": "Tenerife",
+   "prob": [
+    0.4053,
+    0.2761,
+    0.3185
+   ],
+   "goles_esp": [
+    1.21,
+    1.04
+   ],
+   "signo": "1",
+   "doble": "12"
+  },
+  {
+   "n": 11,
+   "local": "Eibar",
+   "visitante": "Burgos",
+   "cuando": "D 17:00",
+   "local_completo": "S.D. Eibar",
+   "visitante_completo": "Real Burgos C.F.",
+   "liga": "es2",
+   "eq_local": "Eibar",
+   "eq_visitante": "Burgos",
+   "prob": [
+    0.4379,
+    0.265,
+    0.2971
+   ],
+   "goles_esp": [
+    1.33,
+    1.04
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 12,
+   "local": "Granada",
+   "visitante": "Ceuta",
+   "cuando": "D 17:00",
+   "local_completo": "Granada C.F.",
+   "visitante_completo": "AD Ceuta FC",
+   "liga": "es2",
+   "eq_local": "Granada",
+   "eq_visitante": "Ceuta",
+   "prob": [
+    0.7248,
+    0.1632,
+    0.1121
+   ],
+   "goles_esp": [
+    2.36,
+    0.81
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 13,
+   "local": "Mallorca",
+   "visitante": "Castellón",
+   "cuando": "D 17:00",
+   "local_completo": "R.C.D. Mallorca",
+   "visitante_completo": "C.D. Castellón",
+   "liga": "es2",
+   "eq_local": "Mallorca",
+   "eq_visitante": "Castellón",
+   "prob": [
+    0.2853,
+    0.2918,
+    0.4229
+   ],
+   "goles_esp": [
+    0.88,
+    1.14
+   ],
+   "signo": "2",
+   "doble": "2X"
+  },
+  {
+   "n": 14,
+   "local": "Almería",
+   "visitante": "Sporting Gijón",
+   "cuando": "D 17:00",
+   "local_completo": "U.D. Almería",
+   "visitante_completo": "Real Sporting de Gijón",
+   "liga": "es2",
+   "eq_local": "Almería",
+   "eq_visitante": "Sporting Gijón",
+   "prob": [
+    0.6332,
+    0.1937,
+    0.1732
+   ],
+   "goles_esp": [
+    2.11,
+    1.01
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 15,
+   "local": "Espanyol",
+   "visitante": "Getafe",
+   "cuando": "L 21:00",
+   "local_completo": "R.C.D. Espanyol",
+   "visitante_completo": "Getafe C.F.",
+   "liga": "laliga",
+   "eq_local": "Espanyol",
+   "eq_visitante": "Getafe",
+   "prob": [
+    0.5626,
+    0.2683,
+    0.1691
+   ],
+   "goles_esp": [
+    1.38,
+    0.62
+   ],
+   "signo": "1",
+   "pleno": {
+    "local": "1",
+    "visitante": "0",
+    "prob": 0.1873,
+    "cat_local": [
+     0.252,
+     0.347,
+     0.239,
+     0.162
+    ],
+    "cat_visitante": [
+     0.539,
+     0.333,
+     0.103,
+     0.025
+    ]
+   },
+   "doble": null
+  }
+ ],
+ "clave": "2026-25",
+ "temporada": 2026,
+ "generado": "2026-11-24 21:34",
+ "congelada": false
+}

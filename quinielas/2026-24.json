@@ -328,5 +328,12 @@
  "clave": "2026-24",
  "temporada": 2026,
  "generado": "2026-11-24 08:02",
- "congelada": false
+ "congelada": true,
+ "resumen": {
+  "jugados": 0,
+  "aciertos": 0,
+  "con_dobles": 0,
+  "pronosticados": 0,
+  "pleno": null
+ }
 }
