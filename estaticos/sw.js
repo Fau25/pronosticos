@@ -8,7 +8,7 @@ const VERSION = 'pronosticos-__VERSION__';
 const APP = 'app-' + VERSION;
 const DATOS = 'pron-datos';
 const BASE = ['./', './manifest.webmanifest', './icono-192.png', './icono-512.png', './apple-touch-icon.png',
-              './urbanist.woff2', './urbanist-italic.woff2'];
+              './sora-400.woff2', './sora-500.woff2', './sora-600.woff2', './sora-700.woff2'];
 const ESPERA = 500;   // ms que se espera a la red si ya hay copia guardada
 
 self.addEventListener('install', e => {
@@ -17,7 +17,7 @@ self.addEventListener('install', e => {
 
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
-    for (const k of await caches.keys()) if (k !== APP && k !== DATOS) await caches.delete(k);
+    for (const k of await caches.keys()) if (k.startsWith('app-pronosticos-') && k !== APP) await caches.delete(k);   // solo las suyas: no tocar las de otras apps del mismo dominio
     // podar días viejos de la caché de datos
     const c = await caches.open(DATOS), limite = new Date(Date.now() - 40 * 864e5).toISOString().slice(0, 10);
     for (const req of await c.keys()) {
