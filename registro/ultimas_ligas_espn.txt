@@ -1,9 +1,9 @@
-  [espn] 48 partidos leídos (0 errores)
-  [espn] bundesliga: 36 en la base, 36 jugados, 36 con córners
-  [espn] laliga: 41 en la base, 41 jugados, 41 con córners
-  [espn] ligue1: 36 en la base, 36 jugados, 36 con córners
-  [espn] premier: 40 en la base, 40 jugados, 40 con córners
-  [espn] seriea: 50 en la base, 50 jugados, 50 con córners
+  [espn] 50 partidos leídos (0 errores)
+  [espn] bundesliga: 37 en la base, 36 jugados, 36 con córners
+  [espn] laliga: 42 en la base, 41 jugados, 41 con córners
+  [espn] ligue1: 37 en la base, 36 jugados, 36 con córners
+  [espn] premier: 41 en la base, 40 jugados, 40 con córners
+  [espn] seriea: 51 en la base, 50 jugados, 50 con córners
    2026-11-23T20:00 Levante 1-1 Elche · córners 6 · amarillas 6 · tiros 22
    2026-11-23T20:00 Brentford 4-0 Everton · córners 9 · amarillas 1 · tiros 25
    2026-11-23T19:45 Monza 3-0 Fiorentina · córners 10 · amarillas 1 · tiros 30
