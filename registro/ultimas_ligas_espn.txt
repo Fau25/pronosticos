@@ -1,11 +1,13 @@
-  [espn] 44 partidos leídos (0 errores)
-  [espn] bundesliga: 42 en la base, 36 jugados, 36 con córners
-  [espn] laliga: 46 en la base, 41 jugados, 41 con córners
-  [espn] ligue1: 42 en la base, 36 jugados, 36 con córners
-  [espn] premier: 44 en la base, 40 jugados, 40 con córners
-  [espn] seriea: 54 en la base, 50 jugados, 50 con córners
+  [espn] 48 partidos leídos (0 errores)
+  [espn] bundesliga: 45 en la base, 36 jugados, 36 con córners
+  [espn] laliga: 50 en la base, 41 jugados, 41 con córners
+  [espn] ligue1: 45 en la base, 36 jugados, 36 con córners
+  [espn] premier: 50 en la base, 40 jugados, 40 con córners
+  [espn] seriea: 58 en la base, 50 jugados, 50 con córners
    2026-11-23T20:00 Levante 1-1 Elche · córners 6 · amarillas 6 · tiros 22
    2026-11-23T20:00 Brentford 4-0 Everton · córners 9 · amarillas 1 · tiros 25
    2026-11-23T19:45 Monza 3-0 Fiorentina · córners 10 · amarillas 1 · tiros 30
    2026-11-22T20:00 Getafe 0-3 Atletico Madrid · córners 9 · amarillas 4 · tiros 31
    2026-11-22T19:45 Atalanta 4-4 Inter · córners 11 · amarillas 3 · tiros 31
+  [espn] equipos sin emparejar: Deportivo
+  AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)
