@@ -1,13 +1,13 @@
   [espn] 48 partidos leídos (0 errores)
   [espn] bundesliga: 45 en la base, 37 jugados, 37 con córners
-  [espn] laliga: 51 en la base, 42 jugados, 42 con córners
+  [espn] laliga: 51 en la base, 43 jugados, 43 con córners
   [espn] ligue1: 45 en la base, 37 jugados, 37 con córners
   [espn] premier: 50 en la base, 41 jugados, 41 con córners
   [espn] seriea: 60 en la base, 51 jugados, 51 con córners
+   2026-11-28T13:00 Real Betis 0-1 Rayo Vallecano · córners 11 · amarillas 6 · tiros 27
    2026-11-27T20:00 Levante 1-3 Racing Santander · córners 14 · amarillas 4 · tiros 38
    2026-11-27T20:00 Nottingham Forest 3-2 Chelsea · córners 3 · amarillas 6 · tiros 19
    2026-11-27T19:45 Venezia 0-0 Bologna · córners 9 · amarillas 6 · tiros 27
    2026-11-27T19:45 Brest 1-0 Paris FC · córners 8 · amarillas 5 · tiros 35
-   2026-11-27T19:30 Werder Bremen 3-3 Borussia M.Gladbach · córners 11 · amarillas 5 · tiros 40
   [espn] equipos sin emparejar: Deportivo
   AVISO: ESPN: equipos sin emparejar con Understat (Deportivo)

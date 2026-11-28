@@ -22,7 +22,18 @@
     1.01
    ],
    "signo": "1",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     0,
+     1
+    ],
+    "signo": "2",
+    "cat": [
+     "0",
+     "1"
+    ]
+   }
   },
   {
    "n": 2,
@@ -198,7 +209,18 @@
     1.19
    ],
    "signo": "1",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     4,
+     1
+    ],
+    "signo": "1",
+    "cat": [
+     "M",
+     "1"
+    ]
+   }
   },
   {
    "n": 10,
@@ -353,5 +375,12 @@
  "clave": "2026-25",
  "temporada": 2026,
  "generado": "2026-11-27 17:57",
- "congelada": false
+ "congelada": true,
+ "resumen": {
+  "jugados": 2,
+  "aciertos": 1,
+  "con_dobles": 1,
+  "pronosticados": 2,
+  "pleno": null
+ }
 }

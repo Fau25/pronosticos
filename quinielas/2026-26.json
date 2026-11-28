@@ -1,0 +1,280 @@
+{
+ "jornada": 26,
+ "cierre": "2026-12-01T20:00:00+01:00",
+ "partidos": [
+  {
+   "n": 1,
+   "local": "R. Sociedad",
+   "visitante": "Real Madrid",
+   "cuando": "X 19:00",
+   "local_completo": "Real Sociedad",
+   "visitante_completo": "Real Madrid C.F.",
+   "liga": "laliga",
+   "eq_local": "Real Sociedad",
+   "eq_visitante": "Real Madrid",
+   "prob": [
+    0.2655,
+    0.1978,
+    0.5366
+   ],
+   "goles_esp": [
+    1.49,
+    2.17
+   ],
+   "signo": "2",
+   "doble": null
+  },
+  {
+   "n": 2,
+   "local": "Albacete",
+   "visitante": "Las Palmas",
+   "cuando": "M 20:00",
+   "local_completo": "Albacete Balomp.",
+   "visitante_completo": "U.D. Las Palmas",
+   "liga": "es2",
+   "eq_local": "Albacete",
+   "eq_visitante": "Las Palmas",
+   "prob": [
+    0.3504,
+    0.2481,
+    0.4015
+   ],
+   "goles_esp": [
+    1.29,
+    1.4
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 3,
+   "local": "Cartagena",
+   "visitante": "Elche",
+   "cuando": "M 21:00",
+   "local_completo": "Cartagena F.C.",
+   "visitante_completo": "Elche C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Elche",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 4,
+   "local": "Extremadura",
+   "visitante": "Betis",
+   "cuando": "M 21:00",
+   "local_completo": "CD Extremadura ",
+   "visitante_completo": "Real Betis Balompié",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Real Betis",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 5,
+   "local": "Numancia",
+   "visitante": "Athletic",
+   "cuando": "M 21:00",
+   "local_completo": "C.D. Numancia",
+   "visitante_completo": "Athletic Club Bilbao",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Athletic Club",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 6,
+   "local": "Mirandés",
+   "visitante": "Leganés",
+   "cuando": "X 20:00",
+   "local_completo": "Mirandés",
+   "visitante_completo": "C.D. Leganés",
+   "liga": "eu",
+   "eq_local": "Randers FC",
+   "eq_visitante": "Leganés",
+   "prob": [
+    0.3056,
+    0.2486,
+    0.4458
+   ],
+   "liga_local": "den",
+   "liga_visitante": "es2",
+   "goles_esp": [
+    1.17,
+    1.47
+   ],
+   "signo": "2",
+   "doble": "12"
+  },
+  {
+   "n": 7,
+   "local": "Almería",
+   "visitante": "Granada",
+   "cuando": "X 20:00",
+   "local_completo": "U.D. Almería",
+   "visitante_completo": "Granada C.F.",
+   "liga": "es2",
+   "eq_local": "Almería",
+   "eq_visitante": "Granada",
+   "prob": [
+    0.5432,
+    0.2216,
+    0.2351
+   ],
+   "goles_esp": [
+    1.81,
+    1.11
+   ],
+   "signo": "1",
+   "doble": null
+  },
+  {
+   "n": 8,
+   "local": "Rayo Maj.",
+   "visitante": "Mallorca",
+   "cuando": "X 21:00",
+   "local_completo": "Rayo Majadahonda",
+   "visitante_completo": "R.C.D. Mallorca",
+   "liga": "eu",
+   "eq_local": "Rayo Vallecano",
+   "eq_visitante": "Mallorca",
+   "prob": [
+    0.4437,
+    0.2747,
+    0.2816
+   ],
+   "liga_local": "laliga",
+   "liga_visitante": "es2",
+   "goles_esp": [
+    1.27,
+    0.95
+   ],
+   "signo": "1",
+   "doble": "12"
+  },
+  {
+   "n": 9,
+   "local": "Sestao",
+   "visitante": "Villarreal",
+   "cuando": "X 21:00",
+   "local_completo": "Sestao",
+   "visitante_completo": "Villarreal C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Villarreal",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 10,
+   "local": "Atlético Paso",
+   "visitante": "Sevilla",
+   "cuando": "J 19:00",
+   "local_completo": "Atlético Paso",
+   "visitante_completo": "Sevilla F.C.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Sevilla",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 11,
+   "local": "Amorebieta",
+   "visitante": "Osasuna",
+   "cuando": "J 21:00",
+   "local_completo": "Amorebieta",
+   "visitante_completo": "C.At. de Osasuna",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Osasuna",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 12,
+   "local": "R. Zaragoza",
+   "visitante": "Burgos",
+   "cuando": "J 21:00",
+   "local_completo": "Real Zaragoza C.D.",
+   "visitante_completo": "Real Burgos C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Burgos",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 13,
+   "local": "CD Coria",
+   "visitante": "Málaga",
+   "cuando": "J 21:00",
+   "local_completo": "CD Coria",
+   "visitante_completo": "Málaga C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Malaga",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 14,
+   "local": "Jaén",
+   "visitante": "Valencia",
+   "cuando": "J 21:00",
+   "local_completo": "Real Jaén C.F.",
+   "visitante_completo": "Valencia C.F.",
+   "liga": null,
+   "eq_local": null,
+   "eq_visitante": "Valencia",
+   "prob": null,
+   "doble": null
+  },
+  {
+   "n": 15,
+   "local": "Barcelona",
+   "visitante": "At. Madrid",
+   "cuando": "X 21:30",
+   "local_completo": "Fútbol Club Barcelona",
+   "visitante_completo": "Club Atlético de Madrid",
+   "liga": "laliga",
+   "eq_local": "Barcelona",
+   "eq_visitante": "Atletico Madrid",
+   "prob": [
+    0.6325,
+    0.1726,
+    0.1948
+   ],
+   "goles_esp": [
+    2.54,
+    1.38
+   ],
+   "signo": "1",
+   "pleno": {
+    "local": "M",
+    "visitante": "1",
+    "prob": 0.162,
+    "cat_local": [
+     0.079,
+     0.201,
+     0.255,
+     0.466
+    ],
+    "cat_visitante": [
+     0.253,
+     0.348,
+     0.239,
+     0.161
+    ]
+   },
+   "doble": null
+  }
+ ],
+ "clave": "2026-26",
+ "temporada": 2026,
+ "generado": "2026-11-28 16:49",
+ "congelada": false
+}
