@@ -20,7 +20,7 @@
  "partidos_validacion": 92,
  "validacion_desviacion": {
   "sin_ajuste": 151.66,
-  "a_ojo": 127.8,
+  "a_ojo": 127.83,
   "medido": 129.4
  },
  "validacion_cruzada": {

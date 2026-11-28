@@ -3,31 +3,31 @@
  "desde": "2025-08-01",
  "por_liga": {
   "laliga": {
-   "n": 472,
-   "acierto": 0.5297,
-   "con_doble": 0.7521,
-   "pleno": 0.1568,
+   "n": 482,
+   "acierto": 0.527,
+   "con_doble": 0.749,
+   "pleno": 0.1598,
    "de_14": 7.4
   },
   "es2": {
-   "n": 570,
-   "acierto": 0.4509,
-   "con_doble": 0.7526,
-   "pleno": 0.1123,
+   "n": 581,
+   "acierto": 0.4492,
+   "con_doble": 0.7522,
+   "pleno": 0.1153,
    "de_14": 6.3
   },
   "esf": {
-   "n": 306,
-   "acierto": 0.6078,
-   "con_doble": 0.8431,
-   "pleno": 0.1895,
-   "de_14": 8.5
+   "n": 313,
+   "acierto": 0.6166,
+   "con_doble": 0.8466,
+   "pleno": 0.1949,
+   "de_14": 8.6
   }
  },
- "generado": "2026-11-21 05:09",
- "n": 1348,
- "acierto": 0.5141,
- "con_doble": 0.773,
- "pleno": 0.1454,
+ "generado": "2026-11-28 05:51",
+ "n": 1376,
+ "acierto": 0.5145,
+ "con_doble": 0.7725,
+ "pleno": 0.149,
  "de_14": 7.2
 }
