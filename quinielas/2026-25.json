@@ -55,7 +55,18 @@
     1.36
    ],
    "signo": "2",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     3,
+     4
+    ],
+    "signo": "2",
+    "cat": [
+     "M",
+     "M"
+    ]
+   }
   },
   {
    "n": 3,
@@ -77,7 +88,18 @@
     1.65
    ],
    "signo": "2",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     2,
+     3
+    ],
+    "signo": "2",
+    "cat": [
+     "2",
+     "M"
+    ]
+   }
   },
   {
    "n": 4,
@@ -242,7 +264,18 @@
     1.04
    ],
    "signo": "1",
-   "doble": "12"
+   "doble": "12",
+   "resultado": {
+    "goles": [
+     4,
+     0
+    ],
+    "signo": "1",
+    "cat": [
+     "M",
+     "0"
+    ]
+   }
   },
   {
    "n": 11,
@@ -264,7 +297,18 @@
     1.04
    ],
    "signo": "1",
-   "doble": null
+   "doble": null,
+   "resultado": {
+    "goles": [
+     3,
+     0
+    ],
+    "signo": "1",
+    "cat": [
+     "M",
+     "0"
+    ]
+   }
   },
   {
    "n": 12,
@@ -377,10 +421,10 @@
  "generado": "2026-11-27 17:57",
  "congelada": true,
  "resumen": {
-  "jugados": 2,
-  "aciertos": 1,
-  "con_dobles": 1,
-  "pronosticados": 2,
+  "jugados": 6,
+  "aciertos": 5,
+  "con_dobles": 5,
+  "pronosticados": 6,
   "pleno": null
  }
 }
